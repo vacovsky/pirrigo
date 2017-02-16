@@ -1,17 +1,19 @@
 package main
 
-var PORT string
+var CONFIG PirriSettings
 
-var REDISHOST string
-var REDISPORT string
+//var PORT string
 
-var SQLDBTYPE string
-var SQLSERVER string
-var SQLPASS string
-var SQLUSER string
-var SQLDB string
+//var REDISHOST string
+//var REDISPORT string
 
-var RABBITSERVER string
-var RABBITPORT string
-var RABBITUSER string
-var RABBITPASS string
+//var SQLDBTYPE string
+//var SQLSERVER string
+//var SQLPASS string
+//var SQLUSER string
+//var SQLDB string
+
+//var RABBITSERVER string
+//var RABBITPORT string
+//var RABBITUSER string
+//var RABBITPASS string

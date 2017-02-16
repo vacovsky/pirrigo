@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	//	"strconv"
+	"strconv"
 	"strings"
 )
 
@@ -40,46 +40,62 @@ func loadConfig() {
 }
 
 func parseConfig(config map[string]string) {
+	CONFIG = PirriSettings{}
+
 	if port, ok := config["port"]; ok {
-		PORT = port
+		CONFIG.HttpPort, err = strconv.Atoi(port)
+		//		PORT = port
 	}
 	if sqldbtype, ok := config["sqldbtype"]; ok {
-		SQLDBTYPE = sqldbtype
+		CONFIG.SqlDbType = sqldbtype
+		//		SQLDBTYPE = sqldbtype
 	}
 	if redishost, ok := config["redishost"]; ok {
-		REDISHOST = redishost
-	}
-	if sqlserver, ok := config["sqlserver"]; ok {
-		SQLSERVER = sqlserver
-	}
-	if sqluser, ok := config["sqluser"]; ok {
-		SQLUSER = sqluser
-	}
-	if sqlpass, ok := config["sqlpass"]; ok {
-		SQLPASS = sqlpass
-	}
-	if sqldb, ok := config["sqldb"]; ok {
-		SQLDB = sqldb
+		CONFIG.RedisServer = redishost
+		//		REDISHOST = redishost
 	}
 	if redisport, ok := config["redisport"]; ok {
-		REDISPORT = redisport
+		CONFIG.RedisPort, err = strconv.Atoi(redisport)
+		//		REDISPORT = redisport
+	}
+	if sqlserver, ok := config["sqlserver"]; ok {
+		CONFIG.SqlServer = sqlserver
+		//		SQLSERVER = sqlserver
+	}
+	if sqluser, ok := config["sqluser"]; ok {
+		CONFIG.SqlUser = sqluser
+		//		SQLUSER = sqluser
+	}
+	if sqlpass, ok := config["sqlpass"]; ok {
+		CONFIG.SqlPass = sqlpass
+		//		SQLPASS = sqlpass
+	}
+	if sqldb, ok := config["sqldb"]; ok {
+		CONFIG.SqlDbName = sqldb
+		//		SQLDB = sqldb
 	}
 	if rabbitserver, ok := config["rabbitserver"]; ok {
-		RABBITSERVER = rabbitserver
+		CONFIG.RabbitServer = rabbitserver
+		//		RABBITSERVER = rabbitserver
 	}
 	if rabbitport, ok := config["rabbitport"]; ok {
-		RABBITPORT = rabbitport
+		CONFIG.RabbitPort, err = strconv.Atoi(rabbitport)
+		//		RABBITPORT = rabbitport
 	}
 	if rabbituser, ok := config["rabbituser"]; ok {
-		RABBITUSER = rabbituser
+		CONFIG.RabbitUser = rabbituser
+		//		RABBITUSER = rabbituser
 	}
 	if rabbitpass, ok := config["rabbitpass"]; ok {
-		RABBITPASS = rabbitpass
+		CONFIG.RabbitPass = rabbitpass
+		//		RABBITPASS = rabbitpass
 	}
-
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func displayConfig() {
-	message := "Server available at http://localhost:" + PORT
+	message := "Server available at http://localhost:" + strconv.Itoa(CONFIG.HttpPort)
 	fmt.Printf("\n" + message + "\n")
 }

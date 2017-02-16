@@ -61,4 +61,20 @@ type PirriSettings struct {
 	GpioOffState      int // 1 or 0
 	UseNewRelic       bool
 	UtcOffset         int
+	HttpPort          int
+	SqlDbType         string
+	SqlServer         string
+	SqlUser           string
+	SqlPass           string
+	SqlDbName         string
+	RedisServer       string
+	RedisPort         int
+	RabbitPort        int
+}
+
+type Station struct {
+	ID     int
+	GPIO   int
+	Notes  string
+	Common bool
 }
