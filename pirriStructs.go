@@ -29,20 +29,20 @@ type StationHistory struct {
 
 type StationScheduleEntry struct {
 	//SELECT * FROM pirri.schedule;
-	ScheduleID int
-	StartDate  time.Time
-	EndDate    time.Time
-	Sunday     bool
-	Monday     bool
-	Tuesday    bool
-	Wednesday  bool
-	Thursday   bool
-	Fridayb    bool
-	Saturday   bool
-	SID        int //station ID
-	StartTime  int
-	Duration   int
-	Repeating  bool
+	ID        int
+	StartDate time.Time
+	EndDate   time.Time
+	Sunday    bool
+	Monday    bool
+	Tuesday   bool
+	Wednesday bool
+	Thursday  bool
+	Fridayb   bool
+	Saturday  bool
+	SID       int //station ID
+	StartTime int
+	Duration  int
+	Repeating bool
 }
 
 type PirriSettings struct {

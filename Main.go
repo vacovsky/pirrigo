@@ -11,4 +11,6 @@ func main() {
 	fmt.Println(name)
 
 	configInit()
+
+	fmt.Println(GetCurrentTasks())
 }
