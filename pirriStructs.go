@@ -27,7 +27,7 @@ type StationHistory struct {
 type StationSchedule struct {
 	ID        int       `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	StartDate time.Time `sql:"DEFAULT:current_timestamp"`
-	EndDate   time.Time `sql:"DEFAULT:2025-01-01T00:00:00"`
+	EndDate   time.Time `sql:"DEFAULT:'2025-01-01 00:00:00'"`
 	Sunday    bool      `sql:"DEFAULT:false"`
 	Monday    bool      `sql:"DEFAULT:false"`
 	Tuesday   bool      `sql:"DEFAULT:false"`

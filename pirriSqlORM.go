@@ -14,7 +14,11 @@ func GormSetup() {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&StationSchedule{})
+	db.AutoMigrate(
+		&StationSchedule{},
+		&GpioPins{},
+		&PirriSettings{},
+		&StationHistory{})
 
 	//	db.Select(`SELECT id, station, duration FROM schedule
 	//                        WHERE (startdate <= CAST(replace(date(NOW()), '-', '') AS UNSIGNED)
