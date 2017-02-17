@@ -7,7 +7,7 @@ import (
 
 func GetCurrentTasks() StationScheduleEntry {
 	defer db.Close()
-	result := StationScheduleEntry{}
+	result := &StationScheduleEntry{}
 	openSqlConnection()
 	nowTime := time.Now()
 
@@ -27,7 +27,7 @@ func GetCurrentTasks() StationScheduleEntry {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	return result
+	return &result
 
 }
 

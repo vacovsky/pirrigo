@@ -44,51 +44,42 @@ func parseConfig(config map[string]string) {
 
 	if port, ok := config["port"]; ok {
 		CONFIG.HttpPort, err = strconv.Atoi(port)
-		//		PORT = port
 	}
 	if sqldbtype, ok := config["sqldbtype"]; ok {
 		CONFIG.SqlDbType = sqldbtype
-		//		SQLDBTYPE = sqldbtype
 	}
 	if redishost, ok := config["redishost"]; ok {
 		CONFIG.RedisServer = redishost
-		//		REDISHOST = redishost
 	}
 	if redisport, ok := config["redisport"]; ok {
 		CONFIG.RedisPort, err = strconv.Atoi(redisport)
-		//		REDISPORT = redisport
 	}
 	if sqlserver, ok := config["sqlserver"]; ok {
 		CONFIG.SqlServer = sqlserver
-		//		SQLSERVER = sqlserver
 	}
 	if sqluser, ok := config["sqluser"]; ok {
 		CONFIG.SqlUser = sqluser
-		//		SQLUSER = sqluser
 	}
 	if sqlpass, ok := config["sqlpass"]; ok {
 		CONFIG.SqlPass = sqlpass
-		//		SQLPASS = sqlpass
 	}
 	if sqldb, ok := config["sqldb"]; ok {
 		CONFIG.SqlDbName = sqldb
-		//		SQLDB = sqldb
 	}
 	if rabbitserver, ok := config["rabbitserver"]; ok {
 		CONFIG.RabbitServer = rabbitserver
-		//		RABBITSERVER = rabbitserver
 	}
 	if rabbitport, ok := config["rabbitport"]; ok {
 		CONFIG.RabbitPort, err = strconv.Atoi(rabbitport)
-		//		RABBITPORT = rabbitport
 	}
 	if rabbituser, ok := config["rabbituser"]; ok {
 		CONFIG.RabbitUser = rabbituser
-		//		RABBITUSER = rabbituser
 	}
 	if rabbitpass, ok := config["rabbitpass"]; ok {
 		CONFIG.RabbitPass = rabbitpass
-		//		RABBITPASS = rabbitpass
+	}
+	if sqlport, ok := config["sqlport"]; ok {
+		CONFIG.SqlPort = sqlport
 	}
 	if err != nil {
 		fmt.Println(err)

@@ -11,7 +11,7 @@ var err error
 
 func openSqlConnection() {
 	db, err = sql.Open(
-		CONFIG.SqlDbType, CONFIG.SqlUser+":"+CONFIG.SqlPass+"@"+CONFIG.SqlServer+"/"+CONFIG.SqlDbName)
+		CONFIG.SqlDbType, CONFIG.SqlUser+":"+CONFIG.SqlPass+"@tcp("+CONFIG.SqlServer+":"+CONFIG.SqlPort+")/"+CONFIG.SqlDbName)
 	if err != nil {
 		panic(err.Error())
 	}

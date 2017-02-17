@@ -66,6 +66,7 @@ type PirriSettings struct {
 	SqlServer         string
 	SqlUser           string
 	SqlPass           string
+	SqlPort           string
 	SqlDbName         string
 	RedisServer       string
 	RedisPort         int
