@@ -5,44 +5,40 @@ import (
 )
 
 type DripNode struct {
-	//SELECT id, gph, sid, count FROM pirri.dripnodes;
-	ID    int
+	ID    int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	GPH   float32
 	SID   int
 	Count int
 }
 
 type GpioPins struct {
-	//SELECT gpio, notes FROM pirri.gpio_pins;
-	GPIO  int
+	GPIO  int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	Notes float32
 }
 
 type StationHistory struct {
-	//SELECT id, sid, schedule_id, duration, starttime FROM pirri.history;
-	ID         int
-	SID        float32
+	ID         int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	SID        int
 	ScheduleID int
 	Duration   int
-	StartTime  time.Time
+	StartTime  time.Time `sql:"DEFAULT:current_timestamp" gorm:"primary_key"`
 }
 
-type StationScheduleEntry struct {
-	//SELECT * FROM pirri.schedule;
-	ID        int
-	StartDate time.Time
-	EndDate   time.Time
-	Sunday    bool
-	Monday    bool
-	Tuesday   bool
-	Wednesday bool
-	Thursday  bool
-	Fridayb   bool
-	Saturday  bool
-	SID       int //station ID
+type StationSchedule struct {
+	ID        int       `sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	StartDate time.Time `sql:"DEFAULT:current_timestamp"`
+	EndDate   time.Time `sql:"DEFAULT:2025-01-01T00:00:00"`
+	Sunday    bool      `sql:"DEFAULT:false"`
+	Monday    bool      `sql:"DEFAULT:false"`
+	Tuesday   bool      `sql:"DEFAULT:false"`
+	Wednesday bool      `sql:"DEFAULT:false"`
+	Thursday  bool      `sql:"DEFAULT:false"`
+	Fridayb   bool      `sql:"DEFAULT:false"`
+	Saturday  bool      `sql:"DEFAULT:false"`
+	SID       int
 	StartTime int
-	Duration  int
-	Repeating bool
+	Duration  int  `sql:"DEFAULT:0"`
+	Repeating bool `sql:"DEFAULT:false"`
 }
 
 type PirriSettings struct {
@@ -74,8 +70,8 @@ type PirriSettings struct {
 }
 
 type Station struct {
-	ID     int
+	ID     int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	GPIO   int
 	Notes  string
-	Common bool
+	Common bool `sql:"DEFAULT:false"`
 }

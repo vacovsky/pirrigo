@@ -1,6 +1,7 @@
 package main
 
 var CONFIG PirriSettings
+var CONNSTRING string
 
 //var PORT string
 

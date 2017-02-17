@@ -81,6 +81,7 @@ func parseConfig(config map[string]string) {
 	if sqlport, ok := config["sqlport"]; ok {
 		CONFIG.SqlPort = sqlport
 	}
+	CONNSTRING = CONFIG.SqlUser + ":" + CONFIG.SqlPass + "@tcp(" + CONFIG.SqlServer + ":" + CONFIG.SqlPort + ")/" + CONFIG.SqlDbName
 	if err != nil {
 		fmt.Println(err)
 	}
