@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
@@ -25,6 +28,12 @@ func GormSetup() {
 		&StationSchedule{},
 		&Settings{},
 		&Station{})
+}
+
+func JsonifyResults(input *gorm.DB) string {
+	result, _ := json.Marshal(input)
+	fmt.Println(string(result))
+	return string(result)
 }
 
 //	db.Select(`SELECT id, station, duration FROM schedule

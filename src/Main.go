@@ -1,6 +1,7 @@
 package main
 
 import (
+	//	"encoding/json"
 	"fmt"
 )
 
@@ -14,5 +15,6 @@ func main() {
 	configInit()
 	GormSetup()
 
+	GetAllGpio()
 	//	fmt.Println(GetCurrentTasks())
 }

@@ -1,8 +1,6 @@
 package main
 
-import (
-	"fmt"
-)
+//	"fmt"
 
 type GpioPin struct {
 	GPIO  int `gorm:"primary_key"`
@@ -10,6 +8,12 @@ type GpioPin struct {
 }
 
 func GetAllGpio() {
-	//	gpio := db.First(&GpioPins)
-	fmt.Println("urrrr")
+	GormDbConnect()
+	defer db.Close()
+	gpios := db.Where("GPIO > ?", 0).Find(&GpioPin{}).Order("GPIO DESC")
+
+	JsonifyResults(gpios)
+	//	Model(&dn).Where(
+	//		"GPH = ?", gph).Where(
+	//		"SID = ?", station).UpdateColumn(DripNode{Count: count})
 }
