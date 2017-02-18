@@ -89,6 +89,10 @@ func parseConfig(config map[string]string) {
 	if showsettings, ok := config["showsettings"]; ok {
 		SETTINGS.ShowSettings, err = strconv.ParseBool(showsettings)
 	}
+	if simulategpioactivity, ok := config["simulategpioactivity"]; ok {
+		SETTINGS.SimulateGpioActivity, err = strconv.ParseBool(simulategpioactivity)
+	}
+
 	CONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
 	if err != nil {
 		panic("Configuration File Error - check app.config")
