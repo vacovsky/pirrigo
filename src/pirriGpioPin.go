@@ -11,7 +11,7 @@ func GetGpioByPin() {
 	GormDbConnect()
 	defer db.Close()
 	gpio := db.Where("GPIO = ?", 4).Find(&GpioPin{}).Order("GPIO DESC")
-	JsonifyResults(gpio)
+	JsonifySqlResults(gpio)
 	//	Model(&dn).Where(
 	//		"GPH = ?", gph).Where(
 	//		"SID = ?", station).UpdateColumn(DripNode{Count: count})

@@ -26,4 +26,6 @@ type Settings struct {
 	RedisServer       string
 	RedisPort         int
 	RabbitPort        int
+	GormDebug         bool
+	ShowSettings      bool
 }

@@ -33,8 +33,10 @@ func loadConfig() {
 			config[c[0]] = c[1]
 		}
 	}
-	for k, v := range config {
-		fmt.Println(k, "=", v)
+	if SETTINGS.ShowSettings {
+		for k, v := range config {
+			fmt.Println(k, "=", v)
+		}
 	}
 	parseConfig(config)
 }
@@ -81,9 +83,15 @@ func parseConfig(config map[string]string) {
 	if sqlport, ok := config["sqlport"]; ok {
 		SETTINGS.SqlPort = sqlport
 	}
-	CONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName
+	if gormdebug, ok := config["gormdebug"]; ok {
+		SETTINGS.GormDebug, err = strconv.ParseBool(gormdebug)
+	}
+	if showsettings, ok := config["showsettings"]; ok {
+		SETTINGS.ShowSettings, err = strconv.ParseBool(showsettings)
+	}
+	CONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
 	if err != nil {
-		fmt.Println(err)
+		panic("Configuration File Error - check app.config")
 	}
 }
 
