@@ -10,10 +10,10 @@ func showVersion() {
 }
 
 func main() {
-
 	configInit()
 	GormSetup()
-
+	WG.Add(2)
 	go GpioActivator(4, true, 300)
 	go TaskMonitor()
+	WG.Wait()
 }

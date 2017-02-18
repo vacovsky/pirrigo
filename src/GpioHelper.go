@@ -34,6 +34,7 @@ func GpioActivator(gpio int, state bool, seconds int) {
 	} else {
 		GpioActivate(gpio, state, seconds)
 	}
+	defer WG.Done()
 }
 
 func GpioSimulation(gpio int, state bool, seconds int) {

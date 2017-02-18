@@ -87,4 +87,5 @@ func TaskMonitor() {
 		CheckForTask()
 		time.Sleep(time.Duration(SETTINGS.MonitorInterval) * time.Second)
 	}
+	defer WG.Done()
 }
