@@ -40,54 +40,54 @@ func loadConfig() {
 }
 
 func parseConfig(config map[string]string) {
-	CONFIG = PirriSettings{}
+	SETTINGS = Settings{}
 
 	if port, ok := config["port"]; ok {
-		CONFIG.HttpPort, err = strconv.Atoi(port)
+		SETTINGS.HttpPort, err = strconv.Atoi(port)
 	}
 	if sqldbtype, ok := config["sqldbtype"]; ok {
-		CONFIG.SqlDbType = sqldbtype
+		SETTINGS.SqlDbType = sqldbtype
 	}
 	if redishost, ok := config["redishost"]; ok {
-		CONFIG.RedisServer = redishost
+		SETTINGS.RedisServer = redishost
 	}
 	if redisport, ok := config["redisport"]; ok {
-		CONFIG.RedisPort, err = strconv.Atoi(redisport)
+		SETTINGS.RedisPort, err = strconv.Atoi(redisport)
 	}
 	if sqlserver, ok := config["sqlserver"]; ok {
-		CONFIG.SqlServer = sqlserver
+		SETTINGS.SqlServer = sqlserver
 	}
 	if sqluser, ok := config["sqluser"]; ok {
-		CONFIG.SqlUser = sqluser
+		SETTINGS.SqlUser = sqluser
 	}
 	if sqlpass, ok := config["sqlpass"]; ok {
-		CONFIG.SqlPass = sqlpass
+		SETTINGS.SqlPass = sqlpass
 	}
 	if sqldb, ok := config["sqldb"]; ok {
-		CONFIG.SqlDbName = sqldb
+		SETTINGS.SqlDbName = sqldb
 	}
 	if rabbitserver, ok := config["rabbitserver"]; ok {
-		CONFIG.RabbitServer = rabbitserver
+		SETTINGS.RabbitServer = rabbitserver
 	}
 	if rabbitport, ok := config["rabbitport"]; ok {
-		CONFIG.RabbitPort, err = strconv.Atoi(rabbitport)
+		SETTINGS.RabbitPort, err = strconv.Atoi(rabbitport)
 	}
 	if rabbituser, ok := config["rabbituser"]; ok {
-		CONFIG.RabbitUser = rabbituser
+		SETTINGS.RabbitUser = rabbituser
 	}
 	if rabbitpass, ok := config["rabbitpass"]; ok {
-		CONFIG.RabbitPass = rabbitpass
+		SETTINGS.RabbitPass = rabbitpass
 	}
 	if sqlport, ok := config["sqlport"]; ok {
-		CONFIG.SqlPort = sqlport
+		SETTINGS.SqlPort = sqlport
 	}
-	CONNSTRING = CONFIG.SqlUser + ":" + CONFIG.SqlPass + "@tcp(" + CONFIG.SqlServer + ":" + CONFIG.SqlPort + ")/" + CONFIG.SqlDbName
+	CONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName
 	if err != nil {
 		fmt.Println(err)
 	}
 }
 
 func displayConfig() {
-	message := "Server available at http://localhost:" + strconv.Itoa(CONFIG.HttpPort)
+	message := "Server available at http://localhost:" + strconv.Itoa(SETTINGS.HttpPort)
 	fmt.Printf("\n" + message + "\n")
 }
