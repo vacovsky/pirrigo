@@ -9,19 +9,19 @@ import (
 
 type StationSchedule struct {
 	ID        int       `sql:"AUTO_INCREMENT" gorm:"primary_key"`
-	StartDate time.Time `sql:"DEFAULT:current_timestamp"`
-	EndDate   time.Time `sql:"DEFAULT:'2025-01-01 00:00:00'"`
-	Sunday    bool      `sql:"DEFAULT:false"`
-	Monday    bool      `sql:"DEFAULT:false"`
-	Tuesday   bool      `sql:"DEFAULT:false"`
-	Wednesday bool      `sql:"DEFAULT:false"`
-	Thursday  bool      `sql:"DEFAULT:false"`
-	Friday    bool      `sql:"DEFAULT:false"`
-	Saturday  bool      `sql:"DEFAULT:false"`
-	StationID int
-	StartTime int
-	Duration  int  `sql:"DEFAULT:0"`
-	Repeating bool `sql:"DEFAULT:false"`
+	StartDate time.Time `sql:"DEFAULT:current_timestamp" gorm:"not null"`
+	EndDate   time.Time `sql:"DEFAULT:'2025-01-01 00:00:00'" gorm:"not null"`
+	Sunday    bool      `sql:"DEFAULT:false" gorm:"not null"`
+	Monday    bool      `sql:"DEFAULT:false" gorm:"not null"`
+	Tuesday   bool      `sql:"DEFAULT:false" gorm:"not null"`
+	Wednesday bool      `sql:"DEFAULT:false" gorm:"not null"`
+	Thursday  bool      `sql:"DEFAULT:false" gorm:"not null"`
+	Friday    bool      `sql:"DEFAULT:false" gorm:"not null"`
+	Saturday  bool      `sql:"DEFAULT:false" gorm:"not null"`
+	StationID int       `gorm:"not null"`
+	StartTime int       `gorm:"not null"`
+	Duration  int       `sql:"DEFAULT:0" gorm:"not null"`
+	Repeating bool      `sql:"DEFAULT:false" gorm:"not null"`
 }
 
 func CreateNewStationSchedule() {
@@ -70,12 +70,13 @@ func CheckForTask() {
 	defer db.Close()
 
 	sched := StationSchedule{}
-	//	nowTime := time.Now()
-	//	fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute())
-	db.First(&sched)
+	nowTime := time.Now()
+	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
+	db.Where(sqlFilter).First(&sched)
 	blob, err := json.Marshal(&sched)
 	fmt.Println(string(blob))
+
 	if err != nil {
-		panic("No results or broken model.")
+		panic("Something went wrong when trying to query for a scheduled task!")
 	}
 }

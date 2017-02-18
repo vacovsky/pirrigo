@@ -17,7 +17,6 @@ func GormDbConnect() {
 	if err != nil {
 		panic("failed to connect database")
 	}
-
 }
 
 func GormSetup() {

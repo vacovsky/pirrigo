@@ -14,9 +14,9 @@ func main() {
 
 	configInit()
 	GormSetup()
+	CreateNewStationSchedule()
 
 	CheckForTask()
 	//	GetAllGpio()
 	//	fmt.Println(GetCurrentTasks())
-	//	CreateNewStationSchedule()
 }

@@ -3,7 +3,8 @@ package main
 //	"fmt"
 
 type GpioPin struct {
-	GPIO  int `gorm:"primary_key"`
+	ID    int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	GPIO  int `gorm:"not null;unique"`
 	Notes string
 }
 
