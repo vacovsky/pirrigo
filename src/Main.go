@@ -15,6 +15,7 @@ func main() {
 	configInit()
 	GormSetup()
 
-	GetAllGpio()
+	CheckForTask()
+	//	GetAllGpio()
 	//	fmt.Println(GetCurrentTasks())
 }

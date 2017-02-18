@@ -30,20 +30,12 @@ func GormSetup() {
 		&Station{})
 }
 
-func JsonifyResults(input *gorm.DB) string {
-	result, _ := json.Marshal(input)
-	fmt.Println(string(result))
-	return string(result)
+func JsonifyResults(input *gorm.DB) []string {
+	var result []string = []string{}
+	r, _ := json.Marshal(input.Value)
+	result = append(result, string(r))
+	fmt.Println(string(r))
+
+	return result
+
 }
-
-//	db.Select(`SELECT id, station, duration FROM schedule
-//                        WHERE (startdate <= CAST(replace(date(NOW()), '-', '') AS UNSIGNED)
-//                                AND enddate > CAST(replace(date(NOW()), '-', '') AS UNSIGNED)))`)
-
-//sqlQuery := fmt.Sprintf(`SELECT id, station, duration FROM schedule
-//                        WHERE (startdate <= CAST(replace(date(NOW()), '-', '') AS UNSIGNED)
-//                                AND enddate > CAST(replace(date(NOW()), '-', '') AS UNSIGNED))
-//                            and %s=1
-//                            and starttime=%s`,
-//		nowTime.Weekday(),
-//		fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))

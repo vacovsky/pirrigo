@@ -7,12 +7,23 @@ type GpioPin struct {
 	Notes string
 }
 
+func GetGpioByPin() {
+	GormDbConnect()
+	defer db.Close()
+	gpio := db.Where("GPIO = ?", 4).Find(&GpioPin{}).Order("GPIO DESC")
+	JsonifyResults(gpio)
+	//	Model(&dn).Where(
+	//		"GPH = ?", gph).Where(
+	//		"SID = ?", station).UpdateColumn(DripNode{Count: count})
+}
+
 func GetAllGpio() {
 	GormDbConnect()
 	defer db.Close()
-	gpios := db.Where("GPIO > ?", 0).Find(&GpioPin{}).Order("GPIO DESC")
+	//	gpios := db.Raw("SELECT gpio FROM gpio_pins").Scan()
 
-	JsonifyResults(gpios)
+	//	for gpios.
+	//	JsonifyResults(gpios)
 	//	Model(&dn).Where(
 	//		"GPH = ?", gph).Where(
 	//		"SID = ?", station).UpdateColumn(DripNode{Count: count})
