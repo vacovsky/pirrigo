@@ -26,7 +26,6 @@ func Example() {
 
 	pin.Pull(rpio.PullUp)
 	rpio.Close()
-
 }
 
 func GpioActivator(gpio int, state bool, seconds int) {
@@ -44,19 +43,28 @@ func GpioSimulation(gpio int, state bool, seconds int) {
 		"\nDuration (seconds):", seconds)
 	fmt.Println("Active!", time.Now())
 	for seconds > 0 {
-		fmt.Println(seconds)
-
-		time.Sleep(time.Duration(seconds) * time.Second)
+		fmt.Print(string(seconds) + " ")
+		time.Sleep(time.Second)
 		seconds -= 1
 	}
 	fmt.Println("Deactivated!", time.Now())
 
 }
 
-//TODO
-
 func GpioActivate(gpio int, state bool, seconds int) {
-	pin := rpio.Pin(10)
+	pin := rpio.Pin(gpio)
 	defer rpio.Close()
-	fmt.Println(pin)
+
+	// activate gpio
+	if state {
+		pin.High()
+	} else {
+		pin.Low()
+	}
+
+	// start countdown
+	for seconds > 0 {
+		time.Sleep(time.Duration(1) * time.Second)
+		seconds -= 1
+	}
 }

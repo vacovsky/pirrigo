@@ -1,23 +1,19 @@
 package main
 
 import (
-	//	"encoding/json"
 	"fmt"
 )
 
-var VERSION string = "0.0.1"
-var err error
-
-func main() {
+func showVersion() {
 	name := "PirriGo v" + VERSION
 	fmt.Println(name)
+}
+
+func main() {
 
 	configInit()
 	GormSetup()
-	//	CreateNewStationSchedule()
-	//	CheckForTask()
-	//	GetAllGpio()
-	//	fmt.Println(GetCurrentTasks())
 
-	GpioActivator(4, true, 5)
+	go GpioActivator(4, true, 300)
+	go TaskMonitor()
 }

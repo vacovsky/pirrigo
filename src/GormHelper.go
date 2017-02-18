@@ -12,9 +12,9 @@ var db *gorm.DB
 
 func GormDbConnect() {
 
-	db, err = gorm.Open(SETTINGS.SqlDbType, CONNSTRING)
+	db, ERR = gorm.Open(SETTINGS.SqlDbType, CONNSTRING)
 	db.LogMode(SETTINGS.GormDebug)
-	if err != nil {
+	if ERR != nil {
 		panic("failed to connect database")
 	}
 }

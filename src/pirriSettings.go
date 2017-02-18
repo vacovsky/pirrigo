@@ -29,4 +29,5 @@ type Settings struct {
 	GormDebug            bool
 	ShowSettings         bool
 	SimulateGpioActivity bool
+	MonitorInterval      int
 }

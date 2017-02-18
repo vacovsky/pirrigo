@@ -57,10 +57,10 @@ func CheckForTaskRaw() {
 	result := db.Raw(sqlQuery)
 	result.Scan(&sched)
 
-	blob, err := json.Marshal(&sched)
+	blob, ERR := json.Marshal(&sched)
 	fmt.Println(string(blob))
-	if err != nil {
-		panic("No results or broken model.")
+	if ERR != nil {
+		panic(ERR.Error())
 	}
 	JsonifySqlResults(result)
 }
@@ -73,10 +73,18 @@ func CheckForTask() {
 	nowTime := time.Now()
 	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
 	db.Where(sqlFilter).First(&sched)
-	blob, err := json.Marshal(&sched)
+	blob, ERR := json.Marshal(&sched)
 	fmt.Println(string(blob))
 
-	if err != nil {
-		panic("Something went wrong when trying to query for a scheduled task!")
+	if ERR != nil {
+		panic(ERR.Error())
+	}
+}
+
+func TaskMonitor() {
+	fmt.Println("Starting monitoring at %s second interval...", SETTINGS.MonitorInterval)
+	for !KILL {
+		CheckForTask()
+		time.Sleep(time.Duration(SETTINGS.MonitorInterval) * time.Second)
 	}
 }
