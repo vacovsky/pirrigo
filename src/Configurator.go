@@ -45,7 +45,7 @@ func parseConfig(config map[string]string) {
 	SETTINGS = Settings{}
 
 	if port, ok := config["port"]; ok {
-		SETTINGS.HttpPort, err = strconv.Atoi(port)
+		SETTINGS.HttpPort = port
 	}
 	if sqldbtype, ok := config["sqldbtype"]; ok {
 		SETTINGS.SqlDbType = sqldbtype
@@ -54,7 +54,7 @@ func parseConfig(config map[string]string) {
 		SETTINGS.RedisServer = redishost
 	}
 	if redisport, ok := config["redisport"]; ok {
-		SETTINGS.RedisPort, err = strconv.Atoi(redisport)
+		SETTINGS.RedisPort = redisport
 	}
 	if sqlserver, ok := config["sqlserver"]; ok {
 		SETTINGS.SqlServer = sqlserver
@@ -72,7 +72,7 @@ func parseConfig(config map[string]string) {
 		SETTINGS.RabbitServer = rabbitserver
 	}
 	if rabbitport, ok := config["rabbitport"]; ok {
-		SETTINGS.RabbitPort, err = strconv.Atoi(rabbitport)
+		SETTINGS.RabbitPort = rabbitport
 	}
 	if rabbituser, ok := config["rabbituser"]; ok {
 		SETTINGS.RabbitUser = rabbituser
@@ -84,18 +84,33 @@ func parseConfig(config map[string]string) {
 		SETTINGS.SqlPort = sqlport
 	}
 	if gormdebug, ok := config["gormdebug"]; ok {
-		SETTINGS.GormDebug, err = strconv.ParseBool(gormdebug)
+		SETTINGS.GormDebug, ERR = strconv.ParseBool(gormdebug)
 	}
 	if showsettings, ok := config["showsettings"]; ok {
-		SETTINGS.ShowSettings, err = strconv.ParseBool(showsettings)
+		SETTINGS.ShowSettings, ERR = strconv.ParseBool(showsettings)
 	}
-	CONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
-	if err != nil {
+	if simulategpioactivity, ok := config["simulategpioactivity"]; ok {
+		SETTINGS.SimulateGpioActivity, ERR = strconv.ParseBool(simulategpioactivity)
+	}
+	if monitorinterval, ok := config["monitorinterval"]; ok {
+		SETTINGS.MonitorInterval, ERR = strconv.Atoi(monitorinterval)
+	}
+	if taskqueue, ok := config["taskqueue"]; ok {
+		SETTINGS.RabbitTaskQueue = taskqueue
+	}
+	if stopqueue, ok := config["stopqueue"]; ok {
+		SETTINGS.RabbitStopQueue = stopqueue
+	}
+	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
+	SQLCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
+	fmt.Println(SQLCONNSTRING)
+	fmt.Println(RMQCONNSTRING)
+	if ERR != nil {
 		panic("Configuration File Error - check app.config")
 	}
 }
 
 func displayConfig() {
-	message := "Server available at http://localhost:" + strconv.Itoa(SETTINGS.HttpPort)
+	message := "Server available at http://localhost:" + SETTINGS.HttpPort
 	fmt.Printf("\n" + message + "\n")
 }
