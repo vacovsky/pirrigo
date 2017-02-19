@@ -8,6 +8,8 @@ type Settings struct {
 	RabbitServer         string
 	RabbitUser           string
 	RabbitPass           string
+	RabbitTaskQueue      string
+	RabbitStopQueue      string
 	PirriUsername        string
 	PirriPassword        string
 	AdjustForWeather     bool

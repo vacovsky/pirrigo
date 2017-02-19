@@ -15,7 +15,7 @@ func failOnError(err error, msg string) {
 }
 
 func RabbitConnect() {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial(RMQCONNSTRING)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -24,6 +24,8 @@ func RabbisSend() {
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
+	ch, err := conn.Channel()
+
 	q, err := ch.QueueDeclare(
 		"hello", // name
 		false,   // durable
@@ -48,7 +50,7 @@ func RabbisSend() {
 }
 
 func RebbitReceive() {
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial(RMQCONNSTRING)
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -64,5 +66,16 @@ func RebbitReceive() {
 		false,   // no-wait
 		nil,     // arguments
 	)
+	autoAck := false
+
+	msgs, err := ch.Consume(q.Name, "", autoAck, false, false, false, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	for d := range msgs { // the d stands for Delivery
+		log.Printf(string(d.Body[:])) // or whatever you want to do with the message
+		d.Ack(false)
+	}
 	failOnError(err, "Failed to declare a queue")
 }

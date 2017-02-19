@@ -56,7 +56,7 @@ func parseConfig(config map[string]string) {
 	if redisport, ok := config["redisport"]; ok {
 		SETTINGS.RedisPort = redisport
 	}
-	if sqlserver, ok := config["sqlyserver"]; ok {
+	if sqlserver, ok := config["sqlserver"]; ok {
 		SETTINGS.SqlServer = sqlserver
 	}
 	if sqluser, ok := config["sqluser"]; ok {
@@ -95,8 +95,16 @@ func parseConfig(config map[string]string) {
 	if monitorinterval, ok := config["monitorinterval"]; ok {
 		SETTINGS.MonitorInterval, ERR = strconv.Atoi(monitorinterval)
 	}
-	RMQCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
+	if taskqueue, ok := config["taskqueue"]; ok {
+		SETTINGS.RabbitTaskQueue = taskqueue
+	}
+	if stopqueue, ok := config["stopqueue"]; ok {
+		SETTINGS.RabbitStopQueue = stopqueue
+	}
+	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
 	SQLCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
+	fmt.Println(SQLCONNSTRING)
+	fmt.Println(RMQCONNSTRING)
 	if ERR != nil {
 		panic("Configuration File Error - check app.config")
 	}

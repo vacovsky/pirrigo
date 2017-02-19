@@ -15,7 +15,7 @@ func GormDbConnect() {
 	db, ERR = gorm.Open(SETTINGS.SqlDbType, SQLCONNSTRING)
 	db.LogMode(SETTINGS.GormDebug)
 	if ERR != nil {
-		panic("failed to connect database")
+		panic(ERR.Error())
 	}
 }
 
