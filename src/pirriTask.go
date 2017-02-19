@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 type Task struct {
@@ -11,22 +12,31 @@ type Task struct {
 }
 
 func (t *Task) Log() {
-	fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
-	// TODO write to database
+	if SETTINGS.PirriDebug {
+		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
+	}
+	GormDbConnect()
+	defer db.Close()
+	db.Create(&StationHistory{
+		StationID:  t.Station.ID,
+		ScheduleID: t.StationSchedule.ID,
+		Duration:   t.StationSchedule.Duration,
+		StartTime:  time.Now(),
+	})
 }
 
 func (t *Task) Send() {
 	taskBlob, ERR := json.Marshal(&t)
 	failOnError(ERR, "Could not jsonify task.")
-
 	if SETTINGS.PirriDebug {
 		fmt.Println("Sending Task:", string(taskBlob))
 	}
-
 	rabbitSend(SETTINGS.RabbitTaskQueue, string(taskBlob))
 }
 
 func (t *Task) Execute() {
-	fmt.Println("Executing task", t.Station.ID, t.StationSchedule.StartTime)
-	// TODO Actually execute the task
+	if SETTINGS.PirriDebug {
+		fmt.Println("Executing task", t.Station.ID, t.StationSchedule.StartTime)
+	}
+	gpioActivator(t.Station.GPIO, true, t.StationSchedule.Duration)
 }

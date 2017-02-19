@@ -8,11 +8,9 @@ import (
 func reactToGpioMessage(m []byte) {
 	task := Task{}
 	json.Unmarshal(m, &task)
-	//	WG.Add(1)
 	task.Log()
-	//	go
-	gpioActivator(task.Station.GPIO, true, task.StationSchedule.Duration)
-	//	WG.Done()
+	task.Execute()
+
 }
 
 func reactToStopMessage(m []byte) {
