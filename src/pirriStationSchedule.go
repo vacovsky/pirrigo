@@ -85,7 +85,7 @@ func CheckForTasks() {
 }
 
 func TaskMonitor() {
-	fmt.Println("Starting monitoring at %s second interval...", SETTINGS.MonitorInterval)
+	fmt.Println("Starting monitoring at interval:", SETTINGS.MonitorInterval, "seconds.")
 	for !KILL {
 		CheckForTasks()
 		time.Sleep(time.Duration(SETTINGS.MonitorInterval) * time.Second)
