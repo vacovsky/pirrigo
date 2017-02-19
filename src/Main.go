@@ -12,18 +12,11 @@ func showVersion() {
 func main() {
 	configInit()
 	GormSetup()
+	createJunkData()
 	WG.Add(3)
 
-	//	t := Task{Station, ScheduleID: 4, Duration: 15}
-	//	task, _ := json.Marshal(t)
-	//	//	failOnError(ERR, ERR.Error())
-
-	// TODO this is for testing only
-	//	RabbitSend(SETTINGS.RabbitTaskQueue, string(task))
-	// end test
-
-	// Check schedule table every minute for tasks
-	go TaskMonitor()
+	// Monitor database for pre-scheduled tasks
+	go taskMonitor()
 
 	// Listen for tasks to execute
 	go rabbitReceive(SETTINGS.RabbitTaskQueue)

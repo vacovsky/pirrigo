@@ -101,10 +101,17 @@ func parseConfig(config map[string]string) {
 	if stopqueue, ok := config["stopqueue"]; ok {
 		SETTINGS.RabbitStopQueue = stopqueue
 	}
+	if pirridebug, ok := config["pirridebug"]; ok {
+		SETTINGS.PirriDebug, ERR = strconv.ParseBool(pirridebug)
+	}
+
 	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
 	SQLCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
-	fmt.Println(SQLCONNSTRING)
-	fmt.Println(RMQCONNSTRING)
+	if SETTINGS.ShowSettings {
+		fmt.Println(SQLCONNSTRING)
+		fmt.Println(RMQCONNSTRING)
+	}
+
 	if ERR != nil {
 		panic("Configuration File Error - check app.config")
 	}

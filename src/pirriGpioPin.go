@@ -18,5 +18,4 @@ func GetGpioByPin() {
 func GetAllGpio() {
 	GormDbConnect()
 	defer db.Close()
-
 }

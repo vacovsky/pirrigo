@@ -32,4 +32,5 @@ type Settings struct {
 	ShowSettings         bool
 	SimulateGpioActivity bool
 	MonitorInterval      int
+	PirriDebug           bool
 }

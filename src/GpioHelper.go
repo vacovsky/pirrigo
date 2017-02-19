@@ -17,9 +17,10 @@ func gpioActivator(gpio int, state bool, seconds int) {
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
-	fmt.Println("GPIO Sinulation starting:",
-		"\nTime:", time.Now(), "\nGPIO:", gpio,
-		"\nDesired State", state,
+	fmt.Println("GPIO Simulation starting:",
+		"\nTime:", time.Now(),
+		"\nGPIO:", gpio,
+		"\nDesired State:", state,
 		"\nDuration (seconds):", seconds)
 	fmt.Println("Active!", time.Now())
 	for seconds > 0 {
@@ -47,7 +48,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	}
 }
 
-//func Example() {
+/*func Example() {
 //	pin := rpio.Pin(10)
 
 //	pin.Output() // Output mode
@@ -66,4 +67,4 @@ func gpioActivate(gpio int, state bool, seconds int) {
 
 //	pin.Pull(rpio.PullUp)
 //	rpio.Close()
-//}
+}*/

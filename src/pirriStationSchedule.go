@@ -39,7 +39,7 @@ func CreateNewStationSchedule() {
 	db.Create(&sched)
 }
 
-func CheckForTaskRaw() {
+func checkForTaskRaw() {
 	sched := StationSchedule{}
 	nowTime := time.Now()
 
@@ -63,7 +63,7 @@ func CheckForTaskRaw() {
 	JsonifySqlResults(result)
 }
 
-func CheckForTasks() {
+func checkForTasks() {
 	GormDbConnect()
 	defer db.Close()
 
@@ -72,30 +72,28 @@ func CheckForTasks() {
 	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
 
 	db.Where(sqlFilter).Find(&scheds)
-
+	sendFoundScheduleItems(scheds)
 	if ERR != nil {
 		panic(ERR.Error())
 	}
 }
 
-func TaskMonitor() {
+func taskMonitor() {
 	fmt.Println("Starting monitoring at interval:", SETTINGS.MonitorInterval, "seconds.")
 	for !KILL {
-		CheckForTasks()
+		checkForTasks()
 		time.Sleep(time.Duration(SETTINGS.MonitorInterval) * time.Second)
 	}
 	defer WG.Done()
 }
 
-func SendFoundScheduleItems(items []StationSchedule) {
-	blob, ERR := json.Marshal(&items)
-	failOnError(ERR, "Could not jsonify task.")
-
-	fmt.Println(string(blob))
+func sendFoundScheduleItems(items []StationSchedule) {
+	GormDbConnect()
+	defer db.Close()
 
 	for i := range items {
-		//		task := Task{}
-		fmt.Println(string(i))
+		task := Task{StationSchedule: items[i]}
+		db.Where(Station{ID: task.StationSchedule.StationID}).Find(&task.Station)
+		task.Send()
 	}
-
 }
