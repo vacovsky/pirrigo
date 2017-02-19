@@ -10,10 +10,10 @@ import (
 
 func startPirriWebApp() {
 	// POSTs
-	http.HandleFunc("/formtest", test)
+	//	http.HandleFunc("/formtest", test)
 
 	// GETs
-	http.HandleFunc("/colors", Colors)
+	//	http.HandleFunc("/colors", Colors)
 	http.HandleFunc("/", Home)
 
 	// STATIC

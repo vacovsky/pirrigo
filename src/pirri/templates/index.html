@@ -1,7 +1,7 @@
 <!doctype html>
 <html ng-app="pirriweb" ng-cloak>
     <head>
-        <title>Pirri - {{version}}</title>
+        <title>PirriGo</title>
         <link rel="icon" href="static/icon.png">
         <link rel="stylesheet" href="/static/libs/bootstrap-theme.min.css">
         <link rel="stylesheet" href="/static/libs/angular-material.min.css">
@@ -27,7 +27,7 @@
     <body class="text-shadow">
         <div id="PirriControl" ng-controller="PirriControl as pc">
             <div class="made-with-love">
-                Pirri - {{version}} | Made with <i><img ng-show="beatheart" id="beatheart" src="static/heart.svg"><img ng-show="!beatheart" id="stillheart" src="static/stillheart.svg"></i> by
+                PirriGo | Made with <i><img ng-show="beatheart" id="beatheart" src="static/heart.svg"><img ng-show="!beatheart" id="stillheart" src="static/stillheart.svg"></i> by
                 <a target="_blank" href="">Joe Vacovsky Jr.</a>
             </div>
             <div id="station-schedules">
@@ -130,8 +130,8 @@
                             startDate: moment().format("YYYY-MM-DD"),
                             timeFormat: 'HH:mm',
                             columnDateFormat: 'dddd, DD MMM',
-                            minTime: '{{ mincaltime }}',
-                            maxTime: '{{ maxcaltime }}',
+                            minTime: '',
+                            maxTime: '',
                             slotDuration: 30,
                             timeGranularity: 30,
                             dayClick: function(el, startTime) {
@@ -143,7 +143,7 @@
                             angular.element(document.getElementById('PirriControl')).scope().pc.mapModelForSchedEditFromCalClick(eventId);
                             angular.element(document.getElementById('PirriControl')).scope().$apply();
                             },
-                            events: {{ caldata | safe }},
+                            events: undefined,
                             overlapColor: '#FF0',
                             overlapTextColor: '#000',
                             overlapTitle: 'Multiple'

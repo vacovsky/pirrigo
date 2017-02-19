@@ -17,16 +17,12 @@ func main() {
 
 	// Start the Web application for management of schedule etc.
 	go startPirriWebApp()
-
 	// Monitor database for pre-scheduled tasks
 	go startTaskMonitor()
-
 	// Listen for tasks to execute
 	go rabbitReceive(SETTINGS.RabbitTaskQueue)
-
 	// Listen for stop commands
 	go rabbitReceive(SETTINGS.RabbitStopQueue)
-
-	// cleanly exit after all goroutines are finished
+	// Cleanly exit after all goroutines are finished
 	WG.Wait()
 }
