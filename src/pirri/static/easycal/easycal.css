@@ -1,0 +1,61 @@
+.easycal,.easycal table{
+	width: 100%;
+	table-layout: fixed;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+
+.easycal{
+	border: 1px solid #CCC;
+}
+
+.easycal table.ec-head-table{
+	border-bottom: 1px solid #CCC;
+}
+
+.easycal table.ec-head-table tr{
+	height: 40px;
+}
+
+.easycal table.ec-head-table tr td{
+	border-left: 1px solid #CCC;
+	text-align: center;
+}
+
+.easycal table.ec-head-table tr td:FIRST-CHILD{
+	border-left: 0;
+	width: 50px;
+}
+
+.easycal table.ec-time-grid-table tr td{
+	border-left: 1px solid #CCC;
+}
+
+.easycal table.ec-time-grid-table tr td:FIRST-CHILD{
+	border-left: 0;
+	width: 50px;
+}
+
+.easycal table.ec-time-grid-table tr td .table-cell{
+	height: 36px;
+	max-height: 36px;
+	border-top: 1px solid #CCC;
+	text-align: center;
+}
+
+.easycal table.ec-time-grid-table tr td .table-cell:FIRST-CHILD{
+	border-top: 0;
+}
+
+.easycal table.ec-time-grid-table tr td .table-cell.ec-slot{
+	cursor: pointer;
+}
+
+.easycal table.ec-time-grid-table .table-cell .ec-time-range{
+	font-size: 10px;
+	padding-bottom: 3px;
+}
+
+.easycal table.ec-time-grid-table tr td .ec-slot .ec-minor-slot:FIRST-CHILD{
+	border-top: 0 !important;
+}
