@@ -16,7 +16,7 @@ type Settings struct {
 	GpioOffState         int // 1 or 0
 	UseNewRelic          bool
 	UtcOffset            int
-	HttpPort             int
+	HttpPort             string
 	SqlDbType            string
 	SqlServer            string
 	SqlUser              string
@@ -24,8 +24,8 @@ type Settings struct {
 	SqlPort              string
 	SqlDbName            string
 	RedisServer          string
-	RedisPort            int
-	RabbitPort           int
+	RedisPort            string
+	RabbitPort           string
 	GormDebug            bool
 	ShowSettings         bool
 	SimulateGpioActivity bool

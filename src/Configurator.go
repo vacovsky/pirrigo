@@ -45,7 +45,7 @@ func parseConfig(config map[string]string) {
 	SETTINGS = Settings{}
 
 	if port, ok := config["port"]; ok {
-		SETTINGS.HttpPort, ERR = strconv.Atoi(port)
+		SETTINGS.HttpPort = port
 	}
 	if sqldbtype, ok := config["sqldbtype"]; ok {
 		SETTINGS.SqlDbType = sqldbtype
@@ -54,9 +54,9 @@ func parseConfig(config map[string]string) {
 		SETTINGS.RedisServer = redishost
 	}
 	if redisport, ok := config["redisport"]; ok {
-		SETTINGS.RedisPort, ERR = strconv.Atoi(redisport)
+		SETTINGS.RedisPort = redisport
 	}
-	if sqlserver, ok := config["sqlserver"]; ok {
+	if sqlserver, ok := config["sqlyserver"]; ok {
 		SETTINGS.SqlServer = sqlserver
 	}
 	if sqluser, ok := config["sqluser"]; ok {
@@ -72,7 +72,7 @@ func parseConfig(config map[string]string) {
 		SETTINGS.RabbitServer = rabbitserver
 	}
 	if rabbitport, ok := config["rabbitport"]; ok {
-		SETTINGS.RabbitPort, ERR = strconv.Atoi(rabbitport)
+		SETTINGS.RabbitPort = rabbitport
 	}
 	if rabbituser, ok := config["rabbituser"]; ok {
 		SETTINGS.RabbitUser = rabbituser
@@ -95,14 +95,14 @@ func parseConfig(config map[string]string) {
 	if monitorinterval, ok := config["monitorinterval"]; ok {
 		SETTINGS.MonitorInterval, ERR = strconv.Atoi(monitorinterval)
 	}
-
-	CONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
+	RMQCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
+	SQLCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
 	if ERR != nil {
 		panic("Configuration File Error - check app.config")
 	}
 }
 
 func displayConfig() {
-	message := "Server available at http://localhost:" + strconv.Itoa(SETTINGS.HttpPort)
+	message := "Server available at http://localhost:" + SETTINGS.HttpPort
 	fmt.Printf("\n" + message + "\n")
 }
