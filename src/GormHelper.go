@@ -36,7 +36,5 @@ func JsonifySqlResults(input *gorm.DB) []string {
 	r, _ := json.Marshal(input.Value)
 	result = append(result, string(r))
 	fmt.Println(string(r))
-
 	return result
-
 }

@@ -1,7 +1,15 @@
 package main
 
+import (
+	"fmt"
+)
+
 type Task struct {
-	StationID  int
-	ScheduleID int
-	Duration   int
+	Station         Station         //`gorm:"ForeignKey:Station"`
+	StationSchedule StationSchedule //`gorm:"ForeignKey:StationSchedule"`
+}
+
+func (t *Task) Log() {
+	fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
+	// TODO write to database
 }

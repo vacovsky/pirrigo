@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -13,18 +12,24 @@ func showVersion() {
 func main() {
 	configInit()
 	GormSetup()
+	WG.Add(3)
 
-	t := Task{StationID: 23, ScheduleID: 4, Duration: 15}
-	task, _ := json.Marshal(t)
-	//	failOnError(ERR, ERR.Error())
+	//	t := Task{Station, ScheduleID: 4, Duration: 15}
+	//	task, _ := json.Marshal(t)
+	//	//	failOnError(ERR, ERR.Error())
 
-	RabbitSend(SETTINGS.RabbitTaskQueue, string(task))
+	// TODO this is for testing only
+	//	RabbitSend(SETTINGS.RabbitTaskQueue, string(task))
+	// end test
 
-	WG.Add(4)
-	go GpioActivator(4, true, 300)
+	// Check schedule table every minute for tasks
 	go TaskMonitor()
-	go RabbitReceive(SETTINGS.RabbitTaskQueue)
-	go RabbitReceive(SETTINGS.RabbitStopQueue)
+
+	// Listen for tasks to execute
+	go rabbitReceive(SETTINGS.RabbitTaskQueue)
+
+	// Listen for stop commands
+	go rabbitReceive(SETTINGS.RabbitStopQueue)
 
 	// cleanly exit after all goroutines are finished
 	WG.Wait()

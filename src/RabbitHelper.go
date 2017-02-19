@@ -8,14 +8,15 @@ import (
 
 var conn *amqp.Connection
 
-func RabbitConnect() {
+func rabbitConnect() {
 	conn, ERR = amqp.Dial(RMQCONNSTRING)
 	failOnError(ERR, "Failed to connect to RabbitMQ")
-
 }
-func RabbitSend(queueName string, body string) {
-	RabbitConnect()
+
+func rabbitSend(queueName string, body string) {
+	rabbitConnect()
 	defer conn.Close()
+
 	fmt.Println("Sending", body, "to", queueName)
 	ch, ERR := conn.Channel()
 
@@ -41,12 +42,12 @@ func RabbitSend(queueName string, body string) {
 	failOnError(ERR, "Failed to publish a message")
 }
 
-func RabbitReceive(queueName string) {
-	for {
-		conn, ERR := amqp.Dial(RMQCONNSTRING)
-		failOnError(ERR, "Failed to connect to RabbitMQ")
-		defer conn.Close()
+func rabbitReceive(queueName string) {
+	rabbitConnect()
+	defer conn.Close()
 
+	for {
+		failOnError(ERR, "Failed to connect to RabbitMQ")
 		ch, ERR := conn.Channel()
 		failOnError(ERR, "Failed to open a channel")
 		defer ch.Close()
@@ -67,19 +68,20 @@ func RabbitReceive(queueName string) {
 		}
 
 		for d := range msgs { // the d stands for Delivery
-			//			log.Printf(string(d.Body[:])) // or whatever you want to do with the message
-			//			d.Ack(false)
-			//			if queueName == SETTINGS.RabbitStopQueue {
-			//				KILL = strconv.ParseBool(d.Body["kill"])
-			//			}
 			fmt.Println(string(d.Body[:]))
+			messageHandler(queueName, d.Body)
 		}
 		failOnError(ERR, "Failed to declare a queue")
 	}
 }
 
-//{
-//                            'sid': task[1],
-//                            'schedule_id': task[0],
-//                            'duration': task[2]
-//                        }
+func messageHandler(queueName string, message []byte) {
+	if queueName == SETTINGS.RabbitStopQueue {
+		fmt.Println(queueName, string(message[:]))
+		reactToStopMessage(message)
+	}
+	if queueName == SETTINGS.RabbitTaskQueue {
+		fmt.Println(queueName, message)
+		reactToGpioMessage(message)
+	}
+}

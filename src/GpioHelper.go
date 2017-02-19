@@ -7,37 +7,16 @@ import (
 	"github.com/stianeikeland/go-rpio"
 )
 
-func Example() {
-	pin := rpio.Pin(10)
-
-	pin.Output() // Output mode
-	pin.High()   // Set pin High
-	pin.Low()    // Set pin Low
-	pin.Toggle() // Toggle pin (Low -> High -> Low)
-
-	pin.Input()       // Input mode
-	res := pin.Read() // Read state from pin (High / Low)
-	fmt.Println(res)
-	pin.Mode(rpio.Output) // Alternative syntax
-	pin.Write(rpio.High)  // Alternative syntax
-	pin.PullUp()
-	pin.PullDown()
-	pin.PullOff()
-
-	pin.Pull(rpio.PullUp)
-	rpio.Close()
-}
-
-func GpioActivator(gpio int, state bool, seconds int) {
+func gpioActivator(gpio int, state bool, seconds int) {
 	if SETTINGS.SimulateGpioActivity {
-		GpioSimulation(gpio, state, seconds)
+		gpioSimulation(gpio, state, seconds)
 	} else {
-		GpioActivate(gpio, state, seconds)
+		gpioActivate(gpio, state, seconds)
 	}
 	defer WG.Done()
 }
 
-func GpioSimulation(gpio int, state bool, seconds int) {
+func gpioSimulation(gpio int, state bool, seconds int) {
 	fmt.Println("GPIO Sinulation starting:",
 		"\nTime:", time.Now(), "\nGPIO:", gpio,
 		"\nDesired State", state,
@@ -50,7 +29,7 @@ func GpioSimulation(gpio int, state bool, seconds int) {
 	fmt.Println("Deactivated!", time.Now())
 }
 
-func GpioActivate(gpio int, state bool, seconds int) {
+func gpioActivate(gpio int, state bool, seconds int) {
 	pin := rpio.Pin(gpio)
 	defer rpio.Close()
 
@@ -67,3 +46,24 @@ func GpioActivate(gpio int, state bool, seconds int) {
 		seconds -= 1
 	}
 }
+
+//func Example() {
+//	pin := rpio.Pin(10)
+
+//	pin.Output() // Output mode
+//	pin.High()   // Set pin High
+//	pin.Low()    // Set pin Low
+//	pin.Toggle() // Toggle pin (Low -> High -> Low)
+
+//	pin.Input()       // Input mode
+//	res := pin.Read() // Read state from pin (High / Low)
+//	fmt.Println(res)
+//	pin.Mode(rpio.Output) // Alternative syntax
+//	pin.Write(rpio.High)  // Alternative syntax
+//	pin.PullUp()
+//	pin.PullDown()
+//	pin.PullOff()
+
+//	pin.Pull(rpio.PullUp)
+//	rpio.Close()
+//}
