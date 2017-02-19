@@ -65,15 +65,18 @@ func CheckForTaskRaw() {
 	JsonifySqlResults(result)
 }
 
-func CheckForTask() {
+func CheckForTasks() {
 	GormDbConnect()
 	defer db.Close()
 
-	sched := StationSchedule{}
+	scheds := []StationSchedule{}
+
 	nowTime := time.Now()
 	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
-	db.Where(sqlFilter).First(&sched)
-	blob, ERR := json.Marshal(&sched)
+
+	db.Where(sqlFilter).Find(&scheds)
+	blob, ERR := json.Marshal(&scheds)
+
 	fmt.Println(string(blob))
 
 	if ERR != nil {

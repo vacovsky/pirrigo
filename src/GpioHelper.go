@@ -44,12 +44,10 @@ func GpioSimulation(gpio int, state bool, seconds int) {
 		"\nDuration (seconds):", seconds)
 	fmt.Println("Active!", time.Now())
 	for seconds > 0 {
-		fmt.Print(string(seconds) + " ")
 		time.Sleep(time.Second)
 		seconds -= 1
 	}
 	fmt.Println("Deactivated!", time.Now())
-
 }
 
 func GpioActivate(gpio int, state bool, seconds int) {
