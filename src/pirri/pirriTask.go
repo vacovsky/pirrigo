@@ -36,7 +36,7 @@ func (t *Task) Send() {
 
 func (t *Task) Execute() {
 	if SETTINGS.PirriDebug {
-		fmt.Println("Executing task", t.Station.ID, t.StationSchedule.StartTime)
+		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
 	}
 	gpioActivator(t.Station.GPIO, true, t.StationSchedule.Duration)
 }

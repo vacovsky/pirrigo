@@ -10,7 +10,6 @@ func reactToGpioMessage(m []byte) {
 	json.Unmarshal(m, &task)
 	task.Log()
 	task.Execute()
-
 }
 
 func reactToStopMessage(m []byte) {

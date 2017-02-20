@@ -4,7 +4,7 @@ import (
 	"fmt"
 	//	"io"
 	"net/http"
-	//	"runtime"
+	"runtime"
 )
 
 func startPirriWebApp() {
@@ -55,6 +55,11 @@ func startPirriWebApp() {
 	preParseTemplates()
 	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HttpPort, nil))
+}
+
+func logTraffic() string {
+	pc, _, _, _ := runtime.Caller(1)
+	return runtime.FuncForPC(pc).Name()
 }
 
 func preParseTemplates() {
