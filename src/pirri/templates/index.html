@@ -84,14 +84,14 @@
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
                                     <tr ng-repeat="station in stations" ng-hide="showSearchResults">
-                                        <td class="col-md-1"><a > {[station.sid]} <span ng-click="pc.setEditingStationInfo(station.sid, station.gpio_pin, station.notes); pc.setPage('editstation')" class="glyphicon glyphicon-cog"></span></a></td>
-                                        <td class="col-md-3">{[pc.prettyTime(lastStationRunHash[station.sid])]}</td>
-                                        <td class="col-md-3">{[pc.prettyTime(nextStationRunHash[station.sid].next_datetime)]} for {[nextStationRunHash[station.sid].duration / 60]} min</td>
-                                        <td class="col-md-1">{[station.gpio_pin]}</td>
+                                        <td class="col-md-1"><a > {[station.ID]} <span ng-click="pc.setEditingStationInfo(station.sid, station.gpio_pin, station.notes); pc.setPage('editstation')" class="glyphicon glyphicon-cog"></span></a></td>
+                                        <td class="col-md-3">{[pc.prettyTime(lastStationRunHash[station.ID])]}</td>
+                                        <td class="col-md-3">{[pc.prettyTime(nextStationRunHash[station.ID].next_datetime)]} for {[nextStationRunHash[station.ID].duration / 60]} min</td>
+                                        <td class="col-md-1">{[station.GPIO]}</td>
                                         <td class="col-md-3">
-                                            <span ng-hide="stationModel.sid == station.sid">{[station.notes]}</span>
-                                            <div class="form-group" ng-show="stationModel.id == station.id">
-                                                <input class="form-control" ng-show="stationModel.sid == station.sid" type="text" ng-model="stationModel.notes">
+                                            <span ng-hide="stationModel.tempID == station.ID">{[station.Notes]}</span>
+                                            <div class="form-group" ng-show="stationModel.ID == station.ID">
+                                                <input class="form-control" ng-show="stationModel.tempID == station.ID" type="text" ng-model="stationModel.Notes">
                                             </div>
                                             <div class="dropdown" ng-show="singleRunModel.sid == station.sid">
                                                 <button ng-hide="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
@@ -102,21 +102,21 @@
                                             </div>
                                         </td>
                                         <td class="col-md-1">
-                                            <a><span ng-hide="stationModel.sid == station.sid" ng-click="pc.setEditingStationInfo(station)" class="glyphicon glyphicon-pencil"></span></a>
-                                            <a><span ng-show="stationModel.sid == station.sid" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
+                                            <a><span ng-hide="stationModel.tempID == station.ID" ng-click="pc.setEditingStationInfo(station)" class="glyphicon glyphicon-pencil"></span></a>
+                                            <a><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
                                             <a><span class="glyphicon glyphicon-time"></span></a>
                                             <a><span class="glyphicon glyphicon-stats"></span></a>
-                                            <a><span ng-hide="singleRunModel.sid == station.sid"" ng-click="singleRunModel.sid = station.sid; singleRunModel.sid = station.sid;" class="glyphicon glyphicon-play"></span></a>
-                                            <a><span ng-show="singleRunModel.sid == station.sid"" ng-click="singleRunModel.sid = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
+                                            <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                            <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                         </td>
                                     </tr>
                                     <tr ng-repeat="station in searchResults" ng-show="showSearchResults">
-                                        <td><a > {[station.sid]} <span class="glyphicon glyphicon-cog"></span></a></td>
+                                        <td><a > {[station.ID]} <span class="glyphicon glyphicon-cog"></span></a></td>
                                         <td>???????</td>
                                         <td>???????</td>
-                                        <td>{[station.gpio_pin]}</td>
+                                        <td>{[station.GPIO]}</td>
                                         <td>
-                                            {[station.notes]}
+                                            {[station.Notes]}
                                         </td>
                                         <td><a ><span class="glyphicon glyphicon-time"></span></a></td>
                                         <td><a ><span class="glyphicon glyphicon-stats"></span></a></td>
@@ -132,7 +132,7 @@
                     <!-- START TESTING CAL -->
                     <div id="navpane" ng-show="currentPage == 'mycal'" >
                         <div id="calpane" class="mycal">
-                            <script>
+                            <!--script>
                             $('.mycal').easycal({
                             startDate: moment().format("YYYY-MM-DD"),
                             timeFormat: 'HH:mm',
@@ -155,7 +155,7 @@
                             overlapTextColor: '#000',
                             overlapTitle: 'Multiple'
                             });
-                            </script>
+                            </script-->
                         </div>
                     </div>
                     <!-- END TESTING CAL -->
@@ -302,7 +302,7 @@
                                     <span class="caret"></span> <a  ng-click="show_gpio_diagram = !show_gpio_diagram">[show diagram]</a>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li ng-repeat="gpio in gpio_pins" ng-click="edit_station_model.GPIO = gpio.gpio"><a >{[gpio.gpio]} - {[gpio.notes]}</a></li>
+                                        <li ng-repeat="gpio in gpio_pins" ng-click="edit_station_model.GPIO = gpio.gpio"><a >{[gpio.GPIO]} - {[gpio.Notes]}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -343,7 +343,7 @@
                                     <span class="caret"></span> <a  ng-click="show_gpio_diagram = !show_gpio_diagram">[show diagram]</a>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li ng-repeat="gpio in gpio_pins" ng-click="pc.setGPIO(gpio.gpio)"><a >{[gpio.gpio]} - {[gpio.notes]}</a></li>
+                                        <li ng-repeat="gpio in gpio_pins" ng-click="pc.setGPIO(gpio.gpio)"><a >{[gpio.GPIO]} - {[gpio.Notes]}</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -389,8 +389,8 @@
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
                                     <tr ng-repeat="node in dripnodes">
-                                        <td class="col-md-1">{[node.sid]}</td>
-                                        <td class="col-md-4">{[node.notes]}</td>
+                                        <td class="col-md-1">{[node.ID]}</td>
+                                        <td class="col-md-4">{[node.Notes]}</td>
                                         <td class="col-md-1">{[node.run_mins]}</td>
                                         <td class="col-md-1">{[node.total_gph  | number:2]}</td>
                                         <td class="col-md-2">{[node.total_gph / 60 | number:2]} gal per min / ${[ (node.total_gph / 60) * watercost | number:2]}</td>
@@ -431,7 +431,7 @@
                                                 <div class="dropdown" ng-show="waterNodeModel.id == node.id">
                                                     <button ng-show="waterNodeModel.sid != undefined && (waterNodeModel.id == node.id)" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{[node.sid]}</button>
                                                     <ul class="dropdown-menu">
-                                                        <li ng-repeat="station in stations" ng-click="waterNodeModel.sid = station.sid;"><a >{[station.sid]} - {[station.notes]}</a></li>
+                                                        <li ng-repeat="station in stations" ng-click="waterNodeModel.sid = station.sid;"><a >{[station.ID]} - {[station.Notes]}</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
