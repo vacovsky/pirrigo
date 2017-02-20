@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/davecgh/go-spew/spew"
 )
@@ -42,12 +43,12 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
+	stationId, err := strconv.Atoi(req.URL.Query()["stationid"][0])
 
 	GormDbConnect()
 	defer db.Close()
 
-	db.Where("id = ?")
+	db.Where("id = ?", stationId).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {
 		fmt.Println(err, err.Error())
