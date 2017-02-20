@@ -28,17 +28,12 @@
         $scope.calEvents = []
         this.getCalEvents = function() {
             $scope.beatheart = true;
-            $http.get('/schedule/cal')
-                .success(function(data, status, headers, config) {
-                    $scope.calEvents = data.schedule;
-                    //$scope.$apply();
-                })
-                .error(function(data, status, headers, config) {})
+            $http.get('/schedule/get')
                 .then(function(response) {
-                    $scope.beatheart = false;
+					$scope.calEvents = data.schedule;
+					$scope.beatheart = false;
                 })
             console.log($scope.calEvents)
-                //loadCalendar();
         };
 
         $scope.weatherData = {};
@@ -119,12 +114,11 @@
 
         this.getUsageDataForChart1 = function() {
             $http.get('/stats?id=1')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.chartData1.labels = data.chartData.labels;
                     $scope.chartData1.series = data.chartData.series;
                     $scope.chartData1.data = data.chartData.data;
                 })
-                .error(function(data, status, headers, config) {})
 
             // console.log($scope.chartData1)
             $scope.chartData1.options = {
@@ -152,12 +146,11 @@
 
         this.getUsageDataForChart2 = function() {
             $http.get('/stats?id=2')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.chartData2.labels = data.chartData.labels;
                     $scope.chartData2.series = data.chartData.series;
                     $scope.chartData2.data = data.chartData.data;
                 })
-                .error(function(data, status, headers, config) {})
             $scope.chartData2.options = {
                 scaleStartValue: 0,
                 title: {
@@ -175,12 +168,11 @@
 
         this.getUsageDataForChart3 = function() {
             $http.get('/stats?id=3')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.chartData3.labels = data.chartData.labels;
                     $scope.chartData3.series = data.chartData.series;
                     $scope.chartData3.data = data.chartData.data;
                 })
-                .error(function(data, status, headers, config) {})
             $scope.chartData3.options = {
                 scaleStartValue: 0,
                 title: {
@@ -197,12 +189,11 @@
 
         this.getUsageDataForChart4 = function() {
             $http.get('/stats?id=4')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.chartData4.labels = data.chartData.labels;
                     $scope.chartData4.series = data.chartData.series;
                     $scope.chartData4.data = data.chartData.data;
                 })
-                .error(function(data, status, headers, config) {})
             $scope.chartData4.options = {
                 scaleStartValue: 0,
                 title: {
@@ -397,13 +388,12 @@
         };
         this.loadStations = function() {
             $http.get('/station/list')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.stations = data.stations;
                     angular.forEach($scope.stations, function(value, key) {
                         value['cal_color'] = $scope.randomColor();
                     })
                 })
-                .error(function(data, status, headers, config) {})
         };
 
         this.loadSettings = function() {
@@ -430,19 +420,17 @@
 
         this.loadGPIO = function() {
             $http.get('/gpio/list')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.gpio_pins = data.gpio_pins;
                 })
-                .error(function(data, status, headers, config) {})
         };
 
         this.loadHistory = function(station) {
             var query = '?station=' + station + '&earliest=-168';
             $http.get('/history' + query)
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.history = data.history;
                 })
-                .error(function(data, status, headers, config) {})
         };
 
         this.prettyTime = function(uglyTime) {
@@ -456,30 +444,27 @@
         }
         this.getSchedule = function() {
             $http.get('/schedule')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.schedule = data.schedule;
                 })
-                .error(function(data, status, headers, config) {})
         };
 
         $scope.lastStationRunHash = {}
         this.getLastStationRun = function() {
             $http.get('/station/lastruns')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.lastStationRunHash = data.lastrunlist;
                 })
-                .error(function(data, status, headers, config) {})
                 // console.log($scope.lastStationRunHash);
         };
 
         $scope.nextStationRunHash = {}
         this.getNextStationRun = function() {
             $http.get('/station/nextruns')
-                .success(function(data, status, headers, config) {
+                .then(function(data, status, headers, config) {
                     $scope.nextStationRunHash = data.nextrunlist;
                 })
-                .error(function(data, status, headers, config) {})
-                // console.log($scope.nextStationRunHash);
+                
         };
 
         $scope.waterNodeEntries = [];
