@@ -2,42 +2,84 @@ package main
 
 import (
 	"fmt"
-	"html/template"
+	//	"html/template"
 	//	"io"
 	"net/http"
-	"runtime"
+	//	"runtime"
 )
 
 func startPirriWebApp() {
-	// POSTs
-	//	http.HandleFunc("/formtest", test)
+	//	templatePath := "templates/"
 
-	// GETs
-	//	http.HandleFunc("/colors", Colors)
-	http.HandleFunc("/", Home)
+	// Station
+	http.HandleFunc("/station/add", stationAdd)
+	http.HandleFunc("/station/edit", stationEdit)
+	http.HandleFunc("/station", stationGet)
 
-	// STATIC
+	//	// Schedule
+	//	http.HandleFunc("/schedule/add", Home)
+	//	http.HandleFunc("/schedule/edit", Home)
+	//	http.HandleFunc("/schedule", Home)
+
+	//	// History
+	//	http.HandleFunc("/history", Home)
+	//	http.HandleFunc("/history/add", Home)
+	//	http.HandleFunc("/history/edit", Home)
+
+	//	// Settings
+	//	http.HandleFunc("/settings", Home)
+	//	http.HandleFunc("/settings/add", Home)
+	//	http.HandleFunc("/settings/edit", Home)
+
+	//	// GPIO
+	//	http.HandleFunc("/gpio", Home)
+	//	http.HandleFunc("/gpio/add", Home)
+	//	http.HandleFunc("/gpio/edit", Home)
+
+	//	// Drip Nodes
+	//	http.HandleFunc("/dropnodes", Home)
+	//	http.HandleFunc("/dropnodes/add", Home)
+	//	http.HandleFunc("/dropnodes/edit", Home)
+
+	// Static content
 	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, r.URL.Path[1:])
 	})
 
-	// SERVER
+	// Home
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "templates/index.html")
+	})
+	//	http.HandleFunc("/", Home)
+
+	preParseTemplates()
+	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HttpPort, nil))
 }
 
-func Home(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(logTraffic())
-	t := template.New("templates/index.html")
-	t, _ = template.ParseFiles("templates/index.html") // Parse template file.
-	t.Execute(w, nil)
+func preParseTemplates() {
+	//	tmplPath = TmplBasePath + tmplPath
+	//	template.Must(template.ParseFiles(tmplPath))
+	//	t, _ = template.ParseFiles("templates/index.html") // Parse template file.
 }
 
-func Colors(w http.ResponseWriter, req *http.Request) {
+func Home(w http.ResponseWriter, req *http.Request) {
+	//	fmt.Println(logTraffic())
+
+	//	t.Execute(w, nil)
+}
+
+func stationGet(w http.ResponseWriter, req *http.Request) {
 	fmt.Println(logTraffic())
 	//	io.WriteString(w, LoadAvailableColors())
 }
 
-func logTraffic() string {
-	pc, _, _, _ := runtime.Caller(1)
-	return runtime.FuncForPC(pc).Name()
+func stationAdd(w http.ResponseWriter, req *http.Request) {
+	fmt.Println(logTraffic())
+	//	io.WriteString(w, LoadAvailableColors())
+}
+
+func stationEdit(w http.ResponseWriter, req *http.Request) {
+	fmt.Println(logTraffic())
+	//	io.WriteString(w, LoadAvailableColors())
 }
