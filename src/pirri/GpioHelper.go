@@ -45,6 +45,12 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds -= 1
 	}
+
+	if !state {
+		pin.High()
+	} else {
+		pin.Low()
+	}
 }
 
 /*func Example() {

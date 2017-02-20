@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-	//	"io"
 	"net/http"
 	"runtime"
 )
@@ -11,10 +9,11 @@ func startPirriWebApp() {
 	//	templatePath := "templates/"
 
 	// Station
-	http.HandleFunc("/station/add", stationAdd)
-	http.HandleFunc("/station/run", stationRun)
-	http.HandleFunc("/station/edit", stationEdit)
-	http.HandleFunc("/station", stationGet)
+	//	http.HandleFunc("/station/add", stationAdd)
+	http.HandleFunc("/station/run", stationRunWeb)
+	//	http.HandleFunc("/station/edit", stationEdit)
+	http.HandleFunc("/station/all", stationAllWeb)
+	http.HandleFunc("/station", stationGetWeb)
 
 	//	// Schedule
 	//	http.HandleFunc("/schedule/add", Home)
@@ -22,7 +21,7 @@ func startPirriWebApp() {
 	//	http.HandleFunc("/schedule", Home)
 
 	//	// History
-	//	http.HandleFunc("/history", Home)
+	http.HandleFunc("/history", historyAllWeb)
 	//	http.HandleFunc("/history/add", Home)
 	//	http.HandleFunc("/history/edit", Home)
 
@@ -50,9 +49,7 @@ func startPirriWebApp() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "templates/index.html")
 	})
-	//	http.HandleFunc("/", Home)
 
-	preParseTemplates()
 	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HttpPort, nil))
 }
@@ -60,31 +57,4 @@ func startPirriWebApp() {
 func logTraffic() string {
 	pc, _, _, _ := runtime.Caller(1)
 	return runtime.FuncForPC(pc).Name()
-}
-
-func preParseTemplates() {
-	//	tmplPath = TmplBasePath + tmplPath
-	//	template.Must(template.ParseFiles(tmplPath))
-	//	t, _ = template.ParseFiles("templates/index.html") // Parse template file.
-}
-
-func Home(w http.ResponseWriter, req *http.Request) {
-	//	fmt.Println(logTraffic())
-
-	//	t.Execute(w, nil)
-}
-
-func stationGet(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(logTraffic())
-	//	io.WriteString(w, LoadAvailableColors())
-}
-
-func stationAdd(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(logTraffic())
-	//	io.WriteString(w, LoadAvailableColors())
-}
-
-func stationEdit(w http.ResponseWriter, req *http.Request) {
-	fmt.Println(logTraffic())
-	//	io.WriteString(w, LoadAvailableColors())
 }
