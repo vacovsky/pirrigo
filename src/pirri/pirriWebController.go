@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	//	"html/template"
 	//	"io"
 	"net/http"
 	//	"runtime"
@@ -13,6 +12,7 @@ func startPirriWebApp() {
 
 	// Station
 	http.HandleFunc("/station/add", stationAdd)
+	http.HandleFunc("/station/run", stationRun)
 	http.HandleFunc("/station/edit", stationEdit)
 	http.HandleFunc("/station", stationGet)
 
@@ -37,9 +37,9 @@ func startPirriWebApp() {
 	//	http.HandleFunc("/gpio/edit", Home)
 
 	//	// Drip Nodes
-	//	http.HandleFunc("/dropnodes", Home)
-	//	http.HandleFunc("/dropnodes/add", Home)
-	//	http.HandleFunc("/dropnodes/edit", Home)
+	//	http.HandleFunc("/dropnode", Home)
+	//	http.HandleFunc("/dropnodesadd", Home)
+	//	http.HandleFunc("/dropnode/edit", Home)
 
 	// Static content
 	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {

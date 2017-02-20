@@ -7,8 +7,8 @@ import (
 )
 
 type Task struct {
-	Station         Station         //`gorm:"ForeignKey:Station"`
-	StationSchedule StationSchedule //`gorm:"ForeignKey:StationSchedule"`
+	Station         Station         `json:"station`         //`gorm:"ForeignKey:Station"`
+	StationSchedule StationSchedule `json:"stationSchedule` //`gorm:"ForeignKey:StationSchedule"`
 }
 
 func (t *Task) Log() {

@@ -1,7 +1,8 @@
 package main
 
-type test_struct struct {
-	Test string `json:"testval"`
+type ManualStationRun struct {
+	StationID int //`json:"StationID"`
+	Duration  int //`json:"Duration"`
 }
 
 //$scope.chartData1 = {};

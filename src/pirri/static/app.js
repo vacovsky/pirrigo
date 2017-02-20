@@ -30,7 +30,7 @@
             $scope.beatheart = true;
             $http.get('/schedule/get')
                 .then(function(response) {
-					$scope.calEvents = data.schedule;
+					$scope.calEvents = response.schedule;
 					$scope.beatheart = false;
                 })
             console.log($scope.calEvents)

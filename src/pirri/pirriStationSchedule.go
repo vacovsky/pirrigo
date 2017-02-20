@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	//	"encoding/json"
 	"fmt"
 	"strconv"
 	"time"
@@ -39,30 +39,6 @@ func CreateNewStationSchedule() {
 	defer db.Close()
 
 	db.Create(&sched)
-}
-
-func checkForTaskRaw() {
-	sched := StationSchedule{}
-	nowTime := time.Now()
-
-	date, now := nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute())
-	fmt.Println(date, now)
-	GormDbConnect()
-	defer db.Close()
-	sqlQuery := fmt.Sprintf(`SELECT * FROM station_schedules
-                        WHERE (start_date <= CAST(replace(date(NOW()), '-', '') AS UNSIGNED)
-                                AND end_date > CAST(replace(date(NOW()), '-', '') AS UNSIGNED))
-                            #and %s=1
-                            and start_time=%s`,
-		nowTime.Weekday(),
-		fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
-	result := db.Raw(sqlQuery)
-	result.Scan(&sched)
-
-	blob, ERR := json.Marshal(&sched)
-	fmt.Println(string(blob))
-	failOnError(ERR, "Could not jsonify task.")
-	JsonifySqlResults(result)
 }
 
 func checkForTasks() {
