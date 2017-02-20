@@ -93,7 +93,7 @@
                                             <div class="form-group" ng-show="stationModel.ID == station.ID">
                                                 <input class="form-control" ng-show="stationModel.tempID == station.ID" type="text" ng-model="stationModel.Notes">
                                             </div>
-                                            <div class="dropdown" ng-show="singleRunModel.sid == station.sid">
+                                            <div class="dropdown" ng-show="singleRunModel.ID == station.ID">
                                                 <button ng-hide="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
                                                 <button ng-show="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{[singleRunModel.duration]} min</button>
                                                 <ul class="dropdown-menu">
