@@ -378,7 +378,6 @@
 
         $scope.singleRunModel = {};
         this.submitSingleRun = function() {
-            //stuff
             $http.post('/station/run', $scope.singleRunModel)
                 .then(function(response) {})
             $scope.singleRunModel = {};

@@ -93,11 +93,11 @@
                                             <div class="form-group" ng-show="stationModel.ID == station.ID">
                                                 <input class="form-control" ng-show="stationModel.tempID == station.ID" type="text" ng-model="stationModel.Notes">
                                             </div>
-                                            <div class="dropdown" ng-show="singleRunModel.ID == station.ID">
+                                            <div class="dropdown" ng-show="singleRunModel.StationID == station.ID">
                                                 <button ng-hide="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
-                                                <button ng-show="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{[singleRunModel.duration]} min</button>
+                                                <button ng-show="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{[singleRunModel.Duration]} min</button>
                                                 <ul class="dropdown-menu">
-                                                    <li ng-repeat="interval in durationIntervals" ng-click="singleRunModel.duration = interval * 60; pc.submitSingleRun()"><a >{[interval]} min</a></li>
+                                                    <li ng-repeat="interval in durationIntervals" ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{[interval]} min</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -106,7 +106,7 @@
                                             <a><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
                                             <a><span class="glyphicon glyphicon-time"></span></a>
                                             <a><span class="glyphicon glyphicon-stats"></span></a>
-                                            <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                            <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.StationID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
                                             <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                         </td>
                                     </tr>
