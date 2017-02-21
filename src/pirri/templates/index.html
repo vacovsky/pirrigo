@@ -129,36 +129,6 @@
                         </div>
                     </div>
                     <!-- END STATIONS LIST -->
-                    <!-- START TESTING CAL -->
-                    <div id="navpane" ng-show="currentPage == 'mycal'" >
-                        <div id="calpane" class="mycal">
-                            <!--script>
-                            $('.mycal').easycal({
-                            startDate: moment().format("YYYY-MM-DD"),
-                            timeFormat: 'HH:mm',
-                            columnDateFormat: 'dddd, DD MMM',
-                            minTime: '',
-                            maxTime: '',
-                            slotDuration: 30,
-                            timeGranularity: 30,
-                            dayClick: function(el, startTime) {
-                            angular.element(document.getElementById('PirriControl')).scope().pc.addScheduleButtonFromCalendar(startTime.split(':')[0] + startTime.split(':')[1]);
-                            angular.element(document.getElementById('PirriControl')).scope().$apply();
-                            console.log(startTime.split(':')[0] + startTime.split(':')[1]);
-                            },
-                            eventClick: function(eventId) {
-                            angular.element(document.getElementById('PirriControl')).scope().pc.mapModelForSchedEditFromCalClick(eventId);
-                            angular.element(document.getElementById('PirriControl')).scope().$apply();
-                            },
-                            events: undefined,
-                            overlapColor: '#FF0',
-                            overlapTextColor: '#000',
-                            overlapTitle: 'Multiple'
-                            });
-                            </script-->
-                        </div>
-                    </div>
-                    <!-- END TESTING CAL -->
                     <!-- START STATS-->
                     <div ng-show="currentPage == 'stats'" id="navpane">
                         <div>
@@ -196,29 +166,29 @@
                                 <tbody>
                                     <tr ng-repeat="sched in schedule">
                                         <td class="col-md-1">
-                                            <span ng-show="scheduleModel.id != sched.id">{[sched.station]}</span>
+                                            <span ng-show="scheduleModel.tempID != sched.ID">{[sched.StationID]}</span>
                                             <div class="form-group">
-                                                <input class="form-control" ng-show="scheduleModel.id == sched.id" type="number" ng-model="scheduleModel.station">
+                                                <input class="form-control" ng-show="scheduleModel.tempID == sched.ID" type="number" ng-model="scheduleModel.StationID">
                                             </div>
                                         </td>
                                         <td class="col-md-2">
-                                            <span ng-show="scheduleModel.id != sched.id">{[sched.startdate]}</span>
+                                            <span ng-show="scheduleModel.tempID != sched.ID">{[sched.StartDate]}</span>
                                             <div class="form-group">
-                                                <input class="form-control" placeholder="YYYYMMDD" ng-show="scheduleModel.id == sched.id" type="number" ng-model="scheduleModel.startdate">
+                                                <input class="form-control" placeholder="YYYYMMDD" ng-show="scheduleModel.tempID == sched.ID" type="number" ng-model="scheduleModel.StartDate">
                                             </div>
                                         </td>
                                         <td class="col-md-2">
-                                            <span ng-show="scheduleModel.id != sched.id">{[sched.starttime]}</span>
+                                            <span ng-show="scheduleModel.tempID != sched.ID">{[sched.StartTime]}</span>
                                             <div class="form-group">
-                                                <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.id == sched.id" type="number" ng-model="scheduleModel.starttime">
+                                                <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.tempID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
                                             </div>
                                         </td>
                                         <td class="col-md-1">
-                                            <span ng-show="scheduleModel.id != sched.id">{[sched.duration / 60]} min</span>
-                                            <div class="dropdown" ng-show="scheduleModel.id == sched.id">
-                                                <button ng-show="scheduleModel.duration != undefined && scheduleModel.id == sched.id" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{[scheduleModel.duration / 60]} min</button>
+                                            <span ng-show="scheduleModel.tempID != sched.ID">{[sched.Duration / 60]} min</span>
+                                            <div class="dropdown" ng-show="scheduleModel.tempID == sched.ID">
+                                                <button ng-show="scheduleModel.Duration != undefined && scheduleModel.tempID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{[scheduleModel.Duration / 60]} min</button>
                                                 <ul class="dropdown-menu">
-                                                    <li ng-repeat="interval in durationIntervals" ng-click="scheduleModel.duration = interval * 60;"><a >{[interval]} min</a></li>
+                                                    <li ng-repeat="interval in durationIntervals" ng-click="scheduleModel.Duration = interval * 60;"><a >{[interval]} min</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -265,12 +235,11 @@
                         <div class="tbl-header">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <thead>
-                                    <th class="col-md-1">Station</th>
                                     <th class="col-md-1">History</th>
+                                    <th class="col-md-1">Station</th>
                                     <th class="col-md-3">Started</th>
                                     <th class="col-md-2">Duration</th>
-                                    <th>Scheduled</th>
-                                    <th>Schedule ID</th>
+                                    <th class="col-md-1">Manual</th>
                                 </thead>
                             </table>
                         </div>
@@ -278,12 +247,11 @@
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
                                     <tr ng-repeat="hist in history">
-                                        <td class="col-md-1">{[hist.sid]}</td>
-                                        <td class="col-md-1">{[hist.id]}</td>
-                                        <td class="col-md-3">{[pc.prettyTime(hist.starttime)]}</td>
-                                        <td class="col-md-2">{[hist.duration / 60]} min</td>
-                                        <td>{[hist.schedule_id != 0]}</td>
-                                        <td>{[hist.schedule_id]}</td>
+                                        <td class="col-md-1">{[hist.ID]}</td>
+                                        <td class="col-md-1">{[hist.StationID]}</td>
+                                        <td class="col-md-3">{[pc.prettyTime(hist.StartTime)]}</td>
+                                        <td class="col-md-2">{[hist.Duration / 60]} min</td>
+                                        <td class="col-md-1">{[hist.ScheduleID == 0]}</td>
                                     </tr>
                                 </tbody>
                             </table>
