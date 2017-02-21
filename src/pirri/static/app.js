@@ -52,6 +52,7 @@
             console.log($scope.calEvents)
         };
 
+		$scope.schedule = []
         $scope.weatherData = {};
         $scope.settingsData = {};
         $scope.currentPage = 'home'; // history / home / settings / add
@@ -249,7 +250,7 @@
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
             $scope.scheduleModel = {
-                id: 0,
+                tempID: 0,
                 sunday: false,
                 monday: false,
                 tuesday: false,
@@ -258,11 +259,11 @@
                 friday: false,
                 saturday: false,
                 repeat: false,
-                station: undefined,
-                starttime: undefined,
-                startdate: undefined,
-                enddate: 30000000,
-                duration: 0,
+                station: 0,
+                starttime: 2359,
+                startdate: '2017-01-01 23:59:32',
+                enddate: '2030-01-01 23:59:32',
+                duration: 300,
                 new: true
             };
             $scope.schedule.unshift($scope.scheduleModel)
@@ -449,9 +450,9 @@
             }
         }
         this.getSchedule = function() {
-            $http.get('/schedule')
+            $http.get('/schedule/all')
                 .then(function(response) {
-                    $scope.schedule = response.data.schedule;
+                    $scope.schedule = response.data.stationSchedules;
                 })
         };
 
