@@ -44,9 +44,9 @@
         $scope.calEvents = []
         this.getCalEvents = function() {
             $scope.beatheart = true;
-            $http.get('/schedule/get')
+            $http.get('/schedule/all')
                 .then(function(response) {
-					$scope.calEvents = response.schedule;
+					$scope.calEvents = response.data.StationSchedule;
 					$scope.beatheart = false;
                 })
             console.log($scope.calEvents)

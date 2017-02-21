@@ -1,54 +1,49 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"runtime"
+
+	"github.com/newrelic/go-agent"
 )
 
 func startPirriWebApp() {
-	//	templatePath := "templates/"
+	routes := map[string]func(http.ResponseWriter, *http.Request){
+		"/station/run":  stationRunWeb,
+		"/station/all":  stationAllWeb,
+		"/station":      stationGetWeb,
+		"/schedule/all": stationScheduleAllWeb,
+		"/history":      historyAllWeb,
 
-	// Station
-	//	http.HandleFunc("/station/add", stationAdd)
-	http.HandleFunc("/station/run", stationRunWeb)
-	//	http.HandleFunc("/station/edit", stationEdit)
-	http.HandleFunc("/station/all", stationAllWeb)
-	http.HandleFunc("/station", stationGetWeb)
+		"/static/": (func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, r.URL.Path[1:])
+		}),
 
-	//	// Schedule
-	//	http.HandleFunc("/schedule/add", Home)
-	//	http.HandleFunc("/schedule/edit", Home)
-	//	http.HandleFunc("/schedule", Home)
+		"/": (func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, "templates/index.html")
+		}),
+	}
 
-	//	// History
-	http.HandleFunc("/history", historyAllWeb)
-	//	http.HandleFunc("/history/add", Home)
-	//	http.HandleFunc("/history/edit", Home)
+	if SETTINGS.UseNewRelic {
+		SETTINGS.NewRelicLicense = loadNewRelicKey(SETTINGS.NewRelicLicensePath)
+		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelicLicense)
+		NRAPPMON, ERR := newrelic.NewApplication(config)
+		fmt.Println("USing NewRelic Monitoring Agent")
+		if NRAPPMON == nil || ERR != nil {
+			fmt.Println("Unable to load New Relic Agent using given configuration.")
+		} else {
+			for k, v := range routes {
+				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, v))
+			}
+		}
 
-	//	// Settings
-	//	http.HandleFunc("/settings", Home)
-	//	http.HandleFunc("/settings/add", Home)
-	//	http.HandleFunc("/settings/edit", Home)
-
-	//	// GPIO
-	//	http.HandleFunc("/gpio", Home)
-	//	http.HandleFunc("/gpio/add", Home)
-	//	http.HandleFunc("/gpio/edit", Home)
-
-	//	// Drip Nodes
-	//	http.HandleFunc("/dropnode", Home)
-	//	http.HandleFunc("/dropnodesadd", Home)
-	//	http.HandleFunc("/dropnode/edit", Home)
-
-	// Static content
-	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, r.URL.Path[1:])
-	})
-
-	// Home
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "templates/index.html")
-	})
+	} else {
+		for k, v := range routes {
+			fmt.Println("Not using New Relic for", k)
+			http.HandleFunc(k, v)
+		}
+	}
 
 	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HttpPort, nil))

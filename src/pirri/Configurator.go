@@ -41,6 +41,21 @@ func loadConfig() {
 	parseConfig(config)
 }
 
+func loadNewRelicKey(path string) string {
+	file, err := os.Open(path)
+	defer file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	key := ""
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		key = scanner.Text()
+	}
+	return key
+}
+
 func parseConfig(config map[string]string) {
 	SETTINGS = Settings{}
 
@@ -104,16 +119,22 @@ func parseConfig(config map[string]string) {
 	if pirridebug, ok := config["pirridebug"]; ok {
 		SETTINGS.PirriDebug, ERR = strconv.ParseBool(pirridebug)
 	}
-
 	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
 	SQLCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
 	if SETTINGS.ShowSettings {
 		fmt.Println(SQLCONNSTRING)
 		fmt.Println(RMQCONNSTRING)
 	}
-
+	if usenewrelic, ok := config["usenewrelic"]; ok {
+		SETTINGS.UseNewRelic, ERR = strconv.ParseBool(usenewrelic)
+	}
+	if SETTINGS.UseNewRelic {
+		if newreliclicensepath, ok := config["newreliclicensepath"]; ok {
+			SETTINGS.NewRelicLicensePath = newreliclicensepath
+		}
+	}
 	if ERR != nil {
-		panic("Configuration File Error - check app.config")
+		failOnError(ERR, ERR.Error())
 	}
 }
 

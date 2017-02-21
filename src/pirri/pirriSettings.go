@@ -17,6 +17,8 @@ type Settings struct {
 	GpioOnState          int // 1 or 0
 	GpioOffState         int // 1 or 0
 	UseNewRelic          bool
+	NewRelicLicense      string
+	NewRelicLicensePath  string // path to a text file containing nothing but the key
 	UtcOffset            int
 	HttpPort             string
 	SqlDbType            string
