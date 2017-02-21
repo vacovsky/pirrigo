@@ -95,11 +95,12 @@ func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
 	if db.NewRecord(&scheduleItem) {
 		db.Create(&scheduleItem)
 	} else {
-		db.Update(&scheduleItem)
+		db.Save(&scheduleItem)
 	}
 	if SETTINGS.PirriDebug {
 		spew.Dump(scheduleItem)
 	}
+	stationScheduleAllWeb(rw, req)
 }
 
 func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
@@ -114,4 +115,5 @@ func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	if SETTINGS.PirriDebug {
 		spew.Dump(scheduleItem)
 	}
+	stationScheduleAllWeb(rw, req)
 }

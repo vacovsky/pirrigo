@@ -1,5 +1,6 @@
 (function() {
-    var app = angular.module('pirriweb', ['chart.js']);
+	
+    var app = angular.module('pirriweb', ['chart.js', 'ngCookies','ngMessages', 'ngMaterial']);
     app.Root = '/';
     app.config(['$interpolateProvider',
         function($interpolateProvider) {
@@ -7,8 +8,28 @@
             $interpolateProvider.endSymbol(']}');
         }
     ]);
+	
+	/*
+	angular.module 'app.components'
+ .directive 'autoChangeStringDates', ->
+   directive =
+     restrict: 'A'
+     require: 'ngModel'
+     priority: 2000
+     link: (scope, el, attrs, ngModelController) ->
+       ngModelController.$formatters.push((input) ->
+         if typeof input == Date
+          return input
+         else
+           return Date.create(input, {fromUTC: true})
+       )
+    return
+	
+	<md-datepicker ng-model='myModel' auto-change-string-dates></md-datepicker>
 
-    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter) {
+	*/
+
+    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies) {
         $rootScope.updateInterval = 6000;
         $scope.chartData1 = {
 			labels: [],
@@ -49,9 +70,15 @@
 					$scope.calEvents = response.data.StationSchedule;
 					$scope.beatheart = false;
                 })
-            console.log($scope.calEvents)
         };
 
+		$scope.StrToDate = function (str) {
+            return new Date(str);
+        }
+		$scope.setTabCookie = function() {
+  			$cookies.put('lastTab', $scope.currentPage);
+		}
+		
 		$scope.schedule = []
         $scope.weatherData = {};
         $scope.settingsData = {};
@@ -112,9 +139,9 @@
         };
 
 
-        $scope.currentPage = 0;
+		
         this.setPage = function(pageName) {
-            $scope.currentPage = pagename
+            $scope.currentPage = pageName;
         };
 
 
@@ -136,7 +163,6 @@
                     $scope.chartData1.data = response.data.chartData.data;
                 })
 
-            // console.log($scope.chartData1)
             $scope.chartData1.options = {
                 title: {
                     display: true,
@@ -250,7 +276,7 @@
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
             $scope.scheduleModel = {
-               ID: 0,
+                ID: 0,
 				tempID: 0,
                 Sunday: false,
                 Monday: false,
@@ -296,9 +322,8 @@
         this.submitEditSchedule = function() {
             $http.post('/schedule/edit', $scope.scheduleModel)
                 .then(function(response) {
-					
+					$scope.schedule = response.data.stationSchedules
 				})
-				console.log($scope.scheduleModel)
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
@@ -316,7 +341,6 @@
 
         this.mapModelForSchedEdit = function(currentModel) {
             $scope.scheduleModel = currentModel;
-			console.log($scope.scheduleModel)
         };
 
         this.mapModelForSchedEditFromCalClick = function(id) {
@@ -505,9 +529,12 @@
             this.calcMonthlyCost();
             //this.loadSettings();
             //this.loadWeather();
+			if ($cookies.get('lastTab') != undefined) {
+				$scope.currentPage = $cookies.get('lastTab');
+			}
+
         };
         $scope.loader = this.autoLoader;
-        $scope.currentPage = 'home';
         // $scope.intervalFunction = function() {
         //     $timeout(function() {
         //         $scope.loader();
