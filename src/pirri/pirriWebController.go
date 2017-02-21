@@ -10,16 +10,31 @@ import (
 
 func startPirriWebApp() {
 	routes := map[string]func(http.ResponseWriter, *http.Request){
-		"/station/run":  stationRunWeb,
-		"/station/all":  stationAllWeb,
-		"/station":      stationGetWeb,
-		"/schedule/all": stationScheduleAllWeb,
-		"/history":      historyAllWeb,
 
+		// charts and reporting
+		//
+
+		// weather
+
+		// station
+		"/station/run": stationRunWeb,
+		"/station/all": stationAllWeb,
+		"/station":     stationGetWeb,
+
+		// schedule
+		"/schedule/all":    stationScheduleAllWeb,
+		"/schedule/edit":   stationScheduleEditWeb,
+		"/schedule/delete": stationScheduleDeleteWeb,
+
+		// history
+		"/history": historyAllWeb,
+
+		// static
 		"/static/": (func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, r.URL.Path[1:])
 		}),
 
+		// root
 		"/": (func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "templates/index.html")
 		}),

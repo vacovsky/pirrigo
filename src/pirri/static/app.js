@@ -250,21 +250,21 @@
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
             $scope.scheduleModel = {
-                tempID: 0,
-                sunday: false,
-                monday: false,
-                tuesday: false,
-                wednesday: false,
-                thursday: false,
-                friday: false,
-                saturday: false,
-                repeat: false,
-                station: 0,
-                starttime: 2359,
-                startdate: '2017-01-01 23:59:32',
-                enddate: '2030-01-01 23:59:32',
-                duration: 300,
-                new: true
+               ID: 0,
+				tempID: 0,
+                Sunday: false,
+                Monday: false,
+                Tuesday: false,
+                Wednesday: false,
+                Thursday: false,
+                Friday: false,
+                Saturday: false,
+                Repeating: false,
+                StationID: undefined,
+                StartTime: undefined,
+                StartDate: undefined,
+                EndDate: 30000000,
+                Duration: 0,
             };
             $scope.schedule.unshift($scope.scheduleModel)
         };
@@ -272,73 +272,33 @@
         this.addScheduleButtonFromCalendar = function(startTime) {
             $scope.scheduleModel = undefined;
             $scope.scheduleModel = {
-                id: 0,
-                sunday: false,
-                monday: false,
-                tuesday: false,
-                wednesday: false,
-                thursday: false,
-                friday: false,
-                saturday: false,
-                repeat: false,
-                station: undefined,
-                starttime: undefined,
-                startdate: undefined,
-                enddate: 30000000,
-                duration: 0,
-                new: true
+                ID: 0,
+				tempID: 0,
+                Sunday: false,
+                Monday: false,
+                Tuesday: false,
+                Wednesday: false,
+                Thursday: false,
+                Friday: false,
+                Saturday: false,
+                Repeating: false,
+                StationID: undefined,
+                StartTime: undefined,
+                StartDate: undefined,
+                EndDate: 30000000,
+                Duration: 0,
             };
             $scope.currentPage = 'calendar';
 
             $scope.schedule.unshift($scope.scheduleModel)
         };
 
-        this.convertScheduleBoolToInt = function() {
-            if ($scope.scheduleModel.sunday) {
-                $scope.scheduleModel.sunday = 1;
-            } else {
-                $scope.scheduleModel.sunday = 0;
-            }
-            if ($scope.scheduleModel.monday) {
-                $scope.scheduleModel.monday = 1;
-            } else {
-                $scope.scheduleModel.monday = 0;
-            }
-            if ($scope.scheduleModel.tuesday) {
-                $scope.scheduleModel.tuesday = 1;
-            } else {
-                $scope.scheduleModel.tuesday = 0;
-            }
-            if ($scope.scheduleModel.wednesday) {
-                $scope.scheduleModel.wednesday = 1;
-            } else {
-                $scope.scheduleModel.wednesday = 0;
-            }
-            if ($scope.scheduleModel.thursday) {
-                $scope.scheduleModel.thursday = 1;
-            } else {
-                $scope.scheduleModel.thursday = 0;
-            }
-            if ($scope.scheduleModel.friday) {
-                $scope.scheduleModel.friday = 1;
-            } else {
-                $scope.scheduleModel.friday = 0;
-            }
-            if ($scope.scheduleModel.saturday) {
-                $scope.scheduleModel.saturday = 1;
-            } else {
-                $scope.scheduleModel.saturday = 0;
-            }
-            if ($scope.scheduleModel.repeat) {
-                $scope.scheduleModel.repeat = 1;
-            } else {
-                $scope.scheduleModel.repeat = 0;
-            }
-        };
         this.submitEditSchedule = function() {
-            this.convertScheduleBoolToInt();
             $http.post('/schedule/edit', $scope.scheduleModel)
-                .success(function(response) {})
+                .then(function(response) {
+					
+				})
+				console.log($scope.scheduleModel)
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
@@ -356,6 +316,7 @@
 
         this.mapModelForSchedEdit = function(currentModel) {
             $scope.scheduleModel = currentModel;
+			console.log($scope.scheduleModel)
         };
 
         this.mapModelForSchedEditFromCalClick = function(id) {
@@ -369,7 +330,7 @@
 
         this.submitDeleteSchedule = function(schedule_id) {
             $http.post('/schedule/delete', {
-                    schedule_id: schedule_id
+                    ID: schedule_id
                 })
                 .then(function(response) {})
             $scope.scheduleModel = {};

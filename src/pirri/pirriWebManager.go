@@ -85,14 +85,33 @@ func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	io.WriteString(rw, "{ \"stationSchedules\": "+string(blob)+"}")
 }
 
-//        sqlStr = """SELECT * FROM schedule WHERE enddate > {0} AND startdate <= {1} ORDER BY station ASC""".format(
+func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
+	var scheduleItem StationSchedule
+	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
 
-//if wd == 0 and event['sunday']:
-//                events.append({
-//                    'id': event['id'],
-//                    'title': "SID #" + str(event['station']) + " for " + str(event['duration'] / 60) + ' min',
-//                    'start': str(date.replace(date.year, date.month, date.day, int(str("%04d" % event['starttime'])[:2]), int(str("%04d" % event['starttime'])[-2:]), 0) - timedelta(days=1)),
-//                    'end': str(date.replace(date.year, date.month, date.day, int(str("%04d" % event['starttime'])[:2]), int(str("%04d" % event['starttime'])[-2:]), 0) + timedelta(seconds=event['duration']) - timedelta(days=1)),
-//                    'backgroundColor': station_colors[event['station']],
-//                    'textColor': '#FFF'
-//                })
+	GormDbConnect()
+	defer db.Close()
+
+	if db.NewRecord(&scheduleItem) {
+		db.Create(&scheduleItem)
+	} else {
+		db.Update(&scheduleItem)
+	}
+	if SETTINGS.PirriDebug {
+		spew.Dump(scheduleItem)
+	}
+}
+
+func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
+	var scheduleItem StationSchedule
+	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
+
+	GormDbConnect()
+	defer db.Close()
+
+	db.Delete(&scheduleItem)
+
+	if SETTINGS.PirriDebug {
+		spew.Dump(scheduleItem)
+	}
+}
