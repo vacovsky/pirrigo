@@ -1,54 +1,66 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"runtime"
+
+	"github.com/newrelic/go-agent"
 )
 
 func startPirriWebApp() {
-	//	templatePath := "templates/"
+	routes := map[string]func(http.ResponseWriter, *http.Request){
 
-	// Station
-	//	http.HandleFunc("/station/add", stationAdd)
-	http.HandleFunc("/station/run", stationRunWeb)
-	//	http.HandleFunc("/station/edit", stationEdit)
-	http.HandleFunc("/station/all", stationAllWeb)
-	http.HandleFunc("/station", stationGetWeb)
+		// charts and reporting
+		"/stats/4": statsStationActivity,
+		"/stats/2": statsActivityByDayOfWeek,
 
-	//	// Schedule
-	//	http.HandleFunc("/schedule/add", Home)
-	//	http.HandleFunc("/schedule/edit", Home)
-	//	http.HandleFunc("/schedule", Home)
+		// weather
+		// TODO write a better algorithm for weather handling
 
-	//	// History
-	http.HandleFunc("/history", historyAllWeb)
-	//	http.HandleFunc("/history/add", Home)
-	//	http.HandleFunc("/history/edit", Home)
+		// station
+		"/station/run": stationRunWeb,
+		"/station/all": stationAllWeb,
+		"/station":     stationGetWeb,
 
-	//	// Settings
-	//	http.HandleFunc("/settings", Home)
-	//	http.HandleFunc("/settings/add", Home)
-	//	http.HandleFunc("/settings/edit", Home)
+		// schedule
+		"/schedule/all":    stationScheduleAllWeb,
+		"/schedule/edit":   stationScheduleEditWeb,
+		"/schedule/delete": stationScheduleDeleteWeb,
 
-	//	// GPIO
-	//	http.HandleFunc("/gpio", Home)
-	//	http.HandleFunc("/gpio/add", Home)
-	//	http.HandleFunc("/gpio/edit", Home)
+		// history
+		"/history": historyAllWeb,
 
-	//	// Drip Nodes
-	//	http.HandleFunc("/dropnode", Home)
-	//	http.HandleFunc("/dropnodesadd", Home)
-	//	http.HandleFunc("/dropnode/edit", Home)
+		// static
+		"/static/": (func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, r.URL.Path[1:])
+		}),
 
-	// Static content
-	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, r.URL.Path[1:])
-	})
+		// root
+		"/": (func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, "templates/index.html")
+		}),
+	}
 
-	// Home
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "templates/index.html")
-	})
+	if SETTINGS.UseNewRelic {
+		SETTINGS.NewRelicLicense = loadNewRelicKey(SETTINGS.NewRelicLicensePath)
+		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelicLicense)
+		NRAPPMON, ERR := newrelic.NewApplication(config)
+		fmt.Println("Using New Relic Monitoring Agent")
+		if NRAPPMON == nil || ERR != nil {
+			fmt.Println("Unable to load New Relic Agent using given configuration.")
+		} else {
+			for k, v := range routes {
+				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, v))
+			}
+		}
+
+	} else {
+		for k, v := range routes {
+			fmt.Println("Not using New Relic for", k)
+			http.HandleFunc(k, v)
+		}
+	}
 
 	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HttpPort, nil))

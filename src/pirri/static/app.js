@@ -1,5 +1,6 @@
 (function() {
-    var app = angular.module('pirriweb', ['chart.js']);
+
+    var app = angular.module('pirriweb', ['chart.js', 'ngCookies', 'ngMessages', 'ngMaterial', 'ngAnimate', 'ngSanitize', 'ui.bootstrap']); //
     app.Root = '/';
     app.config(['$interpolateProvider',
         function($interpolateProvider) {
@@ -8,14 +9,64 @@
         }
     ]);
 
-    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter) {
+    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies) {
         $rootScope.updateInterval = 6000;
-        $scope.chartData1 = {};
-        $scope.chartData2 = {}; 
-        $scope.chartData3 = {};
-        $scope.chartData4 = {};
+        $scope.chartData1 = {
+            labels: [],
+            series: [],
+            data: []
+        };
+        $scope.chartData2 = {
+            labels: [],
+            series: [],
+            data: []
+        };
+        $scope.chartData3 = {
+            labels: [],
+            series: [],
+            data: []
+        };
+        $scope.chartData4 = {
+            labels: [],
+            series: [],
+            data: []
+        };
         $scope.beatheart = false;
 
+        /*
+        Datepicker Crap
+        */
+        $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = $scope.formats[0];
+        $scope.altInputFormats = ['M!/d!/yyyy'];
+
+        $scope.dateOptions = {
+            // dateDisabled: disabled,
+            formatYear: 'yy',
+            maxDate: new Date(2050, 5, 22),
+            minDate: new Date(),
+            startingDay: 1
+        };
+
+        $scope.inlineOptions = {
+            // customClass: getDayClass,
+            minDate: new Date(),
+            showWeeks: true
+        };
+
+
+
+        // END datepicker crap
+        $scope.openCalPicker = function(scheduleid) {
+            var result = $.grep($scope.schedule, function(e) {
+                return e.ID == scheduleid;
+            });
+            console.log(result)
+            result[0].calOpen = true;
+            //	    	$scope.calPicker.opened = true;
+        };
+
+        
         $scope.randomColor = function() {
             var letters = '0123456789ABCDEF';
             var color = '#';
@@ -28,14 +79,21 @@
         $scope.calEvents = []
         this.getCalEvents = function() {
             $scope.beatheart = true;
-            $http.get('/schedule/get')
+            $http.get('/schedule/all')
                 .then(function(response) {
-					$scope.calEvents = response.schedule;
-					$scope.beatheart = false;
+                    $scope.calEvents = response.data.StationSchedule;
+                    $scope.beatheart = false;
                 })
-            console.log($scope.calEvents)
         };
 
+        $scope.StrToDate = function(str) {
+            return new Date(str);
+        }
+        $scope.setTabCookie = function() {
+            $cookies.put('lastTab', $scope.currentPage);
+        }
+
+        $scope.schedule = []
         $scope.weatherData = {};
         $scope.settingsData = {};
         $scope.currentPage = 'home'; // history / home / settings / add
@@ -53,9 +111,9 @@
             GPIO: undefined
         };
         $scope.edit_station_model = {
-            SID: undefined,
+            tempID: undefined,
             GPIO: undefined,
-            notes: undefined
+            Notes: undefined
         };
         $scope.durationIntervals = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
         $scope.show_gpio_diagram = false;
@@ -95,9 +153,9 @@
         };
 
 
-        $scope.currentPage = 0;
+
         this.setPage = function(pageName) {
-            $scope.currentPage = pagename
+            $scope.currentPage = pageName;
         };
 
 
@@ -105,22 +163,20 @@
         $scope.watercost = 0.0021;
         this.getWaterUsageStats = function() {
             $http.get('/stats/gallons')
-                .success(function(data, status, headers, config) {
-                    $scope.dripnodes = data.water_usage;
+                .then(function(response) {
+                    $scope.dripnodes = response.data.water_usage;
                 })
-                .error(function(data, status, headers, config) {})
             this.getWaterNodeEntries();
         };
 
         this.getUsageDataForChart1 = function() {
             $http.get('/stats?id=1')
-                .then(function(data, status, headers, config) {
-                    $scope.chartData1.labels = data.chartData.labels;
-                    $scope.chartData1.series = data.chartData.series;
-                    $scope.chartData1.data = data.chartData.data;
+                .then(function(response) {
+                    $scope.chartData1.labels = response.data.chartData.labels;
+                    $scope.chartData1.series = response.data.chartData.series;
+                    $scope.chartData1.data = response.data.chartData.data;
                 })
 
-            // console.log($scope.chartData1)
             $scope.chartData1.options = {
                 title: {
                     display: true,
@@ -146,10 +202,10 @@
 
         this.getUsageDataForChart2 = function() {
             $http.get('/stats?id=2')
-                .then(function(data, status, headers, config) {
-                    $scope.chartData2.labels = data.chartData.labels;
-                    $scope.chartData2.series = data.chartData.series;
-                    $scope.chartData2.data = data.chartData.data;
+                .then(function(response) {
+                    $scope.chartData2.labels = response.data.chartData.labels;
+                    $scope.chartData2.series = response.data.chartData.series;
+                    $scope.chartData2.data = response.data.chartData.data;
                 })
             $scope.chartData2.options = {
                 scaleStartValue: 0,
@@ -168,10 +224,10 @@
 
         this.getUsageDataForChart3 = function() {
             $http.get('/stats?id=3')
-                .then(function(data, status, headers, config) {
-                    $scope.chartData3.labels = data.chartData.labels;
-                    $scope.chartData3.series = data.chartData.series;
-                    $scope.chartData3.data = data.chartData.data;
+                .then(function(response) {
+                    $scope.chartData3.labels = response.data.chartData.labels;
+                    $scope.chartData3.series = response.data.chartData.series;
+                    $scope.chartData3.data = response.data.chartData.data;
                 })
             $scope.chartData3.options = {
                 scaleStartValue: 0,
@@ -189,10 +245,10 @@
 
         this.getUsageDataForChart4 = function() {
             $http.get('/stats?id=4')
-                .then(function(data, status, headers, config) {
-                    $scope.chartData4.labels = data.chartData.labels;
-                    $scope.chartData4.series = data.chartData.series;
-                    $scope.chartData4.data = data.chartData.data;
+                .then(function(response) {
+                    $scope.chartData4.labels = response.data.chartData.labels;
+                    $scope.chartData4.series = response.data.chartData.series;
+                    $scope.chartData4.data = response.data.chartData.data;
                 })
             $scope.chartData4.options = {
                 scaleStartValue: 0,
@@ -211,10 +267,10 @@
         this.loadStatsData = function() {
             $scope.beatheart = true;
             Chart.defaults.global.defaultFontColor = "#fff";
-            this.getUsageDataForChart1();
-            this.getUsageDataForChart2();
-            this.getUsageDataForChart3();
-            this.getUsageDataForChart4();
+            //            this.getUsageDataForChart1();
+            //            this.getUsageDataForChart2();
+            //            this.getUsageDataForChart3();
+            //            this.getUsageDataForChart4();
             $scope.beatheart = false;
         };
 
@@ -222,8 +278,7 @@
         $scope.stationModel = {}
         this.submitEditStation = function() {
             $http.post('/station/edit', $scope.stationModel)
-                .success(function(data, status, headers, config) {})
-                .error(function(data, status, headers, config) {})
+                .success(function(response) {})
             $scope.stationModel = {};
             $scope.stationModel = undefined;
         };
@@ -234,22 +289,27 @@
 
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
+            var d = new Date();
+            var year = d.getFullYear();
+            var month = d.getMonth();
+            var day = d.getDate();
+            var endDate = new Date(year + 10, month, day)
             $scope.scheduleModel = {
-                id: 0,
-                sunday: false,
-                monday: false,
-                tuesday: false,
-                wednesday: false,
-                thursday: false,
-                friday: false,
-                saturday: false,
-                repeat: false,
-                station: undefined,
-                starttime: undefined,
-                startdate: undefined,
-                enddate: 30000000,
-                duration: 0,
-                new: true
+                ID: 0,
+                tempID: 0,
+                Sunday: false,
+                Monday: false,
+                Tuesday: false,
+                Wednesday: false,
+                Thursday: false,
+                Friday: false,
+                Saturday: false,
+                Repeating: false,
+                StationID: undefined,
+                StartTime: undefined,
+                StartDate: new Date(),
+                EndDate: endDate,
+                Duration: 0,
             };
             $scope.schedule.unshift($scope.scheduleModel)
         };
@@ -257,74 +317,32 @@
         this.addScheduleButtonFromCalendar = function(startTime) {
             $scope.scheduleModel = undefined;
             $scope.scheduleModel = {
-                id: 0,
-                sunday: false,
-                monday: false,
-                tuesday: false,
-                wednesday: false,
-                thursday: false,
-                friday: false,
-                saturday: false,
-                repeat: false,
-                station: undefined,
-                starttime: undefined,
-                startdate: undefined,
-                enddate: 30000000,
-                duration: 0,
-                new: true
+                ID: 0,
+                tempID: 0,
+                Sunday: false,
+                Monday: false,
+                Tuesday: false,
+                Wednesday: false,
+                Thursday: false,
+                Friday: false,
+                Saturday: false,
+                Repeating: false,
+                StationID: undefined,
+                StartTime: undefined,
+                StartDate: undefined,
+                EndDate: 30000000,
+                Duration: 0,
             };
             $scope.currentPage = 'calendar';
 
             $scope.schedule.unshift($scope.scheduleModel)
         };
 
-        this.convertScheduleBoolToInt = function() {
-            if ($scope.scheduleModel.sunday) {
-                $scope.scheduleModel.sunday = 1;
-            } else {
-                $scope.scheduleModel.sunday = 0;
-            }
-            if ($scope.scheduleModel.monday) {
-                $scope.scheduleModel.monday = 1;
-            } else {
-                $scope.scheduleModel.monday = 0;
-            }
-            if ($scope.scheduleModel.tuesday) {
-                $scope.scheduleModel.tuesday = 1;
-            } else {
-                $scope.scheduleModel.tuesday = 0;
-            }
-            if ($scope.scheduleModel.wednesday) {
-                $scope.scheduleModel.wednesday = 1;
-            } else {
-                $scope.scheduleModel.wednesday = 0;
-            }
-            if ($scope.scheduleModel.thursday) {
-                $scope.scheduleModel.thursday = 1;
-            } else {
-                $scope.scheduleModel.thursday = 0;
-            }
-            if ($scope.scheduleModel.friday) {
-                $scope.scheduleModel.friday = 1;
-            } else {
-                $scope.scheduleModel.friday = 0;
-            }
-            if ($scope.scheduleModel.saturday) {
-                $scope.scheduleModel.saturday = 1;
-            } else {
-                $scope.scheduleModel.saturday = 0;
-            }
-            if ($scope.scheduleModel.repeat) {
-                $scope.scheduleModel.repeat = 1;
-            } else {
-                $scope.scheduleModel.repeat = 0;
-            }
-        };
         this.submitEditSchedule = function() {
-            this.convertScheduleBoolToInt();
             $http.post('/schedule/edit', $scope.scheduleModel)
-                .success(function(data, status, headers, config) {})
-                .error(function(data, status, headers, config) {})
+                .then(function(response) {
+                    $scope.schedule = response.data.stationSchedules
+                })
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
@@ -333,8 +351,7 @@
         this.submitAddSchedule = function() {
             this.convertScheduleBoolToInt();
             $http.post('/schedule/add', $scope.scheduleModel)
-                .success(function(data, status, headers, config) {})
-                .error(function(data, status, headers, config) {})
+                .success(function(response) {})
                 // cleanup
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
@@ -356,10 +373,9 @@
 
         this.submitDeleteSchedule = function(schedule_id) {
             $http.post('/schedule/delete', {
-                    schedule_id: schedule_id
+                    ID: schedule_id
                 })
-                .success(function(data, status, headers, config) {})
-                .error(function(data, status, headers, config) {})
+                .then(function(response) {})
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
@@ -367,10 +383,8 @@
 
         $scope.singleRunModel = {};
         this.submitSingleRun = function() {
-            //stuff
             $http.post('/station/run', $scope.singleRunModel)
-                .success(function(data, status, headers, config) {})
-                .error(function(data, status, headers, config) {})
+                .then(function(response) {})
             $scope.singleRunModel = {};
             $scope.singleRunMinField = undefined;
         };
@@ -387,49 +401,46 @@
             this.loadWeather();
         };
         this.loadStations = function() {
-            $http.get('/station/list')
-                .then(function(data, status, headers, config) {
-                    $scope.stations = data.stations;
-                    angular.forEach($scope.stations, function(value, key) {
-                        value['cal_color'] = $scope.randomColor();
-                    })
+            $http.get('/station/all')
+                .then(function(response) {
+                    //					console.log(response.data)
+                    $scope.stations = response.data.stations;
+                    //                    angular.forEach($scope.stations, function(value, key) {
+                    //                        value['cal_color'] = $scope.randomColor();
+                    //                    })
                 })
         };
 
         this.loadSettings = function() {
             $http.get('/settings/load')
-                .success(function(data, status, headers, config) {
-                    $scope.settingsData = data;
+                .then(function(response) {
+                    $scope.settingsData = response.data.data;
                 })
-                .error(function(data, status, headers, config) {})
         };
 
         this.loadWeather = function() {
             $scope.beatheart = true;
             $http.get('/weather')
-                .success(function(data, status, headers, config) {
-                    $scope.weatherData = data;
-                    $scope.weatherData.current.sys.sunrise_t = moment(data.current.sys.sunrise * 1000).fromNow();
-                    $scope.weatherData.current.sys.sunset_t = moment(data.current.sys.sunset * 1000).fromNow();
+                .then(function(response) {
+                    //                    $scope.weatherData = response.data;
+                    //                    $scope.weatherData.current.sys.sunrise_t = moment(data.current.sys.sunrise * 1000).fromNow();
+                    //                    $scope.weatherData.current.sys.sunset_t = moment(data.current.sys.sunset * 1000).fromNow();
 
-                })
-                .error(function(data, status, headers, config) {}).then(function() {
-                    $scope.beatheart = false;
                 })
         };
 
         this.loadGPIO = function() {
             $http.get('/gpio/list')
-                .then(function(data, status, headers, config) {
-                    $scope.gpio_pins = data.gpio_pins;
+                .then(function(response) {
+                    $scope.gpio_pins = response.data.gpio_pins;
                 })
         };
 
         this.loadHistory = function(station) {
             var query = '?station=' + station + '&earliest=-168';
             $http.get('/history' + query)
-                .then(function(data, status, headers, config) {
-                    $scope.history = data.history;
+                .then(function(response) {
+                    $scope.history = response.data.history;
                 })
         };
 
@@ -443,17 +454,17 @@
             }
         }
         this.getSchedule = function() {
-            $http.get('/schedule')
-                .then(function(data, status, headers, config) {
-                    $scope.schedule = data.schedule;
+            $http.get('/schedule/all')
+                .then(function(response) {
+                    $scope.schedule = response.data.stationSchedules;
                 })
         };
 
         $scope.lastStationRunHash = {}
         this.getLastStationRun = function() {
             $http.get('/station/lastruns')
-                .then(function(data, status, headers, config) {
-                    $scope.lastStationRunHash = data.lastrunlist;
+                .then(function(response) {
+                    $scope.lastStationRunHash = response.data.lastrunlist;
                 })
                 // console.log($scope.lastStationRunHash);
         };
@@ -461,28 +472,25 @@
         $scope.nextStationRunHash = {}
         this.getNextStationRun = function() {
             $http.get('/station/nextruns')
-                .then(function(data, status, headers, config) {
-                    $scope.nextStationRunHash = data.nextrunlist;
+                .then(function(response) {
+                    $scope.nextStationRunHash = response.data.nextrunlist;
                 })
-                
+
         };
 
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
         this.getWaterNodeEntries = function() {
             $http.get('/station/nodes')
-                .success(function(data, status, headers, config) {
-                    $scope.waterNodeEntries = data.dripnodes;
+                .then(function(response) {
+                    $scope.waterNodeEntries = response.data.dripnodes;
                 })
-                .error(function(data, status, headers, config) {})
-                // console.log($scope.nextStationRunHash);
         }
         this.submitEditNodeEntry = function() {
             $http.post('/station/nodes', $scope.waterNodeModel)
-                .success(function(data, status, headers, config) {
+                .then(function(response) {
                     // console.log($scope.singleRunModel, data)
                 })
-                .error(function(data, status, headers, config) {})
                 // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
@@ -491,10 +499,9 @@
         this.submitAddNodeEntry = function() {
             $scope.waterNodeModel.new = true;
             $http.post('/station/nodes', $scope.waterNodeModel)
-                .success(function(data, status, headers, config) {
+                .then(function(response) {
                     // console.log($scope.singleRunModel, data)
                 })
-                .error(function(data, status, headers, config) {})
                 // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
@@ -503,10 +510,9 @@
         this.submitDeleteNodeEntry = function(nodeid) {
             $scope.waterNodeModel.id = nodeid;
             $http.post('/station/nodes/delete', $scope.waterNodeModel)
-                .success(function(data, status, headers, config) {
+                .then(function(response) {
                     // console.log($scope.singleRunModel, data)
                 })
-                .error(function(data, status, headers, config) {})
                 // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
@@ -542,9 +548,12 @@
             this.calcMonthlyCost();
             //this.loadSettings();
             //this.loadWeather();
+            if ($cookies.get('lastTab') != undefined) {
+                $scope.currentPage = $cookies.get('lastTab');
+            }
+
         };
         $scope.loader = this.autoLoader;
-        $scope.currentPage = 'home';
         // $scope.intervalFunction = function() {
         //     $timeout(function() {
         //         $scope.loader();
