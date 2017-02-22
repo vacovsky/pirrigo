@@ -310,6 +310,7 @@
                 StartDate: new Date(),
                 EndDate: endDate,
                 Duration: 0,
+				timepicker: d
             };
             $scope.schedule.unshift($scope.scheduleModel)
         };

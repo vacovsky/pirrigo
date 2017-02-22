@@ -1,6 +1,8 @@
 package main
 
-//	"fmt"
+import (
+	"fmt"
+)
 
 func ConvertSqlDayToDOW(daynum int) string {
 	result := ""
@@ -18,6 +20,8 @@ func ConvertSqlDayToDOW(daynum int) string {
 		result = "Friday"
 	} else if daynum == 1 {
 		result = "Saturday"
+	} else {
+		fmt.Println("Number provided does not correspond to a day of the week.  Valid inputs are 0-6.")
 	}
 	return result
 }
