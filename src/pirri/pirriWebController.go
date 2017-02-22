@@ -44,7 +44,7 @@ func startPirriWebApp() {
 		SETTINGS.NewRelicLicense = loadNewRelicKey(SETTINGS.NewRelicLicensePath)
 		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelicLicense)
 		NRAPPMON, ERR := newrelic.NewApplication(config)
-		fmt.Println("USing NewRelic Monitoring Agent")
+		fmt.Println("Using New Relic Monitoring Agent")
 		if NRAPPMON == nil || ERR != nil {
 			fmt.Println("Unable to load New Relic Agent using given configuration.")
 		} else {
