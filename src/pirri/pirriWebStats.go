@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"strconv"
+	//	"strconv"
 	//	"time"
 
-	"github.com/davecgh/go-spew/spew"
+	//	"github.com/davecgh/go-spew/spew"
 )
 
 func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
@@ -34,7 +34,14 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 }
 
 func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
-	result := StatsChart{
+	type StatsChart2 struct {
+		ReportType int
+		Labels     []string
+		Series     []string
+		Data       [][]float32
+	}
+
+	result := StatsChart2{
 		ReportType: 2,
 		Labels:     []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"},
 		Series:     []string{"Total", "Scheduled", "Unscheduled"},
@@ -48,27 +55,48 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	defer db.Close()
 
 	type RawResult struct {
-		Day  string
-		Mins int
+		Day  int
+		Mins float32
 	}
 
-	var rawResults []RawResult
-	sqlQuery := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
+	var rawResults1 []RawResult
+	var rawResults2 []RawResult
+	var rawResults3 []RawResult
+
+	sqlQuery1 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
             GROUP BY day
             ORDER BY day ASC`)
-	db.Raw(sqlQuery, 8, 7).Scan(&rawResults)
-	for _, v := range rawResults {
-		dowNum, err := strconv.Atoi(v.Day)
-		if err != nil {
-			fmt.Println(err, err.Error())
+	sqlQuery2 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
+            FROM station_histories
+            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id > 0
+            GROUP BY day
+            ORDER BY day ASC`)
+	sqlQuery3 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
+            FROM station_histories
+            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id = 0
+            GROUP BY day
+            ORDER BY day ASC`)
+	db.Raw(sqlQuery1, -8, 7).Scan(&rawResults1)
+	db.Raw(sqlQuery2, -8, 7).Scan(&rawResults2)
+	db.Raw(sqlQuery3, -8, 7).Scan(&rawResults3)
+
+	result.Data = [][]float32{
+		[]float32{},
+		[]float32{},
+		[]float32{},
+	}
+
+	for _, v := range rawResults1 {
+		for result.Data[0][result.Data[len(result.Data)-1] != v.Day - 1 {
+			result.Data[0] = append(result.Data, v.Day - 1)
 		}
-		v.Day = ConvertSqlDayToDOW(dowNum)
+		
 	}
 
 	if SETTINGS.PirriDebug {
-		spew.Dump(rawResults)
+		//		spew.Dump(rawResults1)
 	}
 
 	blob, err := json.Marshal(&result)
