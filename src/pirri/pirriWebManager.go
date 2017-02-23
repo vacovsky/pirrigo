@@ -12,8 +12,13 @@ func startPirriWebApp() {
 	routes := map[string]func(http.ResponseWriter, *http.Request){
 
 		// charts and reporting
-		"/stats/4": statsStationActivity,
+		"/stats/1": statsActivityByHour,
 		"/stats/2": statsActivityByDayOfWeek,
+		"/stats/3": statsActivityPerStationByDOW,
+		"/stats/4": statsStationActivity,
+
+		// nodes
+		// TODO bleh
 
 		// weather
 		// TODO write a better algorithm for weather handling

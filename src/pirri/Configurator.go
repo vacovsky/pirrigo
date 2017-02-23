@@ -58,7 +58,9 @@ func loadNewRelicKey(path string) string {
 
 func parseConfig(config map[string]string) {
 	SETTINGS = Settings{}
-
+	if utcoffset, ok := config["utcoffset"]; ok {
+		SETTINGS.UtcOffset, ERR = strconv.Atoi(utcoffset)
+	}
 	if port, ok := config["port"]; ok {
 		SETTINGS.HttpPort = port
 	}

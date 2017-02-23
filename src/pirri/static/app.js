@@ -11,25 +11,75 @@
 
     app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies) {
         $rootScope.updateInterval = 6000;
+
         $scope.chartData1 = {
             labels: [],
             series: [],
-            data: []
+            data: [],
+            options: {
+                title: {
+                    display: true,
+                    text: 'Total Usage in Minutes (last 30 days)'
+                },
+                scaleStartValue: 0,
+                legend: {
+                    display: true,
+                    labels: {
+                        //fontColor: 'rgb(255, 99, 132)'
+                    }
+                },
+            }
         };
         $scope.chartData2 = {
             labels: [],
             series: [],
-            data: []
+            data: [],
+            options: {
+                scaleStartValue: 0,
+                title: {
+                    display: true,
+                    text: 'Usage in Minutes by Day of Week (last 7 days)'
+                },
+                scaleStartValue: 0,
+                legend: {
+                    display: true,
+                    labels: {}
+                },
+            }
         };
         $scope.chartData3 = {
             labels: [],
             series: [],
-            data: []
+            data: [],
+            options: {
+                scaleStartValue: 0,
+                title: {
+                    display: true,
+                    text: 'Usage in Minutes Per Station by Day of Week (last 30 days)'
+                },
+                scaleStartValue: 0,
+                legend: {
+                    display: true,
+                    labels: {}
+                },
+            }
         };
         $scope.chartData4 = {
             labels: [],
             series: [],
-            data: []
+            data: [],
+            options: {
+                scaleStartValue: 0,
+                title: {
+                    display: true,
+                    text: 'Station Activity by Hour of the Day (last 30 days)'
+                },
+                scaleStartValue: 0,
+                legend: {
+                    display: true,
+                    labels: {}
+                },
+            }
         };
         $scope.beatheart = false;
 
@@ -66,7 +116,7 @@
             //	    	$scope.calPicker.opened = true;
         };
 
-        
+
         $scope.randomColor = function() {
             var letters = '0123456789ABCDEF';
             var color = '#';
@@ -169,27 +219,13 @@
             this.getWaterNodeEntries();
         };
 
-        this.getUsageDataForChart1 = function() {
-            $http.get('/stats?id=1')
+        this.getChartData = function(chartNum) {
+            $http.get('/stats/' + chartNum)
                 .then(function(response) {
-                    $scope.chartData1.labels = response.data.chartData.labels;
-                    $scope.chartData1.series = response.data.chartData.series;
-                    $scope.chartData1.data = response.data.chartData.data;
+                    $scope['chartData' + chartNum].labels = response.data.Labels;
+                    $scope['chartData' + chartNum].series = response.data.Series;
+                    $scope['chartData' + chartNum].data = response.data.Data;
                 })
-
-            $scope.chartData1.options = {
-                title: {
-                    display: true,
-                    text: 'Total Usage in Minutes (last 30 days)'
-                },
-                scaleStartValue: 0,
-                legend: {
-                    display: true,
-                    labels: {
-                        //fontColor: 'rgb(255, 99, 132)'
-                    }
-                },
-            };
         };
 
         $scope.monthly_cost = 0;
@@ -200,77 +236,14 @@
             })
         };
 
-        this.getUsageDataForChart2 = function() {
-            $http.get('/stats?id=2')
-                .then(function(response) {
-                    $scope.chartData2.labels = response.data.chartData.labels;
-                    $scope.chartData2.series = response.data.chartData.series;
-                    $scope.chartData2.data = response.data.chartData.data;
-                })
-            $scope.chartData2.options = {
-                scaleStartValue: 0,
-                title: {
-                    display: true,
-                    text: 'Usage in Minutes by Day of Week (last 7 days)'
-                },
-                scaleStartValue: 0,
-                legend: {
-                    display: true,
-                    labels: {}
-                },
-            };
-        };
-
-
-        this.getUsageDataForChart3 = function() {
-            $http.get('/stats?id=3')
-                .then(function(response) {
-                    $scope.chartData3.labels = response.data.chartData.labels;
-                    $scope.chartData3.series = response.data.chartData.series;
-                    $scope.chartData3.data = response.data.chartData.data;
-                })
-            $scope.chartData3.options = {
-                scaleStartValue: 0,
-                title: {
-                    display: true,
-                    text: 'Usage in Minutes Per Station by Day of Week (last 30 days)'
-                },
-                scaleStartValue: 0,
-                legend: {
-                    display: true,
-                    labels: {}
-                },
-            };
-        };
-
-        this.getUsageDataForChart4 = function() {
-            $http.get('/stats?id=4')
-                .then(function(response) {
-                    $scope.chartData4.labels = response.data.chartData.labels;
-                    $scope.chartData4.series = response.data.chartData.series;
-                    $scope.chartData4.data = response.data.chartData.data;
-                })
-            $scope.chartData4.options = {
-                scaleStartValue: 0,
-                title: {
-                    display: true,
-                    text: 'Station Activity by Hour of the Day (last 30 days)'
-                },
-                scaleStartValue: 0,
-                legend: {
-                    display: true,
-                    labels: {}
-                },
-            };
-        };
 
         this.loadStatsData = function() {
             $scope.beatheart = true;
             Chart.defaults.global.defaultFontColor = "#fff";
-            //            this.getUsageDataForChart1();
-            //            this.getUsageDataForChart2();
-            //            this.getUsageDataForChart3();
-            //            this.getUsageDataForChart4();
+            this.getChartData(1)
+            this.getChartData(2)
+            this.getChartData(3)
+            this.getChartData(4)
             $scope.beatheart = false;
         };
 
@@ -310,7 +283,7 @@
                 StartDate: new Date(),
                 EndDate: endDate,
                 Duration: 0,
-				timepicker: d
+                timepicker: d
             };
             $scope.schedule.unshift($scope.scheduleModel)
         };

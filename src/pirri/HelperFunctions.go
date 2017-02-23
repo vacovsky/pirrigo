@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 func ConvertSqlDayToDOW(daynum int) string {
@@ -24,4 +26,8 @@ func ConvertSqlDayToDOW(daynum int) string {
 		fmt.Println("Number provided does not correspond to a day of the week.  Valid inputs are 0-6.")
 	}
 	return result
+}
+
+func Spew(s struct{}) {
+	spew.Dump(s)
 }
