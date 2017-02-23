@@ -186,8 +186,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	tracker := 0
 	// build list of stations in ascending order.  There must be a better way to do this...
-	for _, i := range chartData {
-		found := false
+	for y, i := range chartData {
 		if tracker == 0 {
 			seriesTracker[i.ID] = tracker
 			tracker += 1
@@ -197,63 +196,27 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0})
 			result.Series = append(result.Series, i.ID)
-		} else {
-			for k, _ := range seriesTracker {
-				if i.ID == k {
-					found = true
-				}
-				if !found {
-					seriesTracker[i.ID] = tracker
-					result.Data = append(result.Data, []int{
-						0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0,
-						0, 0, 0, 0, 0, 0})
-					result.Series = append(result.Series, i.ID)
-				}
-			}
+		} else if i.ID != result.Series[len(result.Series)-1] {
+			seriesTracker[i.ID] = tracker
+			result.Data = append(result.Data, []int{
+				0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0,
+				0, 0, 0, 0, 0, 0})
+			result.Series = append(result.Series, i.ID)
+			fmt.Println(y)
 		}
-		//		if len(result.Series) == 0 {
-		//			seriesTracker[i.ID] = tracker
-		//			tracker++
 
-		//			result.Series = append(result.Series, i.ID)
-		//			result.Data = append(result.Data, []int{
-		//				0, 0, 0, 0, 0, 0,
-		//				0, 0, 0, 0, 0, 0,
-		//				0, 0, 0, 0, 0, 0,
-		//				0, 0, 0, 0, 0, 0})
-		//		} else {
-		//		megaloop:
-		//			for _, xv := range result.Series {
-		//				if int(i.ID) == int(xv) {
-		//					found = true
-		//					break megaloop
-		//				}
-		//				if !found {
-		//					seriesTracker[i.ID] = tracker
-		//					tracker++
-
-		//					result.Series = append(result.Series, i.ID)
-		//					result.Data = append(result.Data, []int{
-		//						0, 0, 0, 0, 0, 0,
-		//						0, 0, 0, 0, 0, 0,
-		//						0, 0, 0, 0, 0, 0,
-		//						0, 0, 0, 0, 0, 0})
-		//				}
-		//			}
-		//		}
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs
 	}
 
 	if SETTINGS.PirriDebug {
-		//		spew.Dump(&result)
 		spew.Dump(&seriesTracker)
-		//		spew.Dump(&chartData)
 	}
 	blob, err := json.Marshal(&result)
 	if err != nil {
 		fmt.Println(err, err.Error())
 	}
+
 	io.WriteString(rw, string(blob))
 }

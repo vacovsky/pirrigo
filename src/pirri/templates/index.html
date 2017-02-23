@@ -145,10 +145,10 @@
                         <table cellpadding="0" cellspacing="0" border="0">
                             <thead>
                                 <th class="col-md-1">Station</th>
-                                <th class="col-md-2">Start Date</th>
+                                <th class="col-md-4">Start Date</th>
                                 <th class="col-md-2">Start Time</th>
                                 <th class="col-md-1">Duration</th>
-                                <th class="col-md-5">Days</th>
+                                <th class="col-md-3">Days</th>
                                 <th class="col-md-1">
                                     <a><span id="navicons" ng-click="pc.addScheduleButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
                                 </th>
@@ -168,7 +168,7 @@
                                             </ul>
                                         </div>
                                     </td>
-                                    <td class="col-md-2">
+                                    <td class="col-md-4">
                                         <p ng-show="scheduleModel.ID != sched.ID"><em>{[sched.StartDate | date:'fullDate' ]}</em></p>
                                         <p ng-show="scheduleModel.ID == sched.ID" class="input-group">
                                             <input type="text" class="form-control"
@@ -201,7 +201,7 @@
                                             </ul>
                                         </div>
                                     </td>
-                                    <td class="col-md-5">
+                                    <td class="col-md-3">
                                         <div class="checkbox" ng-show="scheduleModel.ID == sched.ID">
                                             <label><input type="checkbox" ng-model="scheduleModel.Sunday">Sun<br/> </label>
                                             <label><input type="checkbox" ng-model="scheduleModel.Monday">Mon<br/> </label>
