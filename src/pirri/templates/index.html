@@ -188,6 +188,7 @@
                                     <td class="col-md-2">
                                         <span ng-show="scheduleModel.ID != sched.ID">{[sched.StartTime]}</span>
                                         <div class="form-group">
+<!--										  <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
                                             <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
                                         </div>
                                     </td>
