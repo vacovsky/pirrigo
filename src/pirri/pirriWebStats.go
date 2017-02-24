@@ -11,29 +11,76 @@ import (
 	"github.com/davecgh/go-spew/spew"
 )
 
+// TODO parameterize the inputs for date ranges and add selectors on stats page
 func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 	type StatsChart struct {
 		ReportType int
-		Labels     []string
+		Labels     []int
 		Series     []string
-		Data       [][]float32
+		Data       [][]int
 	}
-
+	type RawResult struct {
+		StationID int
+		Secs      int
+	}
 	GormDbConnect()
 	defer db.Close()
 
-	type RawResult struct {
-		Day  int
-		Mins float32
-	}
-
 	result := StatsChart{
 		ReportType: 1,
-		Labels:     []string{},
-		Series:     []string{},
+		Labels:     []int{},
+		Series:     []string{"Scheduled", "Unscheduled"},
 	}
+
+	var rawResult0 []RawResult
+	var rawResult1 []RawResult
+
+	seriesTracker := map[int]int{}
+	tracker0 := 0
+	tracker1 := 0
+
+	// unscheduled
+	sqlQuery0 := `SELECT DISTINCT station_id, SUM(duration) as secs
+	            FROM station_histories
+	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id=0 AND station_id > 0
+	            GROUP BY station_id
+	            ORDER BY station_id ASC`
+	// scheduled
+	sqlQuery1 := `SELECT DISTINCT station_id, SUM(duration) as secs
+	            FROM station_histories
+	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id>1 AND station_id > 0
+	            GROUP BY station_id
+	            ORDER BY station_id ASC`
+
+	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
+	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
+
+	for _, i := range rawResult0 {
+		if loc, ok := seriesTracker[i.StationID]; ok {
+			result.Data[loc][0] += i.Secs
+		} else {
+			seriesTracker[i.StationID] = tracker0
+			result.Labels = append(result.Labels, i.StationID)
+			result.Data = append(result.Data, []int{0, 0})
+			result.Data[tracker0][0] += i.Secs
+			tracker0++
+		}
+	}
+	for _, i := range rawResult1 {
+		if loc, ok := seriesTracker[i.StationID]; ok {
+			result.Data[loc][1] += i.Secs
+		} else {
+			seriesTracker[i.StationID] = tracker1
+			result.Labels = append(result.Labels, i.StationID)
+			result.Data = append(result.Data, []int{0, 0})
+			result.Data[tracker1][1] += i.Secs
+			tracker1++
+		}
+	}
+
 	if SETTINGS.PirriDebug {
-		//		spew.Dump(rawResults1)
+		spew.Dump(rawResult1)
+		spew.Dump(seriesTracker)
 	}
 
 	blob, err := json.Marshal(&result)
@@ -190,7 +237,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	tracker := 0
 	// build list of stations in ascending order.  There must be a better way to do this...
-	for y, i := range chartData {
+	for _, i := range chartData {
 		if tracker == 0 {
 			seriesTracker[i.ID] = tracker
 			tracker += 1
@@ -208,7 +255,6 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0})
 			result.Series = append(result.Series, i.ID)
-			fmt.Println(y)
 		}
 
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs
