@@ -11,29 +11,76 @@ import (
 	"github.com/davecgh/go-spew/spew"
 )
 
+// TODO parameterize the inputs for date ranges and add selectors on stats page
 func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 	type StatsChart struct {
 		ReportType int
-		Labels     []string
+		Labels     []int
 		Series     []string
-		Data       [][]float32
+		Data       [][]int
 	}
-
+	type RawResult struct {
+		StationID int
+		Secs      int
+	}
 	GormDbConnect()
 	defer db.Close()
 
-	type RawResult struct {
-		Day  int
-		Mins float32
-	}
-
 	result := StatsChart{
 		ReportType: 1,
-		Labels:     []string{},
-		Series:     []string{},
+		Labels:     []int{},
+		Series:     []string{"Scheduled", "Unscheduled"},
 	}
+
+	var rawResult0 []RawResult
+	var rawResult1 []RawResult
+
+	seriesTracker := map[int]int{}
+	tracker0 := 0
+	tracker1 := 0
+
+	// unscheduled
+	sqlQuery0 := `SELECT DISTINCT station_id, SUM(duration) as secs
+	            FROM station_histories
+	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id=0 AND station_id > 0
+	            GROUP BY station_id
+	            ORDER BY station_id ASC`
+	// scheduled
+	sqlQuery1 := `SELECT DISTINCT station_id, SUM(duration) as secs
+	            FROM station_histories
+	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id>1 AND station_id > 0
+	            GROUP BY station_id
+	            ORDER BY station_id ASC`
+
+	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
+	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
+
+	for _, i := range rawResult0 {
+		if loc, ok := seriesTracker[i.StationID]; ok {
+			result.Data[loc][0] += i.Secs
+		} else {
+			seriesTracker[i.StationID] = tracker0
+			result.Labels = append(result.Labels, i.StationID)
+			result.Data = append(result.Data, []int{0, 0})
+			result.Data[tracker0][0] += i.Secs
+			tracker0++
+		}
+	}
+	for _, i := range rawResult1 {
+		if loc, ok := seriesTracker[i.StationID]; ok {
+			result.Data[loc][1] += i.Secs
+		} else {
+			seriesTracker[i.StationID] = tracker1
+			result.Labels = append(result.Labels, i.StationID)
+			result.Data = append(result.Data, []int{0, 0})
+			result.Data[tracker1][1] += i.Secs
+			tracker1++
+		}
+	}
+
 	if SETTINGS.PirriDebug {
-		//		spew.Dump(rawResults1)
+		spew.Dump(rawResult1)
+		spew.Dump(seriesTracker)
 	}
 
 	blob, err := json.Marshal(&result)
@@ -49,7 +96,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		ReportType int
 		Labels     []string
 		Series     []string
-		Data       [][]float32
+		Data       [][]int
 	}
 
 	result := StatsChart{
@@ -62,44 +109,48 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 
 	type RawResult struct {
 		Day  int
-		Mins float32
+		Secs int
 	}
 
+	var rawResults0 []RawResult
 	var rawResults1 []RawResult
 	var rawResults2 []RawResult
-	var rawResults3 []RawResult
 
-	sqlQuery1 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
+	sqlQuery0 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
             GROUP BY day
             ORDER BY day ASC`)
-	sqlQuery2 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
+	sqlQuery1 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id > 0
             GROUP BY day
             ORDER BY day ASC`)
-	sqlQuery3 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration / 60) as mins
+	sqlQuery2 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id = 0
             GROUP BY day
             ORDER BY day ASC`)
-	db.Raw(sqlQuery1, -8, 7).Scan(&rawResults1)
-	db.Raw(sqlQuery2, -8, 7).Scan(&rawResults2)
-	db.Raw(sqlQuery3, -8, 7).Scan(&rawResults3)
 
-	result.Data = [][]float32{
-		[]float32{0, 0, 0, 0, 0, 0, 0},
-		[]float32{0, 0, 0, 0, 0, 0, 0},
-		[]float32{0, 0, 0, 0, 0, 0, 0},
+	db.Raw(sqlQuery0, SETTINGS.UtcOffset, 7).Scan(&rawResults0)
+	db.Raw(sqlQuery1, SETTINGS.UtcOffset, 7).Scan(&rawResults1)
+	db.Raw(sqlQuery2, SETTINGS.UtcOffset, 7).Scan(&rawResults2)
+
+	result.Data = [][]int{
+		[]int{0, 0, 0, 0, 0, 0, 0},
+		[]int{0, 0, 0, 0, 0, 0, 0},
+		[]int{0, 0, 0, 0, 0, 0, 0},
 	}
 
-	//	for _, _ := range rawResults1 {
-	//				for result.Data[0][result.Data[len(result.Data)-1] != v.Day - 1 {
-	//					result.Data[0] = append(result.Data, v.Day - 1)
-	//				}
-
-	//	}
+	for _, v := range rawResults0 {
+		result.Data[0][v.Day] = v.Secs
+	}
+	for _, v := range rawResults1 {
+		result.Data[1][v.Day] = v.Secs
+	}
+	for _, v := range rawResults2 {
+		result.Data[2][v.Day] = v.Secs
+	}
 
 	if SETTINGS.PirriDebug {
 		//		spew.Dump(rawResults1)
@@ -171,12 +222,12 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 	result.Data = [][]int{}
 
 	sqlStr := fmt.Sprintf(`SELECT stations.id, 
-					  HOUR(start_time - INTERVAL %s HOUR) as hour, 
+					  HOUR(start_time + INTERVAL %s HOUR) as hour, 
 					  (duration) as run_secs
 				FROM station_histories
 				JOIN stations ON stations.id = station_histories.station_id
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
-				ORDER BY station_id ASC`, strconv.Itoa(-1*SETTINGS.UtcOffset))
+				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.UtcOffset))
 
 	GormDbConnect()
 	defer db.Close()
@@ -186,7 +237,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	tracker := 0
 	// build list of stations in ascending order.  There must be a better way to do this...
-	for y, i := range chartData {
+	for _, i := range chartData {
 		if tracker == 0 {
 			seriesTracker[i.ID] = tracker
 			tracker += 1
@@ -204,7 +255,6 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0})
 			result.Series = append(result.Series, i.ID)
-			fmt.Println(y)
 		}
 
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs
