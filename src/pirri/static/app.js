@@ -19,7 +19,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Total Usage in Minutes (last 30 days)'
+                    text: 'Total Usage in Seconds (last 30 days)'
                 },
                 scaleStartValue: 0,
                 legend: {
@@ -38,7 +38,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Usage in Minutes by Day of Week (last 7 days)'
+                    text: 'Usage in Seconds by Day of Week (last 7 days)'
                 },
                 scaleStartValue: 0,
                 legend: {
@@ -55,7 +55,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Usage in Minutes Per Station by Day of Week (last 30 days)'
+                    text: 'Usage in Seconds Per Station by Day of Week (last 30 days)'
                 },
                 scaleStartValue: 0,
                 legend: {
