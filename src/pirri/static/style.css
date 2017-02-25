@@ -42,6 +42,12 @@ body {
     /* overflow: hidden; */
 }
 
+customcal {
+  background-color: blue;
+  color: red;
+  text-shadow: false;
+}
+
 input {
   background-color: #59b300;
   color:  white;

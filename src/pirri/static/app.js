@@ -8,8 +8,11 @@
         'ngAnimate',
         'ngSanitize',
         'ui.calendar',
-        'ui.bootstrap'
-    ]);
+        'ui.bootstrap',
+        'angularMoment'
+    ]).factory('moment', function ($window) {
+        return $window.moment;
+    });;
     app.Root = '/';
     // app.config(['$interpolateProvider',
     //     function($interpolateProvider) {
@@ -436,10 +439,63 @@
                 return "Never"
             }
         }
+
+        $scope.addDays = function(startDate, numberOfDays) {
+            var returnDate = new Date(
+                startDate.getFullYear(),
+                startDate.getMonth(),
+                startDate.getDate() + numberOfDays,
+                startDate.getHours(),
+                startDate.getMinutes(),
+                startDate.getSeconds());
+            return returnDate;
+        }
+
         this.getSchedule = function() {
             $http.get('/schedule/all')
                 .then(function(response) {
                     $scope.schedule = response.data.stationSchedules;
+                    for (i = 0; i < response.data.stationSchedules.length; i++) {
+                        var entry = response.data.stationSchedules[i];
+                        var curDate = new Date();
+                        var startDate = moment(new Date(entry.StartDate)).toDate();
+                        var endDate = moment(new Date(entry.EndDate)).toDate();
+
+                        var dateDiff = Math.abs(endDate.getTime() - startDate.getTime());
+                        var diffDays = Math.ceil(dateDiff / (1000 * 3600 * 24));
+
+                        while (diffDays > 0) {
+                            var newRealDate = moment($scope.addDays(startDate, diffDays)).toDate();
+                            var shouldShow = false;
+
+                            if (newRealDate.getDay() == 0 && entry.Sunday) {
+                                shouldShow = true;
+                            } else if (newRealDate.getDay() == 1 && entry.Monday) {
+                                shouldShow = true;
+                            } else if (newRealDate.getDay() == 2 && entry.Tuesday) {
+                                shouldShow = true;
+                            } else if (newRealDate.getDay() == 3 && entry.Wednesday) {
+                                shouldShow = true;
+                            } else if (newRealDate.getDay() == 4 && entry.Thursday) {
+                                shouldShow = true;
+                            } else if (newRealDate.getDay() == 5 && entry.Friday) {
+                                shouldShow = true;
+                            } else if (newRealDate.getDay() == 6 && entry.Saturday) {
+                                shouldShow = true;
+                            }
+
+                            if (shouldShow) {
+                                var newEntry = {
+                                    ID: entry.ID,
+                                    Start: newRealDate,
+                                    End: newRealDate.setSeconds(newRealDate.getSeconds() + event.Duration)
+                                }
+                                $scope.addEvent(newEntry);
+                                console.log(newEntry.Start.getDate());
+                            }
+                            diffDays--;
+                        }
+                    }
                 })
         };
 
@@ -552,41 +608,43 @@
         var m = date.getMonth();
         var y = date.getFullYear();
 
-        $scope.events = [{
-            title: 'All Day Event',
-            start: new Date(y, m, 1),
-            color: 'orange'
-        }, {
-            title: 'Long Event',
-            start: new Date(y, m, d - 5),
-            end: new Date(y, m, d - 2),
-            color: 'blue'
-        }, {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(y, m, d - 3, 16, 0),
-            allDay: false,
-            color: 'green'
-        }, {
-            id: 999,
-            title: 'Repeating Event',
-            start: new Date(y, m, d + 4, 16, 0),
-            allDay: false,
-            color: 'teal'
-        }, {
-            title: 'Birthday Party',
-            start: new Date(y, m, d + 1, 19, 0),
-            end: new Date(y, m, d + 1, 22, 30),
-            allDay: false,
-            color: 'pink'
-        }, {
-            title: 'Click for Google',
-            start: new Date(y, m, 28),
-            end: new Date(y, m, 29),
-            url: 'http://google.com/',
-            backgroundColor: "purple",
-            color: 'purple'
-        }];
+        $scope.events = [
+            // {
+            //     title: 'All Day Event',
+            //     start: new Date(y, m, 1),
+            //     color: 'orange'
+            // }, {
+            //     title: 'Long Event',
+            //     start: new Date(y, m, d - 5),
+            //     end: new Date(y, m, d - 2),
+            //     color: 'blue'
+            // }, {
+            //     id: 999,
+            //     title: 'Repeating Event',
+            //     start: new Date(y, m, d - 3, 16, 0),
+            //     allDay: false,
+            //     color: 'green'
+            // }, {
+            //     id: 999,
+            //     title: 'Repeating Event',
+            //     start: new Date(y, m, d + 4, 16, 0),
+            //     allDay: false,
+            //     color: 'teal'
+            // }, {
+            //     title: 'Birthday Party',
+            //     start: new Date(y, m, d + 1, 19, 0),
+            //     end: new Date(y, m, d + 1, 22, 30),
+            //     allDay: false,
+            //     color: 'pink'
+            // }, {
+            //     title: 'Click for Google',
+            //     start: new Date(y, m, 28),
+            //     end: new Date(y, m, 29),
+            //     url: 'http://google.com/',
+            //     backgroundColor: "purple",
+            //     color: 'purple'
+            // }
+        ];
         /* event source that calls a function on every view switch */
         // $scope.eventsF = function(start, end, timezone, callback) {
         //     var s = new Date(start).getTime() / 1000;
@@ -629,13 +687,14 @@
             }
         };
         /* add custom event*/
-        $scope.addEvent = function() {
-            $scope.events.push({
-                title: 'Open Sesame',
-                start: new Date(y, m, 28),
-                end: new Date(y, m, 29),
-                className: ['openSesame']
-            });
+        $scope.addEvent = function(ce) {
+            var aCalEvent = {
+                title: "Station " + ce.ID + " active",
+                start: ce.Start,
+                end: ce.End,
+            }
+            $scope.events.push(aCalEvent);
+            // console.log(aCalEvent);
         };
         /* remove event */
         $scope.remove = function(index) {
@@ -665,7 +724,7 @@
         /* config object */
         $scope.uiConfig = {
             calendar: {
-                height: 450,
+                height: 600,
                 editable: true,
                 header: {
                     left: 'title',
