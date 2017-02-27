@@ -143,13 +143,13 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	for _, v := range rawResults0 {
-		result.Data[0][v.Day] = v.Secs
+		result.Data[0][v.Day-1] = v.Secs
 	}
 	for _, v := range rawResults1 {
-		result.Data[1][v.Day] = v.Secs
+		result.Data[1][v.Day-1] = v.Secs
 	}
 	for _, v := range rawResults2 {
-		result.Data[2][v.Day] = v.Secs
+		result.Data[2][v.Day-1] = v.Secs
 	}
 
 	if SETTINGS.PirriDebug {
