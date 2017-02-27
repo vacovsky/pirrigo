@@ -9,6 +9,7 @@
         'ngSanitize',
         // 'ui.calendar',
         // 'ui.bootstrap',
+        'ui.rCalendar',
         'angularMoment'
     ]).factory('moment', function($window) {
         return $window.moment;
@@ -28,7 +29,7 @@
                 start: new Date(y, m, 1),
                 color: 'orange'
             }]
-        $scope.eventSources = [];
+        $scope.eventSource = [];
 
         $scope.chartData1 = {
             labels: [],
@@ -149,7 +150,8 @@
             $scope.beatheart = true;
             $http.get('/schedule/all')
                 .then(function(response) {
-                    $scope.calEvents = response.data.StationSchedule;
+                    $scope.schedule = response.data.stationSchedules;
+                    $scope.loadCalEvents();
                     $scope.beatheart = false;
                 })
         };
@@ -381,10 +383,11 @@
         };
 
         this.refresh = function() {
-            this.getSchedule();
+            // this.getSchedule();
+            this.getCalEvents();
             this.loadStations();
-            this.getLastStationRun();
-            this.getNextStationRun();
+            // this.getLastStationRun();
+            // this.getNextStationRun();
             this.loadGPIO();
             this.loadStatsData();
             this.getWaterUsageStats();
@@ -456,31 +459,31 @@
             return returnDate;
         }
 
-        this.getSchedule = function() {
-            $http.get('/schedule/all')
-                .then(function(response) {
-                    $scope.schedule = response.data.stationSchedules;
-                }).then(this.loadCalEvents())
-        };
+        // this.getSchedule = function() {
+        //     $http.get('/schedule/all')
+        //         .then(function(response) {
+        //             $scope.schedule = response.data.stationSchedules;
+        //         }).then(this.loadCalEvents())
+        // };
 
 
-        $scope.lastStationRunHash = {}
-        this.getLastStationRun = function() {
-            $http.get('/station/lastruns')
-                .then(function(response) {
-                    $scope.lastStationRunHash = response.data.lastrunlist;
-                })
-                // console.log($scope.lastStationRunHash);
-        };
+        // $scope.lastStationRunHash = {}
+        // this.getLastStationRun = function() {
+        //     $http.get('/station/lastruns')
+        //         .then(function(response) {
+        //             $scope.lastStationRunHash = response.data.lastrunlist;
+        //         })
+        //         // console.log($scope.lastStationRunHash);
+        // };
 
-        $scope.nextStationRunHash = {}
-        this.getNextStationRun = function() {
-            $http.get('/station/nextruns')
-                .then(function(response) {
-                    $scope.nextStationRunHash = response.data.nextrunlist;
-                })
+        // $scope.nextStationRunHash = {}
+        // this.getNextStationRun = function() {
+        //     $http.get('/station/nextruns')
+        //         .then(function(response) {
+        //             $scope.nextStationRunHash = response.data.nextrunlist;
+        //         })
 
-        };
+        // };
 
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
@@ -556,8 +559,12 @@
         var m = date.getMonth();
         var y = date.getFullYear();
 
-        this.loadCalEvents = function() {
-            $scope.events = [];
+        $scope.calOptions = {
+            calendarMode: "week"
+        }
+
+        $scope.loadCalEvents = function() {
+            $scope.eventSource = [];
             for (i = 0; i < $scope.schedule.length; i++) {
                 var entry = $scope.schedule[i];
                 var curDate = moment().toDate();
@@ -589,8 +596,10 @@
 
                         if (shouldShow) {
                             var newEntry = {
-                                ID: entry.ID,
-                                Start: new Date(
+                                stationCalID: entry.ID,
+                                title: "Station Run: " + entry.ID,
+                                allDay: false,
+                                start: new Date(
                                     newRealDate.getFullYear(),
                                     newRealDate.getMonth(),
                                     newRealDate.getDate(),
@@ -598,7 +607,7 @@
                                     newRealDate.getMinutes(),
                                     newRealDate.getSeconds()
                                 ),
-                                End: new Date(
+                                end: new Date(
                                     newRealDate.getFullYear(),
                                     newRealDate.getMonth(),
                                     newRealDate.getDate(),
@@ -607,26 +616,25 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             }
-                            // $scope.addEvent(newEntry);
+                            console.log(newEntry);
+                            $scope.eventSource.push(newEntry);
                         }
                     }
                     diffDays--;
                 }
             }
-            console.log($scope.eventSources);
-            // console.log($scope.events)
-            // $scope.eventSources = [$scope.events]
-            // uiCalendarConfig.calendars['stationCalendar'].fullCalendar('refetchEvents');
+            console.log($scope.eventSource)
         }
 
-        
+        this.addEvent = function(ce) {
+
+        }
 
         this.autoLoader = function() {
             this.getCalEvents();
-            this.getSchedule();
             this.loadStations();
-            this.getLastStationRun();
-            this.getNextStationRun();
+            // this.getLastStationRun();
+            // this.getNextStationRun();
             this.loadGPIO();
             this.loadStatsData();
             this.loadHistory();

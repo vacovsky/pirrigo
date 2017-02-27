@@ -36,6 +36,11 @@
     "jquery-ui": "^1.12.1",
     "jquery": "^3.1.1",
     "moment": "^2.17.1",
-    "ui-bootstrap": "^2.5.0"
+    "ui-bootstrap": "^2.5.0",
+    "ng-responsive-calendar": "^0.1.16"
+  },
+  "resolutions": {
+    "angular": "^1.6.2",
+    "bootstrap": "^3.3.7"
   }
 }
