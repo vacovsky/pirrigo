@@ -13,7 +13,6 @@ import (
 
 func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stationSchedules := []StationSchedule{}
-
 	defer db.Close()
 
 	GormDbConnect()
@@ -28,7 +27,6 @@ func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
 	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
-
 	defer db.Close()
 
 	GormDbConnect()

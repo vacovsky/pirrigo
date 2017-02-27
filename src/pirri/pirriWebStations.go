@@ -15,7 +15,6 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	var t Task = Task{Station: Station{}, StationSchedule: StationSchedule{}}
 	var msr ManualStationRun
 	ERR = json.NewDecoder(req.Body).Decode(&msr)
-
 	defer db.Close()
 
 	GormDbConnect()
@@ -30,7 +29,6 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 
 func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stations := []Station{}
-
 	defer db.Close()
 
 	GormDbConnect()
@@ -45,7 +43,6 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	stationId, err := strconv.Atoi(req.URL.Query()["stationid"][0])
-
 	defer db.Close()
 
 	GormDbConnect()

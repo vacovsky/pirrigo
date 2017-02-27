@@ -10,7 +10,6 @@ import (
 
 func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	history := []StationHistory{}
-
 	defer db.Close()
 
 	GormDbConnect()

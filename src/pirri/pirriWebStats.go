@@ -53,8 +53,10 @@ func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 
 	GormDbConnect()
 	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
+	db.Close()
 	GormDbConnect()
 	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
+	db.Close()
 
 	for _, i := range rawResult0 {
 		if loc, ok := seriesTracker[i.StationID]; ok {
@@ -134,10 +136,15 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 
 	GormDbConnect()
 	db.Raw(sqlQuery0, SETTINGS.UtcOffset, 7).Scan(&rawResults0)
+	db.Close()
+
 	GormDbConnect()
 	db.Raw(sqlQuery1, SETTINGS.UtcOffset, 7).Scan(&rawResults1)
+	db.Close()
+
 	GormDbConnect()
 	db.Raw(sqlQuery2, SETTINGS.UtcOffset, 7).Scan(&rawResults2)
+	db.Close()
 
 	result.Data = [][]int{
 		[]int{0, 0, 0, 0, 0, 0, 0},
@@ -232,12 +239,11 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
 				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.UtcOffset))
 
-	defer db.Close()
-
 	seriesTracker := map[int]int{}
 
 	GormDbConnect()
 	db.Raw(sqlStr).Scan(&chartData)
+	db.Close()
 
 	tracker := 0
 	// build list of stations in ascending order.  There must be a better way to do this...

@@ -5,13 +5,15 @@
         <link rel="icon" href="static/icon.png">
         <link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.css">
         <link rel="stylesheet" href="/static/bower_components/angular-material/angular-material.min.css">
+        <link rel="stylesheet" href="/static/bower_components/ng-responsive-calendar/dist/css/calendar.min.css"/>
         <link rel="stylesheet" href="/static/style.css">
-        
         <script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="/static/bower_components/angular/angular.js"></script>
         <script type="text/javascript" src="/static/bower_components/chart.js/dist/Chart.js"></script>
-        <script type="text/javascript" src="/static/bower_components/angular-chart.js/dist/angular-chart.js"></script>
         <script type="text/javascript" src="/static/bower_components/moment/moment.js"></script>
+        
+        <script src="/static/bower_components/ng-responsive-calendar/dist/js/calendar-tpls.min.js"></script>
+        <script type="text/javascript" src="/static/bower_components/angular-chart.js/dist/angular-chart.js"></script>
         <script src="/static/bower_components/angular-moment/angular-moment.js"></script>
         <script src="/static/bower_components/bootstrap/dist/js/bootstrap.js"></script>
         <script type="text/javascript" src="/static/bower_components/angular-cookies/angular-cookies.js"></script>
@@ -242,7 +244,7 @@
                 <!-- END EDIT SCHEDULE-->
                 <!-- START NEW CALENDAR -->
                 <div ng-show="currentPage == 'mycal'">
-                    <!-- <div ui-calendar="uiConfig.calendar" ng-if="eventSources" class="span8 calendar customcal" ng-model="sourceEvents" calendar="stationCalendar"></div> -->
+                    <calendar calendar-mode="week" options="calOptions" event-source="eventSource">
                 </div>
                 <!-- END NEW CALENDAR -->
                 <!-- START HISTORY -->
