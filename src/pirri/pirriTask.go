@@ -6,17 +6,18 @@ import (
 	"time"
 )
 
+//Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
 type Task struct {
 	Station         Station         `json:"station`         //`gorm:"ForeignKey:Station"`
 	StationSchedule StationSchedule `json:"stationSchedule` //`gorm:"ForeignKey:StationSchedule"`
 }
 
-func (t *Task) Log() {
+func (t *Task) log() {
 	if SETTINGS.PirriDebug {
 		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
 	}
 	defer db.Close()
-	GormDbConnect()
+	gormDbConnect()
 	db.Create(&StationHistory{
 		StationID:  t.Station.ID,
 		ScheduleID: t.StationSchedule.ID,
@@ -25,7 +26,7 @@ func (t *Task) Log() {
 	})
 }
 
-func (t *Task) Send() {
+func (t *Task) send() {
 	taskBlob, ERR := json.Marshal(&t)
 	failOnError(ERR, "Could not jsonify task.")
 	if SETTINGS.PirriDebug {
@@ -34,7 +35,7 @@ func (t *Task) Send() {
 	rabbitSend(SETTINGS.RabbitTaskQueue, string(taskBlob))
 }
 
-func (t *Task) Execute() {
+func (t *Task) execute() {
 	if SETTINGS.PirriDebug {
 		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
 	}

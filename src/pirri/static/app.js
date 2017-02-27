@@ -599,7 +599,7 @@
                                 stationCalID: entry.ID,
                                 title: "Station Run: " + entry.ID,
                                 allDay: false,
-                                start: new Date(
+                                startTime: new Date(
                                     newRealDate.getFullYear(),
                                     newRealDate.getMonth(),
                                     newRealDate.getDate(),
@@ -607,7 +607,7 @@
                                     newRealDate.getMinutes(),
                                     newRealDate.getSeconds()
                                 ),
-                                end: new Date(
+                                endTime: new Date(
                                     newRealDate.getFullYear(),
                                     newRealDate.getMonth(),
                                     newRealDate.getDate(),
@@ -616,15 +616,21 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             }
-                            console.log(newEntry);
+                            // console.log(newEntry);
                             $scope.eventSource.push(newEntry);
                         }
                     }
                     diffDays--;
                 }
             }
+            $scope.$broadcast('eventSourceChanged',$scope.eventSource);
             console.log($scope.eventSource)
         }
+
+        $scope.mode = "week";
+        $scope.changeMode = function (mode) {
+            $scope.mode = mode;
+        };
 
         this.addEvent = function(ce) {
 

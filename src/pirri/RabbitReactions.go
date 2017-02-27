@@ -8,8 +8,8 @@ import (
 func reactToGpioMessage(m []byte) {
 	task := Task{}
 	json.Unmarshal(m, &task)
-	task.Log()
-	task.Execute()
+	task.log()
+	task.execute()
 }
 
 func reactToStopMessage(m []byte) {

@@ -68,7 +68,7 @@ func startPirriWebApp() {
 	}
 
 	// Host server
-	panic(http.ListenAndServe(":"+SETTINGS.HttpPort, nil))
+	panic(http.ListenAndServe(":"+SETTINGS.HTTPPort, nil))
 }
 
 func logTraffic() string {

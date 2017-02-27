@@ -213,19 +213,19 @@
                                         <div class="checkbox" ng-show="scheduleModel.ID != sched.ID">
                                             <table style="border: 1px solid black; border-collapse: collapse; text-align: center;">
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Sunday">Sun</th>
-                                                <th ng-show="!sched.Sunday">Sun</th>
+                                                <th ng-show="!sched.Sunday" style="padding: 3px; text-align: center;">Sun</th>
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Monday">Mon</th>
-                                                <th ng-show="!sched.Monday">Mon</th>
+                                                <th ng-show="!sched.Monday" style="padding: 3px; text-align: center;">Mon</th>
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Tuesday">Tue</th>
-                                                <th ng-show="!sched.Tuesday">Tue</th>
+                                                <th ng-show="!sched.Tuesday" style="padding: 3px; text-align: center;">Tue</th>
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Wednesday">Wed</th>
-                                                <th ng-show="!sched.Wednesday">Wed</th>
+                                                <th ng-show="!sched.Wednesday" style="padding: 3px; text-align: center;">Wed</th>
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Thursday">Thu</th>
-                                                <th ng-show="!sched.Thursday">Thu</th>
+                                                <th ng-show="!sched.Thursday" style="padding: 3px; text-align: center;">Thu</th>
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Friday">Fri</th>
-                                                <th ng-show="!sched.Friday">Fri</th>
+                                                <th ng-show="!sched.Friday" style="padding: 3px; text-align: center;">Fri</th>
                                                 <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Saturday">Sat</th>
-                                                <th ng-show="!sched.Saturday">Sat</th>
+                                                <th ng-show="!sched.Saturday" style="padding: 3px; text-align: center;">Sat</th>
                                             </table>
                                         </div>
                                     </td>
@@ -244,7 +244,25 @@
                 <!-- END EDIT SCHEDULE-->
                 <!-- START NEW CALENDAR -->
                 <div ng-show="currentPage == 'mycal'">
-                    <calendar calendar-mode="week" options="calOptions" event-source="eventSource">
+                    <div>
+                        <calendar calendar-mode=mode event-source="eventSource"></calendar>
+                    </div>
+                    <div class="made-with-love btn-toolbar">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default" ng-class="{active:mode==='month'}"
+                            ng-click="changeMode('month')">
+                            Month
+                            </button>
+                            <button type="button" class="btn btn-default" ng-class="{active:mode==='week'}"
+                            ng-click="changeMode('week')">
+                            Week
+                            </button>
+                            <button type="button" class="btn btn-default" ng-class="{active:mode==='day'}"
+                            ng-click="changeMode('day')">
+                            Day
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <!-- END NEW CALENDAR -->
                 <!-- START HISTORY -->

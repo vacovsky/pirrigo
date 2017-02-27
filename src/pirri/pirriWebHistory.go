@@ -12,7 +12,7 @@ func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	history := []StationHistory{}
 	defer db.Close()
 
-	GormDbConnect()
+	gormDbConnect()
 	db.Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {

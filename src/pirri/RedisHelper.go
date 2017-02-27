@@ -4,7 +4,7 @@ import (
 	"gopkg.in/redis.v5"
 )
 
-func RedisWriter(message string, channel string) {
+func redisWriter(message string, channel string) {
 	client := redis.NewClient(&redis.Options{
 		Addr:     SETTINGS.RedisServer + ":" + SETTINGS.RedisPort,
 		Password: "", // no password set

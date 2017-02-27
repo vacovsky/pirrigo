@@ -62,10 +62,7 @@ func parseConfig(config map[string]string) {
 		SETTINGS.UtcOffset, ERR = strconv.Atoi(utcoffset)
 	}
 	if port, ok := config["port"]; ok {
-		SETTINGS.HttpPort = port
-	}
-	if sqldbtype, ok := config["sqldbtype"]; ok {
-		SETTINGS.SqlDbType = sqldbtype
+		SETTINGS.HTTPPort = port
 	}
 	if redishost, ok := config["redishost"]; ok {
 		SETTINGS.RedisServer = redishost
@@ -74,16 +71,19 @@ func parseConfig(config map[string]string) {
 		SETTINGS.RedisPort = redisport
 	}
 	if sqlserver, ok := config["sqlserver"]; ok {
-		SETTINGS.SqlServer = sqlserver
+		SETTINGS.SQLServer = sqlserver
 	}
 	if sqluser, ok := config["sqluser"]; ok {
-		SETTINGS.SqlUser = sqluser
+		SETTINGS.SQLUser = sqluser
 	}
 	if sqlpass, ok := config["sqlpass"]; ok {
-		SETTINGS.SqlPass = sqlpass
+		SETTINGS.SQLPass = sqlpass
 	}
-	if sqldb, ok := config["sqldb"]; ok {
-		SETTINGS.SqlDbName = sqldb
+	if sqldbname, ok := config["sqldb"]; ok {
+		SETTINGS.SQLDbName = sqldbname
+	}
+	if sqldbtype, ok := config["sqldbtype"]; ok {
+		SETTINGS.SQLDBType = sqldbtype
 	}
 	if rabbitserver, ok := config["rabbitserver"]; ok {
 		SETTINGS.RabbitServer = rabbitserver
@@ -98,7 +98,7 @@ func parseConfig(config map[string]string) {
 		SETTINGS.RabbitPass = rabbitpass
 	}
 	if sqlport, ok := config["sqlport"]; ok {
-		SETTINGS.SqlPort = sqlport
+		SETTINGS.SQLPort = sqlport
 	}
 	if gormdebug, ok := config["gormdebug"]; ok {
 		SETTINGS.GormDebug, ERR = strconv.ParseBool(gormdebug)
@@ -122,7 +122,7 @@ func parseConfig(config map[string]string) {
 		SETTINGS.PirriDebug, ERR = strconv.ParseBool(pirridebug)
 	}
 	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
-	SQLCONNSTRING = SETTINGS.SqlUser + ":" + SETTINGS.SqlPass + "@tcp(" + SETTINGS.SqlServer + ":" + SETTINGS.SqlPort + ")/" + SETTINGS.SqlDbName + "?parseTime=true"
+	SQLCONNSTRING = SETTINGS.SQLUser + ":" + SETTINGS.SQLPass + "@tcp(" + SETTINGS.SQLServer + ":" + SETTINGS.SQLPort + ")/" + SETTINGS.SQLDbName + "?parseTime=true"
 	if SETTINGS.ShowSettings {
 		fmt.Println(SQLCONNSTRING)
 		fmt.Println(RMQCONNSTRING)
@@ -141,6 +141,6 @@ func parseConfig(config map[string]string) {
 }
 
 func displayConfig() {
-	message := "Server available at http://localhost:" + SETTINGS.HttpPort
+	message := "Server available at http://localhost:" + SETTINGS.HTTPPort
 	fmt.Printf("\n" + message + "\n")
 }

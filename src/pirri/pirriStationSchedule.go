@@ -7,8 +7,9 @@ import (
 	"time"
 )
 
-var lastTriggeredItem string = ""
+var lastTriggeredItem string
 
+//StationSchedule describes a scheduled activation for a Station
 type StationSchedule struct {
 	ID        int       `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	StartDate time.Time `sql:"DEFAULT:current_timestamp" gorm:"not null"`
@@ -26,7 +27,7 @@ type StationSchedule struct {
 	Repeating bool      `sql:"DEFAULT:false" gorm:"not null"`
 }
 
-func CreateNewStationSchedule() {
+func createNewStationSchedule() {
 	nowTime := time.Now()
 	startTime, ERR := strconv.Atoi(fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
 	failOnError(ERR, "Unable to create new station schedule entry.")
@@ -37,7 +38,7 @@ func CreateNewStationSchedule() {
 	}
 	defer db.Close()
 
-	GormDbConnect()
+	gormDbConnect()
 	db.Create(&sched)
 }
 
@@ -47,7 +48,7 @@ func checkForTasks() {
 	nowTime := time.Now()
 	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
 
-	GormDbConnect()
+	gormDbConnect()
 	db.Where(sqlFilter).Find(&scheds)
 	sendFoundScheduleItems(scheds)
 	if ERR != nil {
@@ -68,8 +69,8 @@ func sendFoundScheduleItems(items []StationSchedule) {
 	defer db.Close()
 	for i := range items {
 		task := Task{StationSchedule: items[i]}
-		GormDbConnect()
+		gormDbConnect()
 		db.Where(Station{ID: task.StationSchedule.StationID}).Find(&task.Station)
-		task.Send()
+		task.send()
 	}
 }

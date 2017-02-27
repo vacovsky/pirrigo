@@ -11,7 +11,7 @@ func showVersion() {
 
 func main() {
 	configInit()
-	GormSetup()
+	gormSetup()
 	createJunkData()
 	WG.Add(4)
 
