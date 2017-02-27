@@ -14,9 +14,9 @@ import (
 func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stationSchedules := []StationSchedule{}
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
 	blob, err := json.Marshal(&stationSchedules)
 	if err != nil {
@@ -29,9 +29,9 @@ func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
 	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	if db.NewRecord(&scheduleItem) {
 		db.Create(&scheduleItem)
 	} else {
@@ -47,9 +47,9 @@ func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
 	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Delete(&scheduleItem)
 
 	if SETTINGS.PirriDebug {

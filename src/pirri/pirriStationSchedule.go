@@ -35,20 +35,19 @@ func CreateNewStationSchedule() {
 		StartTime: startTime,
 		Duration:  300,
 	}
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Create(&sched)
 }
 
 func checkForTasks() {
-	GormDbConnect()
 	defer db.Close()
 
 	scheds := []StationSchedule{}
 	nowTime := time.Now()
 	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
-
+	GormDbConnect()
 	db.Where(sqlFilter).Find(&scheds)
 	sendFoundScheduleItems(scheds)
 	if ERR != nil {
@@ -66,11 +65,10 @@ func startTaskMonitor() {
 }
 
 func sendFoundScheduleItems(items []StationSchedule) {
-	GormDbConnect()
 	defer db.Close()
-
 	for i := range items {
 		task := Task{StationSchedule: items[i]}
+		GormDbConnect()
 		db.Where(Station{ID: task.StationSchedule.StationID}).Find(&task.Station)
 		task.Send()
 	}

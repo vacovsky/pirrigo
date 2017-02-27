@@ -9,8 +9,8 @@ type GpioPin struct {
 }
 
 func GetGpioByPin() {
-	GormDbConnect()
 	defer db.Close()
+	GormDbConnect()
 	gpio := db.Where("GPIO = ?", 4).Find(&GpioPin{}).Order("GPIO DESC")
 	JsonifySqlResults(gpio)
 }

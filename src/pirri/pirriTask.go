@@ -15,8 +15,8 @@ func (t *Task) Log() {
 	if SETTINGS.PirriDebug {
 		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
 	}
-	GormDbConnect()
 	defer db.Close()
+	GormDbConnect()
 	db.Create(&StationHistory{
 		StationID:  t.Station.ID,
 		ScheduleID: t.StationSchedule.ID,

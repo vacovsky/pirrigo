@@ -16,9 +16,9 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	var msr ManualStationRun
 	ERR = json.NewDecoder(req.Body).Decode(&msr)
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
 	if SETTINGS.PirriDebug {
@@ -31,9 +31,9 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stations := []Station{}
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Limit(100).Find(&stations)
 	blob, err := json.Marshal(&stations)
 	if err != nil {
@@ -46,9 +46,9 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	stationId, err := strconv.Atoi(req.URL.Query()["stationid"][0])
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Where("id = ?", stationId).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {

@@ -20,8 +20,8 @@ func NewDripnode(gph float32, station int, count int) {
 
 func UpdateDripnode(gph float32, station int, count int) {
 	dn := DripNode{GPH: gph, SID: station, Count: count}
-	GormDbConnect()
 	defer db.Close()
+	GormDbConnect()
 	db.Model(&dn).Where(
 		"GPH = ?", gph).Where(
 		"SID = ?", station).UpdateColumn(DripNode{Count: count})

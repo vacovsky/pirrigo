@@ -5,16 +5,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-
 	//	"github.com/davecgh/go-spew/spew"
 )
 
 func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	history := []StationHistory{}
 
-	GormDbConnect()
 	defer db.Close()
 
+	GormDbConnect()
 	db.Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {

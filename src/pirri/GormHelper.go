@@ -41,8 +41,8 @@ func JsonifySqlResults(input *gorm.DB) []string {
 
 //TODO remove this later - it's for testing only.
 func createJunkData() {
-	GormDbConnect()
 	defer db.Close()
+	GormDbConnect()
 	db.Create(&Station{
 		GPIO:   5,
 		Notes:  "",

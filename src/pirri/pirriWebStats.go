@@ -23,7 +23,6 @@ func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 		StationID int
 		Secs      int
 	}
-	GormDbConnect()
 	defer db.Close()
 
 	result := StatsChart{
@@ -52,7 +51,9 @@ func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 	            GROUP BY station_id
 	            ORDER BY station_id ASC`
 
+	GormDbConnect()
 	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
+	GormDbConnect()
 	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
 
 	for _, i := range rawResult0 {
@@ -104,7 +105,6 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		Labels:     []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"},
 		Series:     []string{"Total", "Scheduled", "Unscheduled"},
 	}
-	GormDbConnect()
 	defer db.Close()
 
 	type RawResult struct {
@@ -132,8 +132,11 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
             GROUP BY day
             ORDER BY day ASC`)
 
+	GormDbConnect()
 	db.Raw(sqlQuery0, SETTINGS.UtcOffset, 7).Scan(&rawResults0)
+	GormDbConnect()
 	db.Raw(sqlQuery1, SETTINGS.UtcOffset, 7).Scan(&rawResults1)
+	GormDbConnect()
 	db.Raw(sqlQuery2, SETTINGS.UtcOffset, 7).Scan(&rawResults2)
 
 	result.Data = [][]int{
@@ -229,10 +232,11 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
 				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.UtcOffset))
 
-	GormDbConnect()
 	defer db.Close()
 
 	seriesTracker := map[int]int{}
+
+	GormDbConnect()
 	db.Raw(sqlStr).Scan(&chartData)
 
 	tracker := 0
