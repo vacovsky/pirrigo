@@ -7,8 +7,8 @@
         'ngMaterial',
         'ngAnimate',
         'ngSanitize',
-        'ui.calendar',
-        'ui.bootstrap',
+        // 'ui.calendar',
+        // 'ui.bootstrap',
         'angularMoment'
     ]).factory('moment', function($window) {
         return $window.moment;
@@ -21,7 +21,7 @@
     //     }
     // ]);
 
-    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies, $scope, $compile, $timeout, uiCalendarConfig) {
+    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies, $scope, $compile) {
         $rootScope.updateInterval = 6000;
         $scope.events = [{
                 title: 'All Day Event',
@@ -259,7 +259,7 @@
             Chart.defaults.global.defaultFontColor = "#fff";
             this.getChartData(1)
             this.getChartData(2)
-            this.getChartData(3)
+            // this.getChartData(3)
             this.getChartData(4)
             $scope.beatheart = false;
         };
@@ -607,7 +607,7 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             }
-                            $scope.addEvent(newEntry);
+                            // $scope.addEvent(newEntry);
                         }
                     }
                     diffDays--;
