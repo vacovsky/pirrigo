@@ -15,25 +15,23 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	var t Task = Task{Station: Station{}, StationSchedule: StationSchedule{}}
 	var msr ManualStationRun
 	ERR = json.NewDecoder(req.Body).Decode(&msr)
-
-	GormDbConnect()
 	defer db.Close()
 
+	gormDbConnect()
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
 	if SETTINGS.PirriDebug {
 		spew.Dump(t)
 		spew.Dump(msr)
 	}
-	t.Send()
+	t.send()
 }
 
 func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stations := []Station{}
-
-	GormDbConnect()
 	defer db.Close()
 
+	gormDbConnect()
 	db.Limit(100).Find(&stations)
 	blob, err := json.Marshal(&stations)
 	if err != nil {
@@ -44,12 +42,11 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	stationId, err := strconv.Atoi(req.URL.Query()["stationid"][0])
-
-	GormDbConnect()
+	stationID, err := strconv.Atoi(req.URL.Query()["stationid"][0])
 	defer db.Close()
 
-	db.Where("id = ?", stationId).Find(&station)
+	gormDbConnect()
+	db.Where("id = ?", stationID).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {
 		fmt.Println(err, err.Error())

@@ -1,9 +1,6 @@
 package main
 
-func DripNodeById(id int) {
-
-}
-
+/*DripNode Describes a drip emitter */
 type DripNode struct {
 	ID    int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	GPH   float32
@@ -11,17 +8,17 @@ type DripNode struct {
 	Count int
 }
 
-func NewDripnode(gph float32, station int, count int) {
+func newDripnode(gph float32, station int, count int) {
 	dn := DripNode{GPH: gph, SID: station, Count: count}
-	GormDbConnect()
 	defer db.Close()
+	gormDbConnect()
 	db.Create(&dn)
 }
 
-func UpdateDripnode(gph float32, station int, count int) {
+func updateDripnode(gph float32, station int, count int) {
 	dn := DripNode{GPH: gph, SID: station, Count: count}
-	GormDbConnect()
 	defer db.Close()
+	gormDbConnect()
 	db.Model(&dn).Where(
 		"GPH = ?", gph).Where(
 		"SID = ?", station).UpdateColumn(DripNode{Count: count})

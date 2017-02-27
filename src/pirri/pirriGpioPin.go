@@ -1,21 +1,20 @@
 package main
 
-//	"fmt"
-
+//GpioPin - describes a Raspberry Pi GPIO pin
 type GpioPin struct {
 	ID    int `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	GPIO  int `gorm:"not null;unique"`
 	Notes string
 }
 
-func GetGpioByPin() {
-	GormDbConnect()
+func getGpioByPin() {
 	defer db.Close()
+	gormDbConnect()
 	gpio := db.Where("GPIO = ?", 4).Find(&GpioPin{}).Order("GPIO DESC")
-	JsonifySqlResults(gpio)
+	jsonifySQLResults(gpio)
 }
 
-func GetAllGpio() {
-	GormDbConnect()
+func getAllGpio() {
+	gormDbConnect()
 	defer db.Close()
 }

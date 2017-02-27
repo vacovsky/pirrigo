@@ -1,7 +1,8 @@
 package main
 
+//Settings Describes general-purpose application settings for PirriGo as derived from the configuration file (used created/populated).
 type Settings struct {
-	IdSettings           int
+	IDSettings           int
 	OpenWeatherKey       string
 	Zip                  int
 	WeatherUnits         string //imperial or metric
@@ -20,13 +21,13 @@ type Settings struct {
 	NewRelicLicense      string
 	NewRelicLicensePath  string // path to a text file containing nothing but the key
 	UtcOffset            int
-	HttpPort             string
-	SqlDbType            string
-	SqlServer            string
-	SqlUser              string
-	SqlPass              string
-	SqlPort              string
-	SqlDbName            string
+	HTTPPort             string
+	SQLDBType            string
+	SQLServer            string
+	SQLUser              string
+	SQLPass              string
+	SQLPort              string
+	SQLDbName            string
 	RedisServer          string
 	RedisPort            string
 	RabbitPort           string

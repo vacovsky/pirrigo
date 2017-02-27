@@ -1,16 +1,35 @@
 (function() {
 
-    var app = angular.module('pirriweb', ['chart.js', 'ngCookies', 'ngMessages', 'ngMaterial', 'ngAnimate', 'ngSanitize', 'ui.bootstrap']); //
+    var app = angular.module('pirriweb', [
+        'chart.js',
+        'ngCookies',
+        'ngMessages',
+        'ngMaterial',
+        'ngAnimate',
+        'ngSanitize',
+        // 'ui.calendar',
+        // 'ui.bootstrap',
+        'ui.rCalendar',
+        'angularMoment'
+    ]).factory('moment', function($window) {
+        return $window.moment;
+    });;
     app.Root = '/';
-    app.config(['$interpolateProvider',
-        function($interpolateProvider) {
-            $interpolateProvider.startSymbol('{[');
-            $interpolateProvider.endSymbol(']}');
-        }
-    ]);
+    // app.config(['$interpolateProvider',
+    //     function($interpolateProvider) {
+    //         $interpolateProvider.startSymbol('{[');
+    //         $interpolateProvider.endSymbol(']}');
+    //     }
+    // ]);
 
-    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies) {
+    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies, $scope, $compile) {
         $rootScope.updateInterval = 6000;
+        $scope.events = [{
+                title: 'All Day Event',
+                start: new Date(y, m, 1),
+                color: 'orange'
+            }]
+        $scope.eventSource = [];
 
         $scope.chartData1 = {
             labels: [],
@@ -131,7 +150,8 @@
             $scope.beatheart = true;
             $http.get('/schedule/all')
                 .then(function(response) {
-                    $scope.calEvents = response.data.StationSchedule;
+                    $scope.schedule = response.data.stationSchedules;
+                    $scope.loadCalEvents();
                     $scope.beatheart = false;
                 })
         };
@@ -155,7 +175,6 @@
         $scope.showSearchResults = false;
         $scope.history = [];
         $scope.historyScope = "All Stations";
-        $scope.schedule = undefined;
         $scope.gpio_add_model = {
             default_message: "Select GPIO",
             GPIO: undefined
@@ -242,7 +261,7 @@
             Chart.defaults.global.defaultFontColor = "#fff";
             this.getChartData(1)
             this.getChartData(2)
-            this.getChartData(3)
+            // this.getChartData(3)
             this.getChartData(4)
             $scope.beatheart = false;
         };
@@ -364,10 +383,11 @@
         };
 
         this.refresh = function() {
-            this.getSchedule();
+            // this.getSchedule();
+            this.getCalEvents();
             this.loadStations();
-            this.getLastStationRun();
-            this.getNextStationRun();
+            // this.getLastStationRun();
+            // this.getNextStationRun();
             this.loadGPIO();
             this.loadStatsData();
             this.getWaterUsageStats();
@@ -427,30 +447,43 @@
                 return "Never"
             }
         }
-        this.getSchedule = function() {
-            $http.get('/schedule/all')
-                .then(function(response) {
-                    $scope.schedule = response.data.stationSchedules;
-                })
-        };
 
-        $scope.lastStationRunHash = {}
-        this.getLastStationRun = function() {
-            $http.get('/station/lastruns')
-                .then(function(response) {
-                    $scope.lastStationRunHash = response.data.lastrunlist;
-                })
-                // console.log($scope.lastStationRunHash);
-        };
+        $scope.addDays = function(startDate, numberOfDays) {
+            var returnDate = new Date(
+                startDate.getFullYear(),
+                startDate.getMonth(),
+                startDate.getDate() + numberOfDays,
+                startDate.getHours(),
+                startDate.getMinutes(),
+                startDate.getSeconds());
+            return returnDate;
+        }
 
-        $scope.nextStationRunHash = {}
-        this.getNextStationRun = function() {
-            $http.get('/station/nextruns')
-                .then(function(response) {
-                    $scope.nextStationRunHash = response.data.nextrunlist;
-                })
+        // this.getSchedule = function() {
+        //     $http.get('/schedule/all')
+        //         .then(function(response) {
+        //             $scope.schedule = response.data.stationSchedules;
+        //         }).then(this.loadCalEvents())
+        // };
 
-        };
+
+        // $scope.lastStationRunHash = {}
+        // this.getLastStationRun = function() {
+        //     $http.get('/station/lastruns')
+        //         .then(function(response) {
+        //             $scope.lastStationRunHash = response.data.lastrunlist;
+        //         })
+        //         // console.log($scope.lastStationRunHash);
+        // };
+
+        // $scope.nextStationRunHash = {}
+        // this.getNextStationRun = function() {
+        //     $http.get('/station/nextruns')
+        //         .then(function(response) {
+        //             $scope.nextStationRunHash = response.data.nextrunlist;
+        //         })
+
+        // };
 
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
@@ -510,23 +543,6 @@
             $scope.waterNodeEntries.unshift($scope.waterNodeModel)
         };
 
-        this.autoLoader = function() {
-            this.getCalEvents();
-            this.getSchedule();
-            this.loadStations();
-            this.getLastStationRun();
-            this.getNextStationRun();
-            this.loadGPIO();
-            this.loadStatsData();
-            this.loadHistory();
-            this.calcMonthlyCost();
-            //this.loadSettings();
-            //this.loadWeather();
-            if ($cookies.get('lastTab') != undefined) {
-                $scope.currentPage = $cookies.get('lastTab');
-            }
-
-        };
         $scope.loader = this.autoLoader;
         // $scope.intervalFunction = function() {
         //     $timeout(function() {
@@ -536,7 +552,109 @@
         // };
         //$scope.intervalFunction();
 
-        this.autoLoader();
+        // START CAL
 
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $scope.calOptions = {
+            calendarMode: "week"
+        }
+
+        $scope.loadCalEvents = function() {
+            $scope.eventSource = [];
+            for (i = 0; i < $scope.schedule.length; i++) {
+                var entry = $scope.schedule[i];
+                var curDate = moment().toDate();
+                var startDate = new Date(entry.StartDate); //new Date(entry.StartDate);
+                var endDate = new Date(entry.EndDate);
+
+                var dateDiff = Math.abs($scope.addDays(curDate, 31) - $scope.addDays(curDate, -31));
+                var diffDays = Math.ceil(dateDiff / (1000 * 3600 * 24));
+
+                while (diffDays > 0) {
+                    var newRealDate = $scope.addDays(startDate, diffDays);
+                    var shouldShow = false;
+                    if (newRealDate < endDate && newRealDate > startDate) {
+                        if (newRealDate.getDay() == 0 && entry.Sunday) {
+                            shouldShow = true;
+                        } else if (newRealDate.getDay() == 1 && entry.Monday) {
+                            shouldShow = true;
+                        } else if (newRealDate.getDay() == 2 && entry.Tuesday) {
+                            shouldShow = true;
+                        } else if (newRealDate.getDay() == 3 && entry.Wednesday) {
+                            shouldShow = true;
+                        } else if (newRealDate.getDay() == 4 && entry.Thursday) {
+                            shouldShow = true;
+                        } else if (newRealDate.getDay() == 5 && entry.Friday) {
+                            shouldShow = true;
+                        } else if (newRealDate.getDay() == 6 && entry.Saturday) {
+                            shouldShow = true;
+                        }
+
+                        if (shouldShow) {
+                            var newEntry = {
+                                stationCalID: entry.ID,
+                                title: "Station Run: " + entry.ID,
+                                allDay: false,
+                                startTime: new Date(
+                                    newRealDate.getFullYear(),
+                                    newRealDate.getMonth(),
+                                    newRealDate.getDate(),
+                                    newRealDate.getHours(),
+                                    newRealDate.getMinutes(),
+                                    newRealDate.getSeconds()
+                                ),
+                                endTime: new Date(
+                                    newRealDate.getFullYear(),
+                                    newRealDate.getMonth(),
+                                    newRealDate.getDate(),
+                                    newRealDate.getHours(),
+                                    newRealDate.getMinutes(),
+                                    newRealDate.getSeconds() + entry.Duration
+                                )
+                            }
+                            // console.log(newEntry);
+                            $scope.eventSource.push(newEntry);
+                        }
+                    }
+                    diffDays--;
+                }
+            }
+            $scope.$broadcast('eventSourceChanged',$scope.eventSource);
+            console.log($scope.eventSource)
+        }
+
+        $scope.mode = "week";
+        $scope.changeMode = function (mode) {
+            $scope.mode = mode;
+        };
+
+        this.addEvent = function(ce) {
+
+        }
+
+        this.autoLoader = function() {
+            this.getCalEvents();
+            this.loadStations();
+            // this.getLastStationRun();
+            // this.getNextStationRun();
+            this.loadGPIO();
+            this.loadStatsData();
+            this.loadHistory();
+            this.calcMonthlyCost();
+            //this.loadSettings();
+            //this.loadWeather();
+            // this.loadCalEvents();
+            if ($cookies.get('lastTab') != undefined) {
+                $scope.currentPage = $cookies.get('lastTab');
+            }
+        };
+        this.autoLoader();
     });
+
+    // END CAL
+
 })();

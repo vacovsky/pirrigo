@@ -10,17 +10,16 @@ import (
 
 var db *gorm.DB
 
-func GormDbConnect() {
-
-	db, ERR = gorm.Open(SETTINGS.SqlDbType, SQLCONNSTRING)
+func gormDbConnect() {
+	db, ERR = gorm.Open(SETTINGS.SQLDBType, SQLCONNSTRING)
 	db.LogMode(SETTINGS.GormDebug)
 	if ERR != nil {
 		panic(ERR.Error())
 	}
 }
 
-func GormSetup() {
-	GormDbConnect()
+func gormSetup() {
+	gormDbConnect()
 	defer db.Close()
 	db.AutoMigrate(
 		&DripNode{},
@@ -31,7 +30,7 @@ func GormSetup() {
 		&Station{})
 }
 
-func JsonifySqlResults(input *gorm.DB) []string {
+func jsonifySQLResults(input *gorm.DB) []string {
 	var result []string = []string{}
 	r, _ := json.Marshal(input.Value)
 	result = append(result, string(r))
@@ -41,8 +40,8 @@ func JsonifySqlResults(input *gorm.DB) []string {
 
 //TODO remove this later - it's for testing only.
 func createJunkData() {
-	GormDbConnect()
 	defer db.Close()
+	gormDbConnect()
 	db.Create(&Station{
 		GPIO:   5,
 		Notes:  "",
