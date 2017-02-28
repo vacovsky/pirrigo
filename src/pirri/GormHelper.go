@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -16,11 +17,16 @@ func gormDbConnect() {
 	if ERR != nil {
 		panic(ERR.Error())
 	}
+	fmt.Println(db.DB().Ping())
 }
 
 func gormSetup() {
 	gormDbConnect()
-	defer db.Close()
+
+	db.DB().SetMaxIdleConns(10)
+	db.DB().SetMaxOpenConns(100)
+	db.DB().SetConnMaxLifetime(time.Second * 300)
+
 	db.AutoMigrate(
 		&DripNode{},
 		&GpioPin{},
@@ -40,8 +46,6 @@ func jsonifySQLResults(input *gorm.DB) []string {
 
 //TODO remove this later - it's for testing only.
 func createJunkData() {
-	defer db.Close()
-	gormDbConnect()
 	db.Create(&Station{
 		GPIO:   5,
 		Notes:  "",
