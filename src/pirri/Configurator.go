@@ -121,7 +121,12 @@ func parseConfig(config map[string]string) {
 	if pirridebug, ok := config["pirridebug"]; ok {
 		SETTINGS.PirriDebug, ERR = strconv.ParseBool(pirridebug)
 	}
-	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
+
+	if (SETTINGS.RabbitUser != "" || SETTINGS.RabbitPass != "") || SETTINGS.RabbitServer == "" {
+		RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
+	} else {
+		RMQCONNSTRING = "amqp://localhost:5672/"
+	}
 	SQLCONNSTRING = SETTINGS.SQLUser + ":" + SETTINGS.SQLPass + "@tcp(" + SETTINGS.SQLServer + ":" + SETTINGS.SQLPort + ")/" + SETTINGS.SQLDbName + "?parseTime=true"
 	if SETTINGS.ShowSettings {
 		fmt.Println(SQLCONNSTRING)
