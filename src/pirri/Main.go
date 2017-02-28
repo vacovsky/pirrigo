@@ -12,7 +12,7 @@ func showVersion() {
 func main() {
 	configInit()
 	gormSetup()
-	createJunkData()
+	firstRunDBSetup()
 	WG.Add(4)
 
 	// Start the Web application for management of schedule etc.

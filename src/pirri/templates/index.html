@@ -28,13 +28,10 @@
     <body class="text-shadow">
         <div id="PirriControl" ng-controller="PirriControl as pc">
             <div id="station-schedules">
-                <div class="made-with-love">PirriGo | Made with <i><img ng-show="beatheart" id="beatheart" src="static/heart.svg">
-                    <img ng-show="!beatheart" id="stillheart" src="static/stillheart.svg"></i> and rage by <a target="_blank" href="">Joe Vacovsky Jr.</a>
-                </div>
                 <section>
                     <div id="nav">
-                        <div id="searchTextDiv" class="col-sm-3 pull-right">
-                            <p><input type="text" id="searchText" ng-model="searchText" placeholder="Search stations..." class="form-control col-sm-2" ng-change="pc.filterForKeys(searchText)"></p>
+                        <div id="searchText" class="col-sm-3 pull-right">
+                            <input type="text" ng-model="searchText" placeholder="Search stations..." class="form-control col-sm-2" ng-change="pc.filterForKeys(searchText)">
                         </div>
                         <div id="navicons">
                             <div>
@@ -186,19 +183,23 @@
                                         </td>
                                         <td class="col-md-2">
                                             <span ng-show="scheduleModel.ID != sched.ID">{{sched.StartTime}}</span>
-                                            <div class="form-group">
-                                                <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
-                                                <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
-                                            </div>
+                                            <span>
+                                                <div class="form-group">
+                                                    <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
+                                                    <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
+                                                </div>
+                                            </span>
                                         </td>
                                         <td class="col-md-1">
                                             <span ng-show="scheduleModel.ID != sched.ID">{{sched.Duration / 60}} min</span>
-                                            <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
-                                                <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{scheduleModel.Duration / 60}} min</button>
-                                                <ul class="dropdown-menu">
-                                                    <li ng-repeat="interval in durationIntervals" ng-click="scheduleModel.Duration = interval * 60;"><a >{{interval}} min</a></li>
-                                                </ul>
-                                            </div>
+                                            <span>
+                                                <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
+                                                    <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{scheduleModel.Duration / 60}} min</button>
+                                                    <ul class="dropdown-menu">
+                                                        <li ng-repeat="interval in durationIntervals" ng-click="scheduleModel.Duration = interval * 60;"><a >{{interval}} min</a></li>
+                                                    </ul>
+                                                </div>
+                                            </span>
                                         </td>
                                         <td class="col-md-3">
                                             <div class="checkbox" ng-show="scheduleModel.ID == sched.ID">
@@ -244,7 +245,6 @@
                     <!-- END EDIT SCHEDULE-->
                     <!-- START NEW CALENDAR -->
                     <div ng-show="currentPage == 'mycal'">
-                        <div>
                             <calendar calendar-mode=mode event-source="eventSource"></calendar>
                         </div>
                         <div class="made-with-love btn-toolbar">
@@ -494,7 +494,7 @@
                 </section>
             </div>
             <div>
-                <h1 id="pirrilogo"><img height="100" width="150" src="static/icon_text.png"></h1>
+                <h1 id="pirrilogo"><img height="50" width="75" src="static/icon_text.png"></h1>
             </div>
         </div>
     </body>

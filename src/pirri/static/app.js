@@ -15,20 +15,14 @@
         return $window.moment;
     });
     app.Root = '/';
-    // app.config(['$interpolateProvider',
-    //     function($interpolateProvider) {
-    //         $interpolateProvider.startSymbol('{[');
-    //         $interpolateProvider.endSymbol(']}');
-    //     }
-    // ]);
 
     app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies, $scope, $compile) {
         $rootScope.updateInterval = 6000;
         $scope.events = [{
-                title: 'All Day Event',
-                start: new Date(y, m, 1),
-                color: 'orange'
-            }];
+            title: 'All Day Event',
+            start: new Date(y, m, 1),
+            color: 'orange'
+        }];
         $scope.eventSource = [];
 
         $scope.chartData1 = {
@@ -341,7 +335,7 @@
             this.convertScheduleBoolToInt();
             $http.post('/schedule/add', $scope.scheduleModel)
                 .success(function(response) {});
-                // cleanup
+            // cleanup
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
@@ -493,7 +487,7 @@
                 .then(function(response) {
                     // console.log($scope.singleRunModel, data)
                 });
-                // cleanup
+            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -504,7 +498,7 @@
                 .then(function(response) {
                     // console.log($scope.singleRunModel, data)
                 });
-                // cleanup
+            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -515,7 +509,7 @@
                 .then(function(response) {
                     // console.log($scope.singleRunModel, data)
                 });
-                // cleanup
+            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -618,12 +612,12 @@
                     diffDays--;
                 }
             }
-            $scope.$broadcast('eventSourceChanged',$scope.eventSource);
+            $scope.$broadcast('eventSourceChanged', $scope.eventSource);
             // console.log($scope.eventSource)
         };
 
         $scope.mode = "week";
-        $scope.changeMode = function (mode) {
+        $scope.changeMode = function(mode) {
             $scope.mode = mode;
         };
 
