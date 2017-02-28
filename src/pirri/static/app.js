@@ -261,14 +261,30 @@
         this.submitEditStation = function() {
             $http.post('/station/edit', $scope.stationModel)
                 .success(function(response) {});
-            $scope.stationModel = {};
             $scope.stationModel = undefined;
         };
-        this.submitDeleteStation = function() {};
-        this.submitAddStation = function() {};
+        this.submitDeleteStation = function() {
+            $http.post('/station/delete', $scope.stationModel)
+                .then(function(response) {
+                    $scope.stations = response.data.stations;
+                });
+        };
+        this.submitAddStation = function() {
+            $http.post('/station/add', $scope.stationModel)
+                .then(function(response) {
+                    $scope.stations = response.data.stations;
+                });
+        };
+        this.addStationButton = function() {
+            $scope.stationModel = {
+                Notes: "",
+                GPIO: 0,
+                Common: false
+            };
+            $scope.stations.unshift($scope.stationModel);
+        };
 
         $scope.scheduleModel = {};
-
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
             var d = new Date();
@@ -277,7 +293,6 @@
             var day = d.getDate();
             var endDate = new Date(year + 10, month, day);
             $scope.scheduleModel = {
-                ID: 0,
                 tempID: 0,
                 Sunday: false,
                 Monday: false,
@@ -386,11 +401,7 @@
         this.loadStations = function() {
             $http.get('/station/all')
                 .then(function(response) {
-                    //					console.log(response.data)
                     $scope.stations = response.data.stations;
-                    //                    angular.forEach($scope.stations, function(value, key) {
-                    //                        value['cal_color'] = $scope.randomColor();
-                    //                    })
                 });
         };
 
@@ -405,10 +416,6 @@
             $scope.beatheart = true;
             $http.get('/weather')
                 .then(function(response) {
-                    //                    $scope.weatherData = response.data;
-                    //                    $scope.weatherData.current.sys.sunrise_t = moment(data.current.sys.sunrise * 1000).fromNow();
-                    //                    $scope.weatherData.current.sys.sunset_t = moment(data.current.sys.sunset * 1000).fromNow();
-
                 });
         };
 
@@ -448,32 +455,6 @@
             return returnDate;
         };
 
-        // this.getSchedule = function() {
-        //     $http.get('/schedule/all')
-        //         .then(function(response) {
-        //             $scope.schedule = response.data.stationSchedules;
-        //         }).then(this.loadCalEvents())
-        // };
-
-
-        // $scope.lastStationRunHash = {}
-        // this.getLastStationRun = function() {
-        //     $http.get('/station/lastruns')
-        //         .then(function(response) {
-        //             $scope.lastStationRunHash = response.data.lastrunlist;
-        //         })
-        //         // console.log($scope.lastStationRunHash);
-        // };
-
-        // $scope.nextStationRunHash = {}
-        // this.getNextStationRun = function() {
-        //     $http.get('/station/nextruns')
-        //         .then(function(response) {
-        //             $scope.nextStationRunHash = response.data.nextrunlist;
-        //         })
-
-        // };
-
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
         this.getWaterNodeEntries = function() {
@@ -485,9 +466,7 @@
         this.submitEditNodeEntry = function() {
             $http.post('/station/nodes', $scope.waterNodeModel)
                 .then(function(response) {
-                    // console.log($scope.singleRunModel, data)
                 });
-            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -496,9 +475,7 @@
             $scope.waterNodeModel.new = true;
             $http.post('/station/nodes', $scope.waterNodeModel)
                 .then(function(response) {
-                    // console.log($scope.singleRunModel, data)
                 });
-            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -528,20 +505,10 @@
                 count: 0,
                 new: true
             };
-            // console.log($scope.scheduleModel)
             $scope.waterNodeEntries.unshift($scope.waterNodeModel);
         };
 
         $scope.loader = this.autoLoader;
-        // $scope.intervalFunction = function() {
-        //     $timeout(function() {
-        //         $scope.loader();
-        //         $scope.intervalFunction();
-        //     }, $rootScope.updateInterval)
-        // };
-        //$scope.intervalFunction();
-
-        // START CAL
 
         var date = new Date();
         var d = date.getDate();
@@ -605,7 +572,6 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             };
-                            // console.log(newEntry);
                             $scope.eventSource.push(newEntry);
                         }
                     }
@@ -613,7 +579,6 @@
                 }
             }
             $scope.$broadcast('eventSourceChanged', $scope.eventSource);
-            // console.log($scope.eventSource)
         };
 
         $scope.mode = "week";
@@ -628,15 +593,10 @@
         this.autoLoader = function() {
             this.getCalEvents();
             this.loadStations();
-            // this.getLastStationRun();
-            // this.getNextStationRun();
             this.loadGPIO();
             this.loadStatsData();
             this.loadHistory();
             this.calcMonthlyCost();
-            //this.loadSettings();
-            //this.loadWeather();
-            // this.loadCalEvents();
             if ($cookies.get('lastTab') !== undefined) {
                 $scope.currentPage = $cookies.get('lastTab');
             }

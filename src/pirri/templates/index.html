@@ -62,11 +62,13 @@
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <thead>
                                     <th class="col-md-1">Station</th>
-                                    <th class="col-md-3">Last Run</th>
+                                    <th class="col-md-2">Last Run</th>
                                     <th class="col-md-3">Next Run</th>
                                     <th class="col-md-1">GPIO</th>
                                     <th class="col-md-3">Notes</th>
                                     <th class="col-md-1">Controls</th>
+                                    <th class="col-md-1">
+                                        <a><span id="navicons" ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
                                 </thead>
                             </table>
                         </div>
@@ -74,34 +76,35 @@
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
                                     <tr ng-repeat="station in stations" ng-hide="showSearchResults">
-                                        <td class="col-md-1"><a > {{station.ID}} <span ng-click="pc.setEditingStationInfo(station.sid, station.gpio_pin, station.notes); pc.setPage('editstation')" class="glyphicon glyphicon-cog"></span></a></td>
-                                        <td class="col-md-3">{{pc.prettyTime(lastStationRunHash[station.ID])}}</td>
+                                        <td class="col-md-1"><a > {{station.ID}} <!-- <span ng-click="pc.setEditingStationInfo(station.sid, station.gpio_pin, station.notes); pc.setPage('editstation')" class="glyphicon glyphicon-cog"></span> --></a></td>
+                                        <td class="col-md-2">{{pc.prettyTime(lastStationRunHash[station.ID])}}</td>
                                         <td class="col-md-3">{{pc.prettyTime(nextStationRunHash[station.ID].next_datetime)}} for {{nextStationRunHash[station.ID].duration / 60}} min</td>
                                         <td class="col-md-1">{{station.GPIO}}</td>
                                         <td class="col-md-3">
-                                            <span ng-hide="stationModel.tempID == station.ID">{{station.Notes}}</span>
+                                            <span ng-hide="stationModel.ID == station.ID || stationModel.tempID != undefined">{{station.Notes}}</span>
                                             <div class="form-group" ng-show="stationModel.ID == station.ID">
                                                 <input class="form-control" ng-show="stationModel.tempID == station.ID" type="text" ng-model="stationModel.Notes">
                                             </div>
-                                            <div class="dropdown" ng-show="singleRunModel.StationID == station.ID">
-                                                <button ng-hide="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
-                                                <button ng-show="singleRunModel.duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
+                                            <div class="dropdown" ng-show="stationModel.GPIO == station.GPIO || stationModel.GPIO == undefined">
+                                                <button ng-hide="stationModel.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
+                                                <button ng-show="stationModel.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{stationModel.Duration}} min</button>
                                                 <ul class="dropdown-menu">
-                                                    <li ng-repeat="interval in durationIntervals" ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
+                                                    <li ng-repeat="gpio in $scope.gpio_pins" ng-click="stationModel.GPIO = gpio"><a >{{gpio}}</a></li>
                                                 </ul>
                                             </div>
                                         </td>
                                         <td class="col-md-1">
-                                            <a><span ng-hide="stationModel.tempID == station.ID" ng-click="pc.setEditingStationInfo(station)" class="glyphicon glyphicon-pencil"></span></a>
-                                            <a><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
-                                            <a><span class="glyphicon glyphicon-time"></span></a>
-                                            <a><span class="glyphicon glyphicon-stats"></span></a>
-                                            <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.StationID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
-                                            <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
+                                            <a><span ng-hide="stationModel.ID == station.ID" ng-click="stationModel = station" class="glyphicon glyphicon-pencil"></span></a>
+                                            <a><span ng-show="stationModel.ID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
+                                            <a><span ng-show="stationModel.tempID != undefined" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddStation();"></span></a>
+<!--                                             <a><span class="glyphicon glyphicon-time"></span></a>
+                                            <a><span class="glyphicon glyphicon-stats"></span></a> -->
+                                            <a><span ng-hide="stationModel.ID == station.ID"" ng-click="stationModel.StationID = station.ID; stationModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                            <a><span ng-show="stationModel.ID == station.ID"" ng-click="stationModel.ID = undefined; stationModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                         </td>
                                     </tr>
                                     <tr ng-repeat="station in searchResults" ng-show="showSearchResults">
-                                        <td><a > {{station.ID}} <span class="glyphicon glyphicon-cog"></span></a></td>
+                                        <td><a > {{station.ID}} <!-- <span class="glyphicon glyphicon-cog"></span> --></a></td>
                                         <td>???????</td>
                                         <td>???????</td>
                                         <td>{{station.GPIO}}</td>
@@ -245,9 +248,8 @@
                     <!-- END EDIT SCHEDULE-->
                     <!-- START NEW CALENDAR -->
                     <div ng-show="currentPage == 'mycal'">
-                            <calendar calendar-mode=mode event-source="eventSource"></calendar>
-                        </div>
-                        <div class="made-with-love btn-toolbar">
+                        <calendar calendar-mode=mode event-source="eventSource"></calendar>
+`                        <div class="made-with-love btn-toolbar">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default" ng-class="{active:mode==='month'}"
                                 ng-click="changeMode('month')">
