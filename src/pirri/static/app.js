@@ -169,11 +169,7 @@
             default_message: "Select GPIO",
             GPIO: undefined
         };
-        $scope.edit_station_model = {
-            tempID: undefined,
-            GPIO: undefined,
-            Notes: undefined
-        };
+
         $scope.durationIntervals = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
         $scope.show_gpio_diagram = false;
 
@@ -207,16 +203,9 @@
             $scope.gpio_add_model.GPIO = gpio;
         };
 
-        this.setEditingStationInfo = function(station) {
-            $scope.stationModel = station;
-        };
-
-
-
         this.setPage = function(pageName) {
             $scope.currentPage = pageName;
         };
-
 
         $scope.dripnodes = {};
         $scope.watercost = 0.0021;
@@ -256,35 +245,57 @@
             $scope.beatheart = false;
         };
 
+        $scope.availableGpios = [1];
+        
+        this.getGpios = function() {
+            $http.get('/gpios/available')
+                .then(function(response) {
+                    $scope.availableGpios = response.data.gpios
+                })
+        };
 
         $scope.stationModel = {};
-        this.submitEditStation = function() {
-            $http.post('/station/edit', $scope.stationModel)
-                .success(function(response) {});
-            $scope.stationModel = undefined;
+        this.setEditingStationInfo = function(station) {
+            $scope.stationModel = station;
+            $scope.stationModel.tempID = station.ID;
+            $scope.stationModel.GPIO = 0 + station.GPIO;
         };
-        this.submitDeleteStation = function() {
+        this.submitEditStation = function() {
+            $scope.stationModel.ID = $scope.stationModel.tempID
+            $http.post('/station/edit', $scope.stationModel)
+                .then(function(response) {
+                    $scope.stations = response.data.stations;
+                    $scope.stationModel = undefined;
+                    this.getGpios();
+                });
+        };
+
+        this.submitDeleteStation = function(stationID) {
+            $http.post('/station/delete', {
+                    ID: stationID
+                })
+                .then(function(response) {
+                    $scope.stations = response.data.stations;
+                    $scope.stationModel = undefined;
+                    this.getGpios();
+
+                });
+        };
+
+        this.submitAddStation = function() {
             $http.post('/station/delete', $scope.stationModel)
                 .then(function(response) {
                     $scope.stations = response.data.stations;
+                    $scope.stationModel = undefined;
+                    this.getGpios();
+
                 });
-        };
-        this.submitAddStation = function() {
-            $http.post('/station/add', $scope.stationModel)
-                .then(function(response) {
-                    $scope.stations = response.data.stations;
-                });
-        };
-        this.addStationButton = function() {
-            $scope.stationModel = {
-                Notes: "",
-                GPIO: 0,
-                Common: false
-            };
-            $scope.stations.unshift($scope.stationModel);
         };
 
+
+
         $scope.scheduleModel = {};
+
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
             var d = new Date();
@@ -293,6 +304,7 @@
             var day = d.getDate();
             var endDate = new Date(year + 10, month, day);
             $scope.scheduleModel = {
+                ID: 0,
                 tempID: 0,
                 Sunday: false,
                 Monday: false,
@@ -416,6 +428,10 @@
             $scope.beatheart = true;
             $http.get('/weather')
                 .then(function(response) {
+                    //                    $scope.weatherData = response.data;
+                    //                    $scope.weatherData.current.sys.sunrise_t = moment(data.current.sys.sunrise * 1000).fromNow();
+                    //                    $scope.weatherData.current.sys.sunset_t = moment(data.current.sys.sunset * 1000).fromNow();
+
                 });
         };
 
@@ -455,6 +471,32 @@
             return returnDate;
         };
 
+        // this.getSchedule = function() {
+        //     $http.get('/schedule/all')
+        //         .then(function(response) {
+        //             $scope.schedule = response.data.stationSchedules;
+        //         }).then(this.loadCalEvents())
+        // };
+
+
+        // $scope.lastStationRunHash = {}
+        // this.getLastStationRun = function() {
+        //     $http.get('/station/lastruns')
+        //         .then(function(response) {
+        //             $scope.lastStationRunHash = response.data.lastrunlist;
+        //         })
+        //         // console.log($scope.lastStationRunHash);
+        // };
+
+        // $scope.nextStationRunHash = {}
+        // this.getNextStationRun = function() {
+        //     $http.get('/station/nextruns')
+        //         .then(function(response) {
+        //             $scope.nextStationRunHash = response.data.nextrunlist;
+        //         })
+
+        // };
+
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
         this.getWaterNodeEntries = function() {
@@ -466,7 +508,9 @@
         this.submitEditNodeEntry = function() {
             $http.post('/station/nodes', $scope.waterNodeModel)
                 .then(function(response) {
+                    // console.log($scope.singleRunModel, data)
                 });
+            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -475,7 +519,9 @@
             $scope.waterNodeModel.new = true;
             $http.post('/station/nodes', $scope.waterNodeModel)
                 .then(function(response) {
+                    // console.log($scope.singleRunModel, data)
                 });
+            // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -505,10 +551,20 @@
                 count: 0,
                 new: true
             };
+            // console.log($scope.scheduleModel)
             $scope.waterNodeEntries.unshift($scope.waterNodeModel);
         };
 
         $scope.loader = this.autoLoader;
+        // $scope.intervalFunction = function() {
+        //     $timeout(function() {
+        //         $scope.loader();
+        //         $scope.intervalFunction();
+        //     }, $rootScope.updateInterval)
+        // };
+        //$scope.intervalFunction();
+
+        // START CAL
 
         var date = new Date();
         var d = date.getDate();
@@ -572,6 +628,7 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             };
+                            // console.log(newEntry);
                             $scope.eventSource.push(newEntry);
                         }
                     }
@@ -579,6 +636,7 @@
                 }
             }
             $scope.$broadcast('eventSourceChanged', $scope.eventSource);
+            // console.log($scope.eventSource)
         };
 
         $scope.mode = "week";
@@ -593,10 +651,16 @@
         this.autoLoader = function() {
             this.getCalEvents();
             this.loadStations();
+            // this.getLastStationRun();
+            // this.getNextStationRun();
             this.loadGPIO();
             this.loadStatsData();
             this.loadHistory();
             this.calcMonthlyCost();
+            //this.loadSettings();
+            //this.loadWeather();
+            this.getGpios();
+            // this.loadCalEvents();
             if ($cookies.get('lastTab') !== undefined) {
                 $scope.currentPage = $cookies.get('lastTab');
             }

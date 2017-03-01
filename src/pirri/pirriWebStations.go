@@ -47,3 +47,32 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	}
 	io.WriteString(rw, string(blob))
 }
+
+func stationEditWeb(rw http.ResponseWriter, req *http.Request) {
+	var station Station
+	ERR = json.NewDecoder(req.Body).Decode(&station)
+
+	if db.NewRecord(&station) {
+		db.Create(&station)
+	} else {
+		db.Save(&station)
+	}
+	if SETTINGS.PirriDebug {
+		spew.Dump(station)
+	}
+	stationAllWeb(rw, req)
+}
+
+func stationAddWeb(rw http.ResponseWriter, req *http.Request) {
+	var station Station
+	ERR = json.NewDecoder(req.Body).Decode(&station)
+	db.Create(&station)
+	stationAllWeb(rw, req)
+}
+
+func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
+	var station Station
+	ERR = json.NewDecoder(req.Body).Decode(&station)
+	db.Delete(&station)
+	stationAllWeb(rw, req)
+}
