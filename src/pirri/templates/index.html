@@ -67,102 +67,365 @@
                                     <th class="col-md-3">Next Run</th>
                                     -->
                                     <th class="col-md-1">GPIO</th>
-                                    <th class="col-md-3">Notes</th>
-                                    <th class="col-md-1">Controls</th>
-                                    <th class="col-md-1">
-                                        <a><span id="navicons" ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div class="tbl-content">
-                                <table cellpadding="0" cellspacing="0" border="0">
-                                    <tbody>
-                                        <tr ng-repeat="station in stations" ng-hide="showSearchResults">
-                                            <td class="col-md-1"><a><span> {{station.ID}}</span></a></td>
-                                            <!--
-                                            <td class="col-md-3">{{pc.prettyTime(lastStationRunHash[station.ID])}}</td>
-                                            <td class="col-md-3">{{pc.prettyTime(nextStationRunHash[station.ID].next_datetime)}} for {{nextStationRunHash[station.ID].Duration / 60}} min</td>
-                                            -->
-                                            <td class="col-md-1">
-                                                <span ng-show="stationModel.tempID != station.ID" >
-                                                    {{station.GPIO}}
-                                                </span>
-                                                <span>
-                                                    <span>
-                                                        <div class="dropdown" ng-show="stationModel.tempID == station.ID">
-                                                            <button ng-show="stationModel.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{stationModel.GPIO}}</button>
-                                                            <ul class="dropdown-menu">
-                                                                <li ng-repeat="gpio in availableGpios"><a >{{gpio}}</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </span>
-                                                </span>
-                                            </td>
-                                            <td class="col-md-3">
-                                                <span ng-hide="stationModel.tempID == station.ID">{{station.Notes}}</span>
-                                                <span><div class="form-group" ng-show="stationModel.tempID == station.ID">
-                                                    <input class="form-control" ng-show="stationModel.tempID == station.ID" type="text" ng-model="stationModel.Notes">
-                                                </div>
-                                            </span>
-                                            <span>
-                                                <div class="dropdown" ng-show="singleRunModel.tempID == station.ID">
-                                                    <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
-                                                    <button ng-show="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
-                                                    <ul class="dropdown-menu">
-                                                        <li ng-repeat="interval in durationIntervals" ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
-                                                    </ul>
-                                                </div>
-                                            </span>
-                                        </td>
-                                        <td class="col-md-1">
-                                            <a><span ng-hide="stationModel.tempID == station.ID" ng-click="pc.setEditingStationInfo(station)" class="glyphicon glyphicon-pencil"></span></a>
-                                            <a><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
-                                            <!--
-                                            <a><span class="glyphicon glyphicon-time"></span></a>
-                                            <a><span class="glyphicon glyphicon-stats"></span></a>
-                                            -->
-                                            <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
-                                            <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
-                                            - -
-                                            <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteStation(station.ID)"></span></a>
-                                        </td>
-                                    </tr>
-                                </tbody>
+                                    <th class="col-md-4">Notes</th>
+                                    <th class="col-md-2">Controls</th>
+                                    <th class="col-md-1"><a><span ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus"></a></span></a></th>
+                                </thead>
                             </table>
                         </div>
-                        <div id="botnav">
-                            <a href><span lass="glyphicon glyphicon-plus pull-right" ng-click="pc.setPage('add')"></span></a>
+                        <div class="tbl-content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    <tr ng-repeat="station in stations" ng-hide="showSearchResults">
+                                        <td class="col-md-1"><a><span> {{station.ID}}</span></a></td>
+                                        
+                                        <td class="col-md-1">
+                                            <span ng-show="stationModel.tempID != station.ID" >
+                                                {{station.GPIO}}
+                                            </span>
+                                            <span>
+                                                <span>
+                                                    <div class="dropdown" ng-show="stationModel.tempID == station.ID">
+                                                        <button ng-show="stationModel.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{stationModel.GPIO}}</button>
+                                                        <ul class="dropdown-menu">
+                                                            <li ng-repeat="gpio in availableGpios" ng-click="stationModel.GPIO = gpio.GPIO"><a>{{gpio.GPIO}}</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </td>
+                                        <td class="col-md-4">
+                                            <span ng-hide="stationModel.tempID == station.ID">{{station.Notes}}</span>
+                                            <span><div class="form-group" ng-show="stationModel.tempID == station.ID">
+                                                <input class="form-control" ng-show="stationModel.tempID == station.ID" type="text" ng-model="stationModel.Notes">
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <td class="col-md-2">
+                                        <a><span ng-hide="stationModel.tempID == station.ID" ng-click="pc.setEditingStationInfo(station)" class="glyphicon glyphicon-pencil"></span></a>
+                                        <a><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
+                                        <a><span ng-show="stationModel.tempID == -1" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddStation();"></span></a>
+                                        <!--
+                                        <a><span class="glyphicon glyphicon-time"></span></a>
+                                        <a><span class="glyphicon glyphicon-stats"></span></a>
+                                        -->
+                                        <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                        <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
+                                        - -
+                                        <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteStation(station.ID)"></span></a>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <div class="dropdown" ng-show="singleRunModel.ID == station.ID && station.tempID != -1">
+                                            <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
+                                            <button ng-show="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
+                                            <ul class="dropdown-menu">
+                                                <li ng-repeat="interval in durationIntervals" ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END STATIONS LIST -->
+                <!-- START STATS-->
+                <div ng-show="currentPage == 'stats'">
+                    <div>
+                        <canvas id="chart1" height="65" class="chart chart-bar" chart-options="chartData1.options" chart-data="chartData1.data" chart-labels="chartData1.labels" chart-series="chartData1.series"></canvas>
+                    </div>
+                    <div>
+                        <canvas id="chart2" height="65" class="chart chart-line" chart-options="chartData2.options" chart-data="chartData2.data" chart-labels="chartData2.labels" chart-series="chartData2.series"></canvas>
+                    </div>
+                    <div>
+                        <canvas id="chart3" height="65" class="chart chart-bar" chart-options="chartData3.options" chart-data="chartData3.data" chart-labels="chartData3.labels" chart-series="chartData3.series"></canvas>
+                    </div>
+                    <div>
+                        <canvas id="chart4" height="65" class="chart chart-line" chart-options="chartData4.options" chart-data="chartData4.data" chart-labels="chartData4.labels" chart-series="chartData4.series"></canvas>
+                    </div>
+                </div>
+                <!-- END STATS -->
+                <!-- START SCHEDULE -->
+                <div ng-show="currentPage == 'calendar'" >
+                    <div class="tbl-header">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <thead>
+                                <th class="col-md-1">Station</th>
+                                <th class="col-md-4">Start Date</th>
+                                <th class="col-md-2">Start Time</th>
+                                <th class="col-md-1">Duration</th>
+                                <th class="col-md-3">Days</th>
+                                <th class="col-md-1">
+                                    <a><span ng-click="pc.addScheduleButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
+                                </th>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tbl-content">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tbody>
+                                <tr ng-repeat="sched in schedule">
+                                    <td class="col-md-1">
+                                        <span ng-show="scheduleModel.ID != sched.ID">{{sched.StationID}}</span>
+                                        <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
+                                            <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{sched.StationID}}</button>
+                                            <ul class="dropdown-menu">
+                                                <li ng-repeat="s in stations" ng-click="scheduleModel.StationID = s.ID"><a>{{s.ID}} - {{s.Notes}}</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td class="col-md-4">
+                                        <p ng-show="scheduleModel.ID != sched.ID"><em>{{sched.StartDate | date:'fullDate' }}</em></p>
+                                        <p ng-show="scheduleModel.ID == sched.ID" class="input-group">
+                                            <input type="text" class="form-control"
+                                            uib-datepicker-popup="{{format}}"
+                                            ng-model="sched.StartDate"
+                                            is-open="true"
+                                            datepicker-options="dateOptions"
+                                            ng-required="true"
+                                            close-text="Close"
+                                            alt-input-formats="altInputFormats" />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openCalPicker(sched.ID)">
+                                                <i class="glyphicon glyphicon-calendar"></i></button>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td class="col-md-2">
+                                        <span ng-show="scheduleModel.ID != sched.ID">{{sched.StartTime}}</span>
+                                        <span>
+                                            <div class="form-group">
+                                                <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
+                                                <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <span ng-show="scheduleModel.ID != sched.ID">{{sched.Duration / 60}} min</span>
+                                        <span>
+                                            <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
+                                                <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{scheduleModel.Duration / 60}} min</button>
+                                                <ul class="dropdown-menu">
+                                                    <li ng-repeat="interval in durationIntervals" ng-click="scheduleModel.Duration = interval * 60;"><a >{{interval}} min</a></li>
+                                                </ul>
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <td class="col-md-3">
+                                        <div class="checkbox" ng-show="scheduleModel.ID == sched.ID">
+                                            <label><input type="checkbox" ng-model="scheduleModel.Sunday">Sun<br/> </label>
+                                            <label><input type="checkbox" ng-model="scheduleModel.Monday">Mon<br/> </label>
+                                            <label><input type="checkbox" ng-model="scheduleModel.Tuesday">Tue<br/> </label>
+                                            <label><input type="checkbox" ng-model="scheduleModel.Wednesday">Wed<br/> </label>
+                                            <label><input type="checkbox" ng-model="scheduleModel.Thursday">Thu<br/> </label>
+                                            <label><input type="checkbox" ng-model="scheduleModel.Friday">Fri<br/> </label>
+                                            <label><input type="checkbox" ng-model="scheduleModel.Saturday">Sat<br/> </label>
+                                        </div>
+                                        <div class="checkbox" ng-show="scheduleModel.ID != sched.ID">
+                                            <table style="border: 1px solid black; border-collapse: collapse; text-align: center;">
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Sunday">Sun</th>
+                                                <th ng-show="!sched.Sunday" style="padding: 3px; text-align: center;">Sun</th>
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Monday">Mon</th>
+                                                <th ng-show="!sched.Monday" style="padding: 3px; text-align: center;">Mon</th>
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Tuesday">Tue</th>
+                                                <th ng-show="!sched.Tuesday" style="padding: 3px; text-align: center;">Tue</th>
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Wednesday">Wed</th>
+                                                <th ng-show="!sched.Wednesday" style="padding: 3px; text-align: center;">Wed</th>
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Thursday">Thu</th>
+                                                <th ng-show="!sched.Thursday" style="padding: 3px; text-align: center;">Thu</th>
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Friday">Fri</th>
+                                                <th ng-show="!sched.Friday" style="padding: 3px; text-align: center;">Fri</th>
+                                                <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Saturday">Sat</th>
+                                                <th ng-show="!sched.Saturday" style="padding: 3px; text-align: center;">Sat</th>
+                                            </table>
+                                        </div>
+                                    </td>
+                                    <td class="col-md-1">
+                                        <a href><span ng-show="scheduleModel.ID == sched.ID && scheduleModel.new != true" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditSchedule();"></span></a>
+                                        <a href><span ng-show="scheduleModel.ID == sched.ID && scheduleModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddSchedule();"></span></a>
+                                        <a href><span ng-show="scheduleModel.ID == sched.ID" class="glyphicon glyphicon-ban-circle" ng-click="scheduleModel = undefined; pc.refresh();"></span></a>
+                                        <a href><span ng-hide="scheduleModel.ID == sched.ID" class="glyphicon glyphicon-pencil" ng-click="pc.mapModelForSchedEdit(sched)"></span></a>
+                                        - - <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteSchedule(sched.ID);"></span></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- END EDIT SCHEDULE-->
+                <!-- START NEW CALENDAR -->
+                <div ng-show="currentPage == 'mycal'">
+                    <calendar calendar-mode=mode event-source="eventSource"></calendar>
+                    <div class="made-with-love btn-toolbar">
+                        <div ng-show="currentPage == 'mycal'" class="btn-group">
+                            <button type="button" class="btn btn-default" ng-class="{active:mode==='month'}"
+                            ng-click="changeMode('month')">
+                            Month
+                            </button>
+                            <button type="button" class="btn btn-default" ng-class="{active:mode==='week'}"
+                            ng-click="changeMode('week')">
+                            Week
+                            </button>
+                            <button type="button" class="btn btn-default" ng-class="{active:mode==='day'}"
+                            ng-click="changeMode('day')">
+                            Day
+                            </button>
                         </div>
                     </div>
-                    <!-- END STATIONS LIST -->
-                    <!-- START STATS-->
-                    <div ng-show="currentPage == 'stats'">
-                        <div>
-                            <canvas id="chart1" height="65" class="chart chart-bar" chart-options="chartData1.options" chart-data="chartData1.data" chart-labels="chartData1.labels" chart-series="chartData1.series"></canvas>
-                        </div>
-                        <div>
-                            <canvas id="chart2" height="65" class="chart chart-line" chart-options="chartData2.options" chart-data="chartData2.data" chart-labels="chartData2.labels" chart-series="chartData2.series"></canvas>
-                        </div>
-                        <div>
-                            <canvas id="chart3" height="65" class="chart chart-bar" chart-options="chartData3.options" chart-data="chartData3.data" chart-labels="chartData3.labels" chart-series="chartData3.series"></canvas>
-                        </div>
-                        <div>
-                            <canvas id="chart4" height="65" class="chart chart-line" chart-options="chartData4.options" chart-data="chartData4.data" chart-labels="chartData4.labels" chart-series="chartData4.series"></canvas>
-                        </div>
+                </div>
+                <!-- END NEW CALENDAR -->
+                <!-- START HISTORY -->
+                <div ng-show="currentPage == 'history'">
+                    <div class="tbl-header">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <thead>
+                                <th class="col-md-1">History</th>
+                                <th class="col-md-1">Station</th>
+                                <th class="col-md-3">Started</th>
+                                <th class="col-md-2">Duration</th>
+                                <th class="col-md-1">Manual</th>
+                            </thead>
+                        </table>
                     </div>
-                    <!-- END STATS -->
-                    <!-- START SCHEDULE -->
-                    <div ng-show="currentPage == 'calendar'" >
+                    <div class="tbl-content">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tbody>
+                                <tr ng-repeat="hist in history">
+                                    <td class="col-md-1">{{hist.ID}}</td>
+                                    <td class="col-md-1">{{hist.StationID}}</td>
+                                    <td class="col-md-3">{{pc.prettyTime(hist.StartTime)}}</td>
+                                    <td class="col-md-2">{{hist.Duration / 60}} min</td>
+                                    <td class="col-md-1">{{hist.ScheduleID == 0}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- START HISTORY -->
+                <!-- START STATION EDIT FORM -->
+                <div id="navpane addform" ng-show="currentPage == 'editStation'">
+                    <form class="form-horizontal">
+                        <!-- make me an interactive svg if you're cool -->
+                        <div ng-show="addMessage">{{gpio_add_model.message}}</div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="gpiobutton">GPIO:</label>
+                            <div id="gpiobutton" class="dropdown col-sm-8">
+                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{edit_station_model.GPIO}}</button>
+                                <span class="caret"></span> <a  ng-click="show_gpio_diagram = !show_gpio_diagram">[show diagram]</a>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="gpio in gpio_pins" ng-click="edit_station_model.GPIO = gpio.gpio"><a >{{gpio.GPIO}} - {{gpio.Notes}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="notes">Notes:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="notes" placeholder="{{edit_station_model.notes}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-8">
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Enabled</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-8">
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                    <center>
+                    <img id="gpiodiag" ng-show="show_gpio_diagram" src="static/gpio_layout.png" height="300" width="900">
+                    </center>
+                </div>
+                <!-- END STATION EDIT FORM -->
+                <!-- START ADD STATION FORM -->
+                <div id="navpane addform" ng-show="currentPage == 'addStation'">
+                    <form class="form-horizontal">
+                        <!-- make me an interactive svg if you're cool -->
+                        <div ng-show="addMessage">{{gpio_add_model.message}}</div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="gpiobutton">GPIO:</label>
+                            <div id="gpiobutton" class="dropdown col-sm-8">
+                                <button ng-show="gpio_add_model.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">GPIO: {{gpio_add_model.GPIO}}</button>
+                                <button ng-hide="gpio_add_model.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">GPIO: {{gpio_add_model.default_message}}</button>
+                                <span class="caret"></span> <a  ng-click="show_gpio_diagram = !show_gpio_diagram">[show diagram]</a>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="gpio in gpio_pins" ng-click="pc.setGPIO(gpio.gpio)"><a >{{gpio.GPIO}} - {{gpio.Notes}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="notes">Notes:</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="notes" placeholder="Any notes regarding this station.">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-8">
+                                <div class="checkbox">
+                                    <label><input type="checkbox"> Enabled</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-8">
+                                <button type="submit" class="btn btn-success">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                    <center>
+                    <img id="gpiodiag" ng-show="show_gpio_diagram" src="static/gpio_layout.png" height="300" width="900">
+                    </center>
+                </div>
+                <!-- END ADD STATION FORM -->
+                <!-- BEGIN WATER USAGE -->
+                <div ng-show="currentPage == 'waterusage'">
+                    <div class="tbl-header">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <thead>
+                                <th class="col-md-1">Station</th>
+                                <th class="col-md-4">Notes</th>
+                                <th class="col-md-1">Run Minutes</th>
+                                <th class="col-md-1">Gallons per Hour (GPH)</th>
+                                <th class="col-md-2">Est. Cost per minute</th>
+                                <th class="col-md-2">Est. Cost / last 30 days</th>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="tbl-content">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tbody>
+                                <tr ng-repeat="node in dripnodes">
+                                    <td class="col-md-1">{{node.ID}}</td>
+                                    <td class="col-md-4">{{node.Notes}}</td>
+                                    <td class="col-md-1">{{node.run_mins}}</td>
+                                    <td class="col-md-1">{{node.total_gph  | number:2}}</td>
+                                    <td class="col-md-2">{{node.total_gph / 60 | number:2}} gal per min / ${{ (node.total_gph / 60) * watercost | number:2}}</td>
+                                    <td class="col-md-2">{{(node.usage_last_30) | number:2}} gal / ${{ node.usage_last_30 * watercost | number:2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="costinputdiv">
+                        <label for="costinput">Cost per gallon </label>
+                        <p class="col-sm-5"><input id="costinputfield" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="form-control col-sm-2" ng-change="pc.calcCost()"></p>
+                        <p class="pull-right">Estimated total cost / last 30 days: ${{ monthly_cost | number:2 }}</p>
+                    </div>
+                    
+                    <div>
+                        <div id="buffer"></div>
                         <div class="tbl-header">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <thead>
+                                    <th class="col-md-1">ID</th>
                                     <th class="col-md-1">Station</th>
-                                    <th class="col-md-4">Start Date</th>
-                                    <th class="col-md-2">Start Time</th>
-                                    <th class="col-md-1">Duration</th>
-                                    <th class="col-md-3">Days</th>
+                                    <th class="col-md-1">GPH</th>
+                                    <th class="col-md-1">Count</th>
                                     <th class="col-md-1">
-                                        <a><span id="navicons" ng-click="pc.addScheduleButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
+                                        <a><span id="navicons" ng-click="pc.addWaterNodeButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
                                     </th>
                                 </thead>
                             </table>
@@ -170,347 +433,78 @@
                         <div class="tbl-content">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
-                                    <tr ng-repeat="sched in schedule">
+                                    <tr ng-repeat="node in waterNodeEntries">
+                                        <td class="col-md-1">{{node.id}}</td>
                                         <td class="col-md-1">
-                                            <span ng-show="scheduleModel.ID != sched.ID">{{sched.StationID}}</span>
-                                            <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
-                                                <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{sched.StationID}}</button>
+                                            <div ng-show="">{{node.sid}}</div>
+                                            <span ng-show="waterNodeModel.id != node.id">{{node.sid}}</span>
+                                            <div class="dropdown" ng-show="waterNodeModel.id == node.id">
+                                                <button ng-show="waterNodeModel.sid != undefined && (waterNodeModel.id == node.id)" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{node.sid}}</button>
                                                 <ul class="dropdown-menu">
-                                                    <li ng-repeat="s in stations" ng-click="scheduleModel.StationID = s.ID"><a>{{s.ID}} - {{s.Notes}}</a></li>
+                                                    <li ng-repeat="station in stations" ng-click="waterNodeModel.sid = station.sid;"><a >{{station.ID}} - {{station.Notes}}</a></li>
                                                 </ul>
                                             </div>
                                         </td>
-                                        <td class="col-md-4">
-                                            <p ng-show="scheduleModel.ID != sched.ID"><em>{{sched.StartDate | date:'fullDate' }}</em></p>
-                                            <p ng-show="scheduleModel.ID == sched.ID" class="input-group">
-                                                <input type="text" class="form-control"
-                                                uib-datepicker-popup="{{format}}"
-                                                ng-model="sched.StartDate"
-                                                is-open="true"
-                                                datepicker-options="dateOptions"
-                                                ng-required="true"
-                                                close-text="Close"
-                                                alt-input-formats="altInputFormats" />
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-default" ng-click="openCalPicker(sched.ID)">
-                                                    <i class="glyphicon glyphicon-calendar"></i></button>
-                                                </span>
-                                            </p>
-                                        </td>
-                                        <td class="col-md-2">
-                                            <span ng-show="scheduleModel.ID != sched.ID">{{sched.StartTime}}</span>
-                                            <span>
-                                                <div class="form-group">
-                                                    <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
-                                                    <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
-                                                </div>
-                                            </span>
-                                        </td>
                                         <td class="col-md-1">
-                                            <span ng-show="scheduleModel.ID != sched.ID">{{sched.Duration / 60}} min</span>
-                                            <span>
-                                                <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
-                                                    <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{scheduleModel.Duration / 60}} min</button>
-                                                    <ul class="dropdown-menu">
-                                                        <li ng-repeat="interval in durationIntervals" ng-click="scheduleModel.Duration = interval * 60;"><a >{{interval}} min</a></li>
-                                                    </ul>
-                                                </div>
-                                            </span>
-                                        </td>
-                                        <td class="col-md-3">
-                                            <div class="checkbox" ng-show="scheduleModel.ID == sched.ID">
-                                                <label><input type="checkbox" ng-model="scheduleModel.Sunday">Sun<br/> </label>
-                                                <label><input type="checkbox" ng-model="scheduleModel.Monday">Mon<br/> </label>
-                                                <label><input type="checkbox" ng-model="scheduleModel.Tuesday">Tue<br/> </label>
-                                                <label><input type="checkbox" ng-model="scheduleModel.Wednesday">Wed<br/> </label>
-                                                <label><input type="checkbox" ng-model="scheduleModel.Thursday">Thu<br/> </label>
-                                                <label><input type="checkbox" ng-model="scheduleModel.Friday">Fri<br/> </label>
-                                                <label><input type="checkbox" ng-model="scheduleModel.Saturday">Sat<br/> </label>
-                                            </div>
-                                            <div class="checkbox" ng-show="scheduleModel.ID != sched.ID">
-                                                <table style="border: 1px solid black; border-collapse: collapse; text-align: center;">
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Sunday">Sun</th>
-                                                    <th ng-show="!sched.Sunday" style="padding: 3px; text-align: center;">Sun</th>
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Monday">Mon</th>
-                                                    <th ng-show="!sched.Monday" style="padding: 3px; text-align: center;">Mon</th>
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Tuesday">Tue</th>
-                                                    <th ng-show="!sched.Tuesday" style="padding: 3px; text-align: center;">Tue</th>
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Wednesday">Wed</th>
-                                                    <th ng-show="!sched.Wednesday" style="padding: 3px; text-align: center;">Wed</th>
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Thursday">Thu</th>
-                                                    <th ng-show="!sched.Thursday" style="padding: 3px; text-align: center;">Thu</th>
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Friday">Fri</th>
-                                                    <th ng-show="!sched.Friday" style="padding: 3px; text-align: center;">Fri</th>
-                                                    <th style="background-color: #4CAF50; padding: 3px; text-align: center;" ng-show="scheduleModel.ID != sched.ID && sched.Saturday">Sat</th>
-                                                    <th ng-show="!sched.Saturday" style="padding: 3px; text-align: center;">Sat</th>
-                                                </table>
+                                            <span ng-show="waterNodeModel.id != node.id">{{node.gph}}</span>
+                                            <div class="form-group">
+                                                <input class="form-control" ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.gph">
                                             </div>
                                         </td>
                                         <td class="col-md-1">
-                                            <a href><span ng-show="scheduleModel.ID == sched.ID && scheduleModel.new != true" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditSchedule();"></span></a>
-                                            <a href><span ng-show="scheduleModel.ID == sched.ID && scheduleModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddSchedule();"></span></a>
-                                            <a href><span ng-show="scheduleModel.ID == sched.ID" class="glyphicon glyphicon-ban-circle" ng-click="scheduleModel = undefined; pc.refresh();"></span></a>
-                                            <a href><span ng-hide="scheduleModel.ID == sched.ID" class="glyphicon glyphicon-pencil" ng-click="pc.mapModelForSchedEdit(sched)"></span></a>
-                                            - - <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteSchedule(sched.ID);"></span></a>
+                                            <span ng-show="waterNodeModel.id != node.id">{{node.count}}</span>
+                                            <div class="form-group">
+                                                <input class="form-control" ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.count">
+                                            </div>
+                                        </td>
+                                        <td class="col-md-1">
+                                            <a href><span ng-show="waterNodeModel.id == node.id && waterNodeModel.new != true" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditNodeEntry(); pc.getWaterUsageStats(); pc.getWaterNodeEntries();"></span></a>
+                                            <a href><span ng-show="waterNodeModel.id == node.id && waterNodeModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddNodeEntry(); pc.getWaterUsageStats(); pc.getWaterNodeEntries();"></span></a>
+                                            <a href><span ng-show="waterNodeModel.id == node.id" class="glyphicon glyphicon-ban-circle" ng-click="waterNodeModel = undefined; "></span></a>
+                                            <a href><span ng-hide="waterNodeModel.id == node.id" class="glyphicon glyphicon-pencil" ng-click="pc.mapModelForWaterNodeEdit(node)"></span></a>
+                                            - - <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteNodeEntry(node.id); pc.getWaterUsageStats(); pc.getWaterNodeEntries(); pc.getWaterUsageStats()"></span></a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <!-- END EDIT SCHEDULE-->
-                    <!-- START NEW CALENDAR -->
-                    <div ng-show="currentPage == 'mycal'">
-                        <calendar calendar-mode=mode event-source="eventSource"></calendar>
-                        <div class="made-with-love btn-toolbar">
-                            <div ng-show="currentPage == 'mycal'" class="btn-group">
-                                <button type="button" class="btn btn-default" ng-class="{active:mode==='month'}"
-                                ng-click="changeMode('month')">
-                                Month
-                                </button>
-                                <button type="button" class="btn btn-default" ng-class="{active:mode==='week'}"
-                                ng-click="changeMode('week')">
-                                Week
-                                </button>
-                                <button type="button" class="btn btn-default" ng-class="{active:mode==='day'}"
-                                ng-click="changeMode('day')">
-                                Day
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- END NEW CALENDAR -->
-                    <!-- START HISTORY -->
-                    <div ng-show="currentPage == 'history'">
-                        <div class="tbl-header">
-                            <table cellpadding="0" cellspacing="0" border="0">
-                                <thead>
-                                    <th class="col-md-1">History</th>
-                                    <th class="col-md-1">Station</th>
-                                    <th class="col-md-3">Started</th>
-                                    <th class="col-md-2">Duration</th>
-                                    <th class="col-md-1">Manual</th>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="tbl-content">
-                            <table cellpadding="0" cellspacing="0" border="0">
-                                <tbody>
-                                    <tr ng-repeat="hist in history">
-                                        <td class="col-md-1">{{hist.ID}}</td>
-                                        <td class="col-md-1">{{hist.StationID}}</td>
-                                        <td class="col-md-3">{{pc.prettyTime(hist.StartTime)}}</td>
-                                        <td class="col-md-2">{{hist.Duration / 60}} min</td>
-                                        <td class="col-md-1">{{hist.ScheduleID == 0}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <!-- START HISTORY -->
-                    <!-- START STATION EDIT FORM -->
-                    <div id="navpane addform" ng-show="currentPage == 'editStation'">
-                        <form class="form-horizontal">
-                            <!-- make me an interactive svg if you're cool -->
-                            <div ng-show="addMessage">{{gpio_add_model.message}}</div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="gpiobutton">GPIO:</label>
-                                <div id="gpiobutton" class="dropdown col-sm-8">
-                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{edit_station_model.GPIO}}</button>
-                                    <span class="caret"></span> <a  ng-click="show_gpio_diagram = !show_gpio_diagram">[show diagram]</a>
-                                    <ul class="dropdown-menu">
-                                        <li ng-repeat="gpio in gpio_pins" ng-click="edit_station_model.GPIO = gpio.gpio"><a >{{gpio.GPIO}} - {{gpio.Notes}}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="notes">Notes:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="notes" placeholder="{{edit_station_model.notes}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox"> Enabled</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <button type="submit" class="btn btn-success">Save</button>
-                                </div>
-                            </div>
-                        </form>
-                        <center>
-                        <img id="gpiodiag" ng-show="show_gpio_diagram" src="static/gpio_layout.png" height="300" width="900">
-                        </center>
-                    </div>
-                    <!-- END STATION EDIT FORM -->
-                    <!-- START ADD STATION FORM -->
-                    <div id="navpane addform" ng-show="currentPage == 'addStation'">
-                        <form class="form-horizontal">
-                            <!-- make me an interactive svg if you're cool -->
-                            <div ng-show="addMessage">{{gpio_add_model.message}}</div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="gpiobutton">GPIO:</label>
-                                <div id="gpiobutton" class="dropdown col-sm-8">
-                                    <button ng-show="gpio_add_model.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">GPIO: {{gpio_add_model.GPIO}}</button>
-                                    <button ng-hide="gpio_add_model.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">GPIO: {{gpio_add_model.default_message}}</button>
-                                    <span class="caret"></span> <a  ng-click="show_gpio_diagram = !show_gpio_diagram">[show diagram]</a>
-                                    <ul class="dropdown-menu">
-                                        <li ng-repeat="gpio in gpio_pins" ng-click="pc.setGPIO(gpio.gpio)"><a >{{gpio.GPIO}} - {{gpio.Notes}}</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="notes">Notes:</label>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="notes" placeholder="Any notes regarding this station.">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <div class="checkbox">
-                                        <label><input type="checkbox"> Enabled</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-offset-2 col-sm-8">
-                                    <button type="submit" class="btn btn-success">Save</button>
-                                </div>
-                            </div>
-                        </form>
-                        <center>
-                        <img id="gpiodiag" ng-show="show_gpio_diagram" src="static/gpio_layout.png" height="300" width="900">
-                        </center>
-                    </div>
-                    <!-- END ADD STATION FORM -->
-                    <!-- BEGIN WATER USAGE -->
-                    <div ng-show="currentPage == 'waterusage'">
-                        <div class="tbl-header">
-                            <table cellpadding="0" cellspacing="0" border="0">
-                                <thead>
-                                    <th class="col-md-1">Station</th>
-                                    <th class="col-md-4">Notes</th>
-                                    <th class="col-md-1">Run Minutes</th>
-                                    <th class="col-md-1">Gallons per Hour (GPH)</th>
-                                    <th class="col-md-2">Est. Cost per minute</th>
-                                    <th class="col-md-2">Est. Cost / last 30 days</th>
-                                </thead>
-                            </table>
-                        </div>
-                        <div class="tbl-content">
-                            <table cellpadding="0" cellspacing="0" border="0">
-                                <tbody>
-                                    <tr ng-repeat="node in dripnodes">
-                                        <td class="col-md-1">{{node.ID}}</td>
-                                        <td class="col-md-4">{{node.Notes}}</td>
-                                        <td class="col-md-1">{{node.run_mins}}</td>
-                                        <td class="col-md-1">{{node.total_gph  | number:2}}</td>
-                                        <td class="col-md-2">{{node.total_gph / 60 | number:2}} gal per min / ${{ (node.total_gph / 60) * watercost | number:2}}</td>
-                                        <td class="col-md-2">{{(node.usage_last_30) | number:2}} gal / ${{ node.usage_last_30 * watercost | number:2}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="costinputdiv">
-                            <label for="costinput">Cost per gallon </label>
-                            <p class="col-sm-5"><input id="costinputfield" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="form-control col-sm-2" ng-change="pc.calcCost()"></p>
-                            <p class="pull-right">Estimated total cost / last 30 days: ${{ monthly_cost | number:2 }}</p>
-                        </div>
-                        
+                </div>
+                <!-- END WATER USAGE -->
+                <!-- START WEATHER ADJUST PAGE -->
+                <div ng-show="currentPage == 'weatherEdit'">
+                    <div id="currentWeather">
+                        <h3>Current Weather in {{weatherData.current.name}}:</h3>
+                        <h3><img ng-src="http://openweathermap.org/img/w/{{weatherData.current.weather[0].icon}}.png" alt=""> {{weatherData.current.weather[0].description}}</h3>
                         <div>
-                            <div id="buffer"></div>
-                            <div class="tbl-header">
-                                <table cellpadding="0" cellspacing="0" border="0">
-                                    <thead>
-                                        <th class="col-md-1">ID</th>
-                                        <th class="col-md-1">Station</th>
-                                        <th class="col-md-1">GPH</th>
-                                        <th class="col-md-1">Count</th>
-                                        <th class="col-md-1">
-                                            <a><span id="navicons" ng-click="pc.addWaterNodeButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
-                                        </th>
-                                    </thead>
-                                </table>
-                            </div>
-                            <div class="tbl-content">
-                                <table cellpadding="0" cellspacing="0" border="0">
-                                    <tbody>
-                                        <tr ng-repeat="node in waterNodeEntries">
-                                            <td class="col-md-1">{{node.id}}</td>
-                                            <td class="col-md-1">
-                                                <div ng-show="">{{node.sid}}</div>
-                                                <span ng-show="waterNodeModel.id != node.id">{{node.sid}}</span>
-                                                <div class="dropdown" ng-show="waterNodeModel.id == node.id">
-                                                    <button ng-show="waterNodeModel.sid != undefined && (waterNodeModel.id == node.id)" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{node.sid}}</button>
-                                                    <ul class="dropdown-menu">
-                                                        <li ng-repeat="station in stations" ng-click="waterNodeModel.sid = station.sid;"><a >{{station.ID}} - {{station.Notes}}</a></li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td class="col-md-1">
-                                                <span ng-show="waterNodeModel.id != node.id">{{node.gph}}</span>
-                                                <div class="form-group">
-                                                    <input class="form-control" ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.gph">
-                                                </div>
-                                            </td>
-                                            <td class="col-md-1">
-                                                <span ng-show="waterNodeModel.id != node.id">{{node.count}}</span>
-                                                <div class="form-group">
-                                                    <input class="form-control" ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.count">
-                                                </div>
-                                            </td>
-                                            <td class="col-md-1">
-                                                <a href><span ng-show="waterNodeModel.id == node.id && waterNodeModel.new != true" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditNodeEntry(); pc.getWaterUsageStats(); pc.getWaterNodeEntries();"></span></a>
-                                                <a href><span ng-show="waterNodeModel.id == node.id && waterNodeModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddNodeEntry(); pc.getWaterUsageStats(); pc.getWaterNodeEntries();"></span></a>
-                                                <a href><span ng-show="waterNodeModel.id == node.id" class="glyphicon glyphicon-ban-circle" ng-click="waterNodeModel = undefined; "></span></a>
-                                                <a href><span ng-hide="waterNodeModel.id == node.id" class="glyphicon glyphicon-pencil" ng-click="pc.mapModelForWaterNodeEdit(node)"></span></a>
-                                                - - <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteNodeEntry(node.id); pc.getWaterUsageStats(); pc.getWaterNodeEntries(); pc.getWaterUsageStats()"></span></a>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <h4>Wind blowing {{weatherData.current.wind.speed}} knots from the {{weatherData.current.wind.compass_direction}}.</h4>
+                            <h4>Temperature</h4>
+                            <h5> - Now: {{weatherData.current.main.temp}}</h5>
+                            <h5> - min: {{weatherData.current.main.temp_min}}</h5>
+                            <h5> - max: {{weatherData.current.main.temp_max}}</h5>
+                        </div>
+                        <div>
+                            <h4>Precipitation</h4>
+                            <h5> - pressure: {{weatherData.current.main.pressure}}</h5>
+                            <h5> - humidity: {{weatherData.current.main.humidity}}%</h5>
+                        </div>
+                        <div>
+                            <h4>Solar</h4>
+                            <h5> - sunrise: {{ weatherData.current.sys.sunrise_t }}
+                            </h5>
+                            <h5> - sunset: {{ weatherData.current.sys.sunset_t }}</h5>
                         </div>
                     </div>
-                    <!-- END WATER USAGE -->
-                    <!-- START WEATHER ADJUST PAGE -->
-                    <div ng-show="currentPage == 'weatherEdit'">
-                        <div id="currentWeather">
-                            <h3>Current Weather in {{weatherData.current.name}}:</h3>
-                            <h3><img ng-src="http://openweathermap.org/img/w/{{weatherData.current.weather[0].icon}}.png" alt=""> {{weatherData.current.weather[0].description}}</h3>
-                            <div>
-                                <h4>Wind blowing {{weatherData.current.wind.speed}} knots from the {{weatherData.current.wind.compass_direction}}.</h4>
-                                <h4>Temperature</h4>
-                                <h5> - Now: {{weatherData.current.main.temp}}</h5>
-                                <h5> - min: {{weatherData.current.main.temp_min}}</h5>
-                                <h5> - max: {{weatherData.current.main.temp_max}}</h5>
-                            </div>
-                            <div>
-                                <h4>Precipitation</h4>
-                                <h5> - pressure: {{weatherData.current.main.pressure}}</h5>
-                                <h5> - humidity: {{weatherData.current.main.humidity}}%</h5>
-                            </div>
-                            <div>
-                                <h4>Solar</h4>
-                                <h5> - sunrise: {{ weatherData.current.sys.sunrise_t }}
-                                </h5>
-                                <h5> - sunset: {{ weatherData.current.sys.sunset_t }}</h5>
-                            </div>
-                        </div>
-                        <div>Weather data provided by OpenWeatherStation API.</div>
-                        <!-- li ng-repeat=" day in weatherData.forecast.list " ng-click="pc.setGPIO(gpio.gpio)"
-                        <img src="http://openweathermap.org/img/w/02d.png" alt="" -->
-                    </div>
-                    <!-- END WEATHER ADJUST PAGE -->
-                </section>
-            </div>
-            <div>
-                <h1 id="pirrilogo"><img height="50" width="75" src="static/icon_text.png"></h1>
-            </div>
+                    <div>Weather data provided by OpenWeatherStation API.</div>
+                    <!-- li ng-repeat=" day in weatherData.forecast.list " ng-click="pc.setGPIO(gpio.gpio)"
+                    <img src="http://openweathermap.org/img/w/02d.png" alt="" -->
+                </div>
+                <!-- END WEATHER ADJUST PAGE -->
+            </section>
         </div>
-    </body>
+        <div>
+            <h1 id="pirrilogo"><img height="50" width="75" src="static/icon_text.png"></h1>
+        </div>
+    </div>
+</body>
 </html>

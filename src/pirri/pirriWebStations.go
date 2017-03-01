@@ -73,6 +73,9 @@ func stationAddWeb(rw http.ResponseWriter, req *http.Request) {
 func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	ERR = json.NewDecoder(req.Body).Decode(&station)
+	if SETTINGS.PirriDebug {
+		spew.Dump(&station)
+	}
 	db.Delete(&station)
 	stationAllWeb(rw, req)
 }

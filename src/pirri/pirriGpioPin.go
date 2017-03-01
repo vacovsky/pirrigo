@@ -12,7 +12,3 @@ func getGpioByPin() {
 	gpio := db.Where("GPIO = ?", 4).Find(&GpioPin{}).Order("GPIO DESC")
 	jsonifySQLResults(gpio)
 }
-
-func getAllGpio() {
-
-}

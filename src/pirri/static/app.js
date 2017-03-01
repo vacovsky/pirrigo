@@ -16,7 +16,7 @@
     });
     app.Root = '/';
 
-    app.controller('PirriControl', function($rootScope, $scope, $http, $timeout, $filter, $cookies, $scope, $compile) {
+    app.controller('PirriControl', function($scope, $rootScope, $http, $timeout, $filter, $cookies, $scope, $compile) {
         $rootScope.updateInterval = 6000;
         $scope.events = [{
             title: 'All Day Event',
@@ -245,29 +245,30 @@
             $scope.beatheart = false;
         };
 
-        $scope.availableGpios = [1];
-        
-        this.getGpios = function() {
-            $http.get('/gpios/available')
-                .then(function(response) {
-                    $scope.availableGpios = response.data.gpios
-                })
-        };
-
         $scope.stationModel = {};
+        this.addStationButton = function() {
+            $scope.stationModel = {
+                tempID: -1,
+                GPIO: $scope.availableGpios[0].GPIO,
+                Notes: "Created on " + new Date()
+            };
+            $scope.stations.unshift($scope.stationModel);
+
+        };
         this.setEditingStationInfo = function(station) {
             $scope.stationModel = station;
             $scope.stationModel.tempID = station.ID;
             $scope.stationModel.GPIO = 0 + station.GPIO;
         };
-        this.submitEditStation = function() {
-            $scope.stationModel.ID = $scope.stationModel.tempID
+
+        this.submitEditStation = function(newStation) {
+            $scope.stationModel.ID = $scope.stationModel.tempID;
             $http.post('/station/edit', $scope.stationModel)
                 .then(function(response) {
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
-                    this.getGpios();
                 });
+            this.getGpios();
         };
 
         this.submitDeleteStation = function(stationID) {
@@ -277,25 +278,21 @@
                 .then(function(response) {
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
-                    this.getGpios();
-
                 });
+            this.getGpios();
         };
 
         this.submitAddStation = function() {
-            $http.post('/station/delete', $scope.stationModel)
+            $http.post('/station/add', $scope.stationModel)
                 .then(function(response) {
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
-                    this.getGpios();
-
                 });
+            this.getGpios();
+
         };
 
-
-
         $scope.scheduleModel = {};
-
         this.addScheduleButton = function() {
             $scope.scheduleModel = undefined;
             var d = new Date();
@@ -644,8 +641,13 @@
             $scope.mode = mode;
         };
 
-        this.addEvent = function(ce) {
 
+        $scope.availableGpios = [1];
+        this.getGpios = function() {
+            $http.get('/gpio/available')
+                .then(function(response) {
+                    $scope.availableGpios = response.data.gpios;
+                });
         };
 
         this.autoLoader = function() {
