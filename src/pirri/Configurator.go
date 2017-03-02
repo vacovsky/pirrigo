@@ -58,6 +58,12 @@ func loadNewRelicKey(path string) string {
 
 func parseConfig(config map[string]string) {
 	SETTINGS = Settings{}
+	if webuser, ok := config["webuser"]; ok {
+		SETTINGS.WebUser = webuser
+	}
+	if webpass, ok := config["webpass"]; ok {
+		SETTINGS.WebPassword = webpass
+	}
 	if utcoffset, ok := config["utcoffset"]; ok {
 		SETTINGS.UtcOffset, ERR = strconv.Atoi(utcoffset)
 	}

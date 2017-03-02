@@ -62,16 +62,20 @@ func startPirriWebApp() {
 			fmt.Println("Unable to load New Relic Agent using given configuration.")
 		} else {
 			for k, v := range routes {
-				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, v))
+				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, basicAuth(v)))
 			}
 		}
 
 	} else {
 		for k, v := range routes {
 			fmt.Println("Not using New Relic for", k)
-			http.HandleFunc(k, v)
+			http.HandleFunc(k, basicAuth(v))
 		}
 	}
+
+	// http.HandleFunc("/", BasicAuth(func(w http.ResponseWriter, r *http.Request) {
+	// 	http.ServeFile(w, r, "templates/index.html")
+	// }, "admin", "123456", "Please enter your username and password for this site"))
 
 	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HTTPPort, nil))
