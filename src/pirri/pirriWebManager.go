@@ -73,10 +73,6 @@ func startPirriWebApp() {
 		}
 	}
 
-	// http.HandleFunc("/", BasicAuth(func(w http.ResponseWriter, r *http.Request) {
-	// 	http.ServeFile(w, r, "templates/index.html")
-	// }, "admin", "123456", "Please enter your username and password for this site"))
-
 	// Host server
 	panic(http.ListenAndServe(":"+SETTINGS.HTTPPort, nil))
 }

@@ -64,6 +64,9 @@ func parseConfig(config map[string]string) {
 	if webpass, ok := config["webpass"]; ok {
 		SETTINGS.WebPassword = webpass
 	}
+	if weatherstation, ok := config["weatherstation"]; ok {
+		SETTINGS.WeatherStation = weatherstation
+	}
 	if utcoffset, ok := config["utcoffset"]; ok {
 		SETTINGS.UtcOffset, ERR = strconv.Atoi(utcoffset)
 	}

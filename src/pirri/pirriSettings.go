@@ -38,4 +38,5 @@ type Settings struct {
 	PirriDebug           bool
 	WebUser              string
 	WebPassword          string
+	WeatherStation       string
 }
