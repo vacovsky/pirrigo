@@ -109,13 +109,13 @@
                                         <a><span class="glyphicon glyphicon-time"></span></a>
                                         <a><span class="glyphicon glyphicon-stats"></span></a>
                                         -->
-                                        <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
-                                        <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
+                                        <a><span ng-hide="singleRunModel.StationID == station.ID"" ng-click="singleRunModel.Duration = 0; singleRunModel.StationID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                        <a><span ng-show="singleRunModel.StationID == station.ID"" ng-click="singleRunModel = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                         - -
                                         <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteStation(station.ID)"></span></a>
                                     </td>
                                     <td class="col-md-1">
-                                        <div class="dropdown" ng-show="singleRunModel.ID == station.ID && station.tempID != -1">
+                                        <div class="dropdown" ng-show="singleRunModel.StationID == station.ID && stationModel.new != true">
                                             <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
                                             <button ng-show="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
                                             <ul class="dropdown-menu">

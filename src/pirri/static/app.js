@@ -250,7 +250,8 @@
             $scope.stationModel = {
                 tempID: -1,
                 GPIO: $scope.availableGpios[0].GPIO,
-                Notes: "Created on " + new Date()
+                Notes: "Created on " + new Date(),
+                new: true
             };
             $scope.stations.unshift($scope.stationModel);
 
@@ -388,12 +389,12 @@
 
         $scope.singleRunModel = {};
         this.submitSingleRun = function() {
-            $scope.singleRunModel.StationID = $scope.singleRunModel.ID;
             $http.post('/station/run', $scope.singleRunModel)
                 .then(function(response) {
-                    console.log($scope.singleRunModel)
+                    console.log($scope.singleRunModel);
                 });
-            $scope.singleRunMinField = undefined;
+            $scope.singleRunModel = undefined;
+            $scope.singleRunModel = {};
         };
 
         this.refresh = function() {
