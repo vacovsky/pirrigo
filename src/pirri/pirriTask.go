@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 //Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
@@ -16,12 +18,14 @@ func (t *Task) log() {
 	if SETTINGS.PirriDebug {
 		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
 	}
-	db.Create(&StationHistory{
-		StationID:  t.Station.ID,
-		ScheduleID: t.StationSchedule.ID,
-		Duration:   t.StationSchedule.Duration,
-		StartTime:  time.Now(),
-	})
+	if t.Station.GPIO > 0 {
+		db.Create(&StationHistory{
+			StationID:  t.Station.ID,
+			ScheduleID: t.StationSchedule.ID,
+			Duration:   t.StationSchedule.Duration,
+			StartTime:  time.Now(),
+		})
+	}
 }
 
 func (t *Task) send() {
@@ -29,13 +33,19 @@ func (t *Task) send() {
 	failOnError(ERR, "Could not jsonify task.")
 	if SETTINGS.PirriDebug {
 		fmt.Println("Sending Task:", string(taskBlob))
+		spew.Dump(t)
 	}
-	rabbitSend(SETTINGS.RabbitTaskQueue, string(taskBlob))
+	if t.Station.GPIO > 0 {
+		rabbitSend(SETTINGS.RabbitTaskQueue, string(taskBlob))
+	}
 }
 
 func (t *Task) execute() {
 	if SETTINGS.PirriDebug {
 		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
+		spew.Dump(t)
 	}
-	gpioActivator(t.Station.GPIO, true, t.StationSchedule.Duration)
+	if t.Station.GPIO > 0 {
+		gpioActivator(t.Station.GPIO, true, t.StationSchedule.Duration)
+	}
 }

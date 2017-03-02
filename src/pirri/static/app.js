@@ -382,16 +382,17 @@
                     ID: schedule_id
                 })
                 .then(function(response) {});
-            $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
         };
 
         $scope.singleRunModel = {};
         this.submitSingleRun = function() {
+            $scope.singleRunModel.StationID = $scope.singleRunModel.ID;
             $http.post('/station/run', $scope.singleRunModel)
-                .then(function(response) {});
-            $scope.singleRunModel = {};
+                .then(function(response) {
+                    console.log($scope.singleRunModel)
+                });
             $scope.singleRunMinField = undefined;
         };
 
@@ -399,8 +400,6 @@
             // this.getSchedule();
             this.getCalEvents();
             this.loadStations();
-            // this.getLastStationRun();
-            // this.getNextStationRun();
             this.loadGPIO();
             this.loadStatsData();
             this.getWaterUsageStats();

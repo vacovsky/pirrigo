@@ -12,10 +12,14 @@ import (
 )
 
 func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
-	var t Task = Task{Station: Station{}, StationSchedule: StationSchedule{}}
+	var t = Task{Station: Station{}, StationSchedule: StationSchedule{}}
 	var msr ManualStationRun
-	ERR = json.NewDecoder(req.Body).Decode(&msr)
-
+	err := json.NewDecoder(req.Body).Decode(&msr)
+	if err != nil {
+		fmt.Println(err, err.Error())
+	}
+	fmt.Println("START MSR OBJECT")
+	spew.Dump(msr)
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
 	if SETTINGS.PirriDebug {
