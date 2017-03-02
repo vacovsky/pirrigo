@@ -23,7 +23,6 @@ func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 		StationID int
 		Secs      int
 	}
-	defer db.Close()
 
 	result := StatsChart{
 		ReportType: 1,
@@ -51,12 +50,8 @@ func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 	            GROUP BY station_id
 	            ORDER BY station_id ASC`
 
-	gormDbConnect()
 	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
-	db.Close()
-	gormDbConnect()
 	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
-	db.Close()
 
 	for _, i := range rawResult0 {
 		if loc, ok := seriesTracker[i.StationID]; ok {
@@ -107,7 +102,6 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		Labels:     []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"},
 		Series:     []string{"Total", "Scheduled", "Unscheduled"},
 	}
-	defer db.Close()
 
 	type RawResult struct {
 		Day  int
@@ -134,17 +128,9 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
             GROUP BY day
             ORDER BY day ASC`)
 
-	gormDbConnect()
 	db.Raw(sqlQuery0, SETTINGS.UtcOffset, 7).Scan(&rawResults0)
-	db.Close()
-
-	gormDbConnect()
 	db.Raw(sqlQuery1, SETTINGS.UtcOffset, 7).Scan(&rawResults1)
-	db.Close()
-
-	gormDbConnect()
 	db.Raw(sqlQuery2, SETTINGS.UtcOffset, 7).Scan(&rawResults2)
-	db.Close()
 
 	result.Data = [][]int{
 		[]int{0, 0, 0, 0, 0, 0, 0},
@@ -180,9 +166,6 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 		Series     []string
 		Data       [][]float32
 	}
-
-	gormDbConnect()
-	defer db.Close()
 
 	type RawResult struct {
 		Day  int
@@ -241,9 +224,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	seriesTracker := map[int]int{}
 
-	gormDbConnect()
 	db.Raw(sqlStr).Scan(&chartData)
-	db.Close()
 
 	tracker := 0
 	// build list of stations in ascending order.  There must be a better way to do this...

@@ -36,4 +36,7 @@ type Settings struct {
 	SimulateGpioActivity bool
 	MonitorInterval      int
 	PirriDebug           bool
+	WebUser              string
+	WebPassword          string
+	WeatherStation       string
 }

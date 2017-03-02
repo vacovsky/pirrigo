@@ -10,6 +10,9 @@ import (
 
 func startPirriWebApp() {
 	routes := map[string]func(http.ResponseWriter, *http.Request){
+		// GPIO Pins
+		"/gpio/all":       gpioPinsAllWeb,
+		"/gpio/available": gpioPinsAvailableWeb,
 
 		// charts and reporting
 		"/stats/1": statsActivityByHour,
@@ -24,9 +27,12 @@ func startPirriWebApp() {
 		// TODO write a better algorithm for weather handling
 
 		// station
-		"/station/run": stationRunWeb,
-		"/station/all": stationAllWeb,
-		"/station":     stationGetWeb,
+		"/station/run":    stationRunWeb,
+		"/station/all":    stationAllWeb,
+		"/station/add":    stationAddWeb,
+		"/station/edit":   stationEditWeb,
+		"/station/delete": stationDeleteWeb,
+		"/station":        stationGetWeb,
 
 		// schedule
 		"/schedule/all":    stationScheduleAllWeb,
@@ -56,14 +62,14 @@ func startPirriWebApp() {
 			fmt.Println("Unable to load New Relic Agent using given configuration.")
 		} else {
 			for k, v := range routes {
-				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, v))
+				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, basicAuth(v)))
 			}
 		}
 
 	} else {
 		for k, v := range routes {
 			fmt.Println("Not using New Relic for", k)
-			http.HandleFunc(k, v)
+			http.HandleFunc(k, basicAuth(v))
 		}
 	}
 
