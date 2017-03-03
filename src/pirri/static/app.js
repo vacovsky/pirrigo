@@ -247,15 +247,18 @@
 
         $scope.stationModel = {};
         this.addStationButton = function() {
+            $scope.showAddStationButton = false;
             $scope.stationModel = {
                 tempID: -1,
                 GPIO: $scope.availableGpios[0].GPIO,
-                Notes: "Created on " + new Date(),
+                Notes: "Created: " + new Date(),
                 new: true
             };
             $scope.stations.unshift($scope.stationModel);
 
         };
+        $scope.showAddStationButton = true;
+
         this.setEditingStationInfo = function(station) {
             $scope.stationModel = station;
             $scope.stationModel.tempID = station.ID;
@@ -263,6 +266,7 @@
         };
 
         this.submitEditStation = function(newStation) {
+            $scope.showAddStationButton = true;
             $scope.stationModel.ID = $scope.stationModel.tempID;
             $http.post('/station/edit', $scope.stationModel)
                 .then(function(response) {
@@ -273,6 +277,7 @@
         };
 
         this.submitDeleteStation = function(stationID) {
+            $scope.showAddStationButton = true;
             $http.post('/station/delete', {
                     ID: stationID
                 })
@@ -284,6 +289,7 @@
         };
 
         this.submitAddStation = function() {
+            $scope.showAddStationButton = true;
             $http.post('/station/add', $scope.stationModel)
                 .then(function(response) {
                     $scope.stations = response.data.stations;
@@ -558,7 +564,6 @@
                     startTime.slice(2, 4),
                     0
                 );
-                console.log(startTime);
                 var endDate = new Date(entry.EndDate);
 
                 var dateDiff = Math.abs($scope.addDays(curDate, 31) - $scope.addDays(curDate, -31));
