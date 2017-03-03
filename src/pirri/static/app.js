@@ -32,7 +32,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Total Usage in Seconds (last 30 days)'
+                    text: 'Total Usage in Minutes (last 30 days)'
                 },
                 scaleStartValue: 0,
                 legend: {
@@ -51,7 +51,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Usage in Seconds by Day of Week (last 7 days)'
+                    text: 'Usage in Minutes by Day of Week (last 7 days)'
                 },
                 legend: {
                     display: true,
@@ -67,7 +67,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Usage in Seconds Per Station by Day of Week (last 30 days)'
+                    text: 'Usage in Minutes Per Station by Day of Week (last 30 days)'
                 },
                 legend: {
                     display: true,
@@ -83,7 +83,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Station Activity by Hour of the Day (last 30 days)'
+                    text: 'Station Activity in Minutes by Hour of the Day (last 30 days)'
                 },
                 legend: {
                     display: true,
@@ -468,32 +468,6 @@
             return returnDate;
         };
 
-        // this.getSchedule = function() {
-        //     $http.get('/schedule/all')
-        //         .then(function(response) {
-        //             $scope.schedule = response.data.stationSchedules;
-        //         }).then(this.loadCalEvents())
-        // };
-
-
-        // $scope.lastStationRunHash = {}
-        // this.getLastStationRun = function() {
-        //     $http.get('/station/lastruns')
-        //         .then(function(response) {
-        //             $scope.lastStationRunHash = response.data.lastrunlist;
-        //         })
-        //         // console.log($scope.lastStationRunHash);
-        // };
-
-        // $scope.nextStationRunHash = {}
-        // this.getNextStationRun = function() {
-        //     $http.get('/station/nextruns')
-        //         .then(function(response) {
-        //             $scope.nextStationRunHash = response.data.nextrunlist;
-        //         })
-
-        // };
-
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
         this.getWaterNodeEntries = function() {
@@ -553,14 +527,7 @@
         };
 
         $scope.loader = this.autoLoader;
-        // $scope.intervalFunction = function() {
-        //     $timeout(function() {
-        //         $scope.loader();
-        //         $scope.intervalFunction();
-        //     }, $rootScope.updateInterval)
-        // };
-        //$scope.intervalFunction();
-
+        
         // START CAL
 
         var date = new Date();

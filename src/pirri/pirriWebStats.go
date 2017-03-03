@@ -59,21 +59,21 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 		result.Data[1] = append(result.Data[1], 0)
 
 		if loc, ok := seriesTracker[i.StationID]; ok {
-			result.Data[0][loc] += i.Secs
+			result.Data[0][loc] += i.Secs / 60
 		} else {
 			seriesTracker[i.StationID] = tracker0
 			result.Labels = append(result.Labels, i.StationID)
-			result.Data[0][tracker0] += i.Secs
+			result.Data[0][tracker0] += i.Secs / 60
 			tracker0++
 		}
 	}
 	for _, i := range rawResult1 {
 		if loc, ok := seriesTracker[i.StationID]; ok {
-			result.Data[1][loc] += i.Secs
+			result.Data[1][loc] += i.Secs / 60
 		} else {
 			seriesTracker[i.StationID] = tracker1
 			result.Labels = append(result.Labels, i.StationID)
-			result.Data[1][tracker1] += i.Secs
+			result.Data[1][tracker1] += i.Secs / 60
 			tracker1++
 		}
 	}
@@ -141,13 +141,13 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	for _, v := range rawResults0 {
-		result.Data[0][v.Day-1] = v.Secs
+		result.Data[0][v.Day-1] = v.Secs / 60
 	}
 	for _, v := range rawResults1 {
-		result.Data[1][v.Day-1] = v.Secs
+		result.Data[1][v.Day-1] = v.Secs / 60
 	}
 	for _, v := range rawResults2 {
-		result.Data[2][v.Day-1] = v.Secs
+		result.Data[2][v.Day-1] = v.Secs / 60
 	}
 
 	if SETTINGS.PirriDebug {
@@ -222,26 +222,16 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				FROM station_histories
 				JOIN stations ON stations.id = station_histories.station_id
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
+					AND stations.id > 0
 				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.UtcOffset))
 
 	seriesTracker := map[int]int{}
 
 	db.Raw(sqlStr).Scan(&chartData)
 
-	tracker := 0
-	// build list of stations in ascending order.  There must be a better way to do this...
-	for _, i := range chartData {
-		if tracker == 0 {
-			seriesTracker[i.ID] = tracker
-			tracker++
-			result.Data = append(result.Data, []int{
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0,
-				0, 0, 0, 0, 0, 0})
-			result.Series = append(result.Series, i.ID)
-		} else if i.ID != result.Series[len(result.Series)-1] {
-			seriesTracker[i.ID] = tracker
+	for n, i := range chartData {
+		if n == 0 || i.ID != result.Series[len(result.Series)-1] {
+			seriesTracker[i.ID] = len(result.Series)
 			result.Data = append(result.Data, []int{
 				0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0,
@@ -249,8 +239,8 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				0, 0, 0, 0, 0, 0})
 			result.Series = append(result.Series, i.ID)
 		}
-
-		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs
+		fmt.Println(seriesTracker, i.ID, i.Hour, i.RunSecs/60)
+		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs / 60
 	}
 
 	if SETTINGS.PirriDebug {
