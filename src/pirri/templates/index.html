@@ -131,17 +131,17 @@
                 <!-- END STATIONS LIST -->
                 <!-- START STATS-->
                 <div ng-show="currentPage == 'stats'">
+                    <div class="col-md-6">
+                        <canvas id="chart1" height="120" class="chart chart-bar" chart-options="chartData1.options" chart-data="chartData1.data" chart-labels="chartData1.labels" chart-series="chartData1.series"></canvas>
+                    </div class="col-md-6">
+                    <div class="col-md-6">
+                        <canvas id="chart2" height="120" class="chart chart-line" chart-options="chartData2.options" chart-data="chartData2.data" chart-labels="chartData2.labels" chart-series="chartData2.series"></canvas>
+                    </div class="col-md-6">
                     <div>
-                        <canvas id="chart1" height="65" class="chart chart-bar" chart-options="chartData1.options" chart-data="chartData1.data" chart-labels="chartData1.labels" chart-series="chartData1.series"></canvas>
+                        <canvas id="chart3" height="120" class="chart chart-bar" chart-options="chartData3.options" chart-data="chartData3.data" chart-labels="chartData3.labels" chart-series="chartData3.series"></canvas>
                     </div>
-                    <div>
-                        <canvas id="chart2" height="65" class="chart chart-line" chart-options="chartData2.options" chart-data="chartData2.data" chart-labels="chartData2.labels" chart-series="chartData2.series"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="chart3" height="65" class="chart chart-bar" chart-options="chartData3.options" chart-data="chartData3.data" chart-labels="chartData3.labels" chart-series="chartData3.series"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="chart4" height="65" class="chart chart-line" chart-options="chartData4.options" chart-data="chartData4.data" chart-labels="chartData4.labels" chart-series="chartData4.series"></canvas>
+                    <div class="col-md-6">
+                        <canvas id="chart4" height="120" class="chart chart-line" chart-options="chartData4.options" chart-data="chartData4.data" chart-labels="chartData4.labels" chart-series="chartData4.series"></canvas>
                     </div>
                 </div>
                 <!-- END STATS -->

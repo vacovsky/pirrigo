@@ -15,7 +15,7 @@ func startPirriWebApp() {
 		"/gpio/available": gpioPinsAvailableWeb,
 
 		// charts and reporting
-		"/stats/1": statsActivityByHour,
+		"/stats/1": statsActivityByStation,
 		"/stats/2": statsActivityByDayOfWeek,
 		"/stats/3": statsActivityPerStationByDOW,
 		"/stats/4": statsStationActivity,

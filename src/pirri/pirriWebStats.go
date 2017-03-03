@@ -12,7 +12,7 @@ import (
 )
 
 // TODO parameterize the inputs for date ranges and add selectors on stats page
-func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
+func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 	type StatsChart struct {
 		ReportType int
 		Labels     []int
@@ -52,26 +52,28 @@ func statsActivityByHour(rw http.ResponseWriter, req *http.Request) {
 
 	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
 	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
+	result.Data = [][]int{[]int{}, []int{}}
 
 	for _, i := range rawResult0 {
+		result.Data[0] = append(result.Data[0], 0)
+		result.Data[1] = append(result.Data[1], 0)
+
 		if loc, ok := seriesTracker[i.StationID]; ok {
-			result.Data[loc][0] += i.Secs
+			result.Data[0][loc] += i.Secs
 		} else {
 			seriesTracker[i.StationID] = tracker0
 			result.Labels = append(result.Labels, i.StationID)
-			result.Data = append(result.Data, []int{0, 0})
-			result.Data[tracker0][0] += i.Secs
+			result.Data[0][tracker0] += i.Secs
 			tracker0++
 		}
 	}
 	for _, i := range rawResult1 {
 		if loc, ok := seriesTracker[i.StationID]; ok {
-			result.Data[loc][1] += i.Secs
+			result.Data[1][loc] += i.Secs
 		} else {
 			seriesTracker[i.StationID] = tracker1
 			result.Labels = append(result.Labels, i.StationID)
-			result.Data = append(result.Data, []int{0, 0})
-			result.Data[tracker1][1] += i.Secs
+			result.Data[1][tracker1] += i.Secs
 			tracker1++
 		}
 	}

@@ -11,7 +11,7 @@ import (
 func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	history := []StationHistory{}
 
-	db.Find(&history)
+	db.Order("id desc").Limit(100).Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {
 		fmt.Println(err, err.Error())
