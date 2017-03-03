@@ -27,7 +27,7 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 	result := StatsChart{
 		ReportType: 1,
 		Labels:     []int{},
-		Series:     []string{"Scheduled", "Unscheduled"},
+		Series:     []string{"Unscheduled", "Scheduled"},
 	}
 
 	var rawResult0 []RawResult
@@ -46,7 +46,7 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 	// scheduled
 	sqlQuery1 := `SELECT DISTINCT station_id, SUM(duration) as secs
 	            FROM station_histories
-	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id>1 AND station_id > 0
+	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id>=1 AND station_id > 0
 	            GROUP BY station_id
 	            ORDER BY station_id ASC`
 
