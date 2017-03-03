@@ -527,7 +527,7 @@
         };
 
         $scope.loader = this.autoLoader;
-        
+
         // START CAL
 
         var date = new Date();
@@ -539,12 +539,26 @@
             calendarMode: "week"
         };
 
+        function padDigits(number, digits) {
+            return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+        }
+
         $scope.loadCalEvents = function() {
             $scope.eventSource = [];
             for (i = 0; i < $scope.schedule.length; i++) {
                 var entry = $scope.schedule[i];
-                var curDate = moment().toDate();
-                var startDate = new Date(entry.StartDate); //new Date(entry.StartDate);
+                var startTime = padDigits(entry.StartTime, 4);
+                var curDate = new Date();
+                var fstartDate = new Date();
+                var startDate = new Date(
+                    fstartDate.getFullYear(),
+                    fstartDate.getMonth(),
+                    fstartDate.getDate(),
+                    startTime.slice(0, 2),
+                    startTime.slice(2, 4),
+                    0
+                );
+                console.log(startTime);
                 var endDate = new Date(entry.EndDate);
 
                 var dateDiff = Math.abs($scope.addDays(curDate, 31) - $scope.addDays(curDate, -31));
@@ -592,7 +606,6 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             };
-                            // console.log(newEntry);
                             $scope.eventSource.push(newEntry);
                         }
                     }
@@ -600,7 +613,6 @@
                 }
             }
             $scope.$broadcast('eventSourceChanged', $scope.eventSource);
-            // console.log($scope.eventSource)
         };
 
         $scope.mode = "week";
