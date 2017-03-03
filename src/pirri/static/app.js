@@ -4,9 +4,9 @@
         'chart.js',
         'ngCookies',
         'ngMessages',
-        'ngMaterial',
+        // 'ngMaterial',
         'ngAnimate',
-        'ngSanitize',
+        // 'ngSanitize',
         // 'ui.calendar',
         // 'ui.bootstrap',
         'ui.rCalendar',
@@ -32,7 +32,7 @@
             options: {
                 title: {
                     display: true,
-                    text: 'Total Usage in Seconds (last 30 days)'
+                    text: 'Total Usage in Minutes (last 30 days)'
                 },
                 scaleStartValue: 0,
                 legend: {
@@ -51,7 +51,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Usage in Seconds by Day of Week (last 7 days)'
+                    text: 'Usage in Minutes by Day of Week (last 7 days)'
                 },
                 legend: {
                     display: true,
@@ -67,7 +67,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Usage in Seconds Per Station by Day of Week (last 30 days)'
+                    text: 'Usage in Minutes Per Station by Day of Week (last 30 days)'
                 },
                 legend: {
                     display: true,
@@ -83,7 +83,7 @@
                 scaleStartValue: 0,
                 title: {
                     display: true,
-                    text: 'Station Activity by Hour of the Day (last 30 days)'
+                    text: 'Station Activity in Minutes by Hour of the Day (last 30 days)'
                 },
                 legend: {
                     display: true,
@@ -250,7 +250,8 @@
             $scope.stationModel = {
                 tempID: -1,
                 GPIO: $scope.availableGpios[0].GPIO,
-                Notes: "Created on " + new Date()
+                Notes: "Created on " + new Date(),
+                new: true
             };
             $scope.stations.unshift($scope.stationModel);
 
@@ -388,12 +389,12 @@
 
         $scope.singleRunModel = {};
         this.submitSingleRun = function() {
-            $scope.singleRunModel.StationID = $scope.singleRunModel.ID;
             $http.post('/station/run', $scope.singleRunModel)
                 .then(function(response) {
-                    console.log($scope.singleRunModel)
+                    console.log($scope.singleRunModel);
                 });
-            $scope.singleRunMinField = undefined;
+            $scope.singleRunModel = undefined;
+            $scope.singleRunModel = {};
         };
 
         this.refresh = function() {
@@ -467,32 +468,6 @@
             return returnDate;
         };
 
-        // this.getSchedule = function() {
-        //     $http.get('/schedule/all')
-        //         .then(function(response) {
-        //             $scope.schedule = response.data.stationSchedules;
-        //         }).then(this.loadCalEvents())
-        // };
-
-
-        // $scope.lastStationRunHash = {}
-        // this.getLastStationRun = function() {
-        //     $http.get('/station/lastruns')
-        //         .then(function(response) {
-        //             $scope.lastStationRunHash = response.data.lastrunlist;
-        //         })
-        //         // console.log($scope.lastStationRunHash);
-        // };
-
-        // $scope.nextStationRunHash = {}
-        // this.getNextStationRun = function() {
-        //     $http.get('/station/nextruns')
-        //         .then(function(response) {
-        //             $scope.nextStationRunHash = response.data.nextrunlist;
-        //         })
-
-        // };
-
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
         this.getWaterNodeEntries = function() {
@@ -552,13 +527,6 @@
         };
 
         $scope.loader = this.autoLoader;
-        // $scope.intervalFunction = function() {
-        //     $timeout(function() {
-        //         $scope.loader();
-        //         $scope.intervalFunction();
-        //     }, $rootScope.updateInterval)
-        // };
-        //$scope.intervalFunction();
 
         // START CAL
 
@@ -571,12 +539,26 @@
             calendarMode: "week"
         };
 
+        function padDigits(number, digits) {
+            return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+        }
+
         $scope.loadCalEvents = function() {
             $scope.eventSource = [];
             for (i = 0; i < $scope.schedule.length; i++) {
                 var entry = $scope.schedule[i];
-                var curDate = moment().toDate();
-                var startDate = new Date(entry.StartDate); //new Date(entry.StartDate);
+                var startTime = padDigits(entry.StartTime, 4);
+                var curDate = new Date();
+                var fstartDate = new Date();
+                var startDate = new Date(
+                    fstartDate.getFullYear(),
+                    fstartDate.getMonth(),
+                    fstartDate.getDate(),
+                    startTime.slice(0, 2),
+                    startTime.slice(2, 4),
+                    0
+                );
+                console.log(startTime);
                 var endDate = new Date(entry.EndDate);
 
                 var dateDiff = Math.abs($scope.addDays(curDate, 31) - $scope.addDays(curDate, -31));
@@ -624,7 +606,6 @@
                                     newRealDate.getSeconds() + entry.Duration
                                 )
                             };
-                            // console.log(newEntry);
                             $scope.eventSource.push(newEntry);
                         }
                     }
@@ -632,7 +613,6 @@
                 }
             }
             $scope.$broadcast('eventSourceChanged', $scope.eventSource);
-            // console.log($scope.eventSource)
         };
 
         $scope.mode = "week";

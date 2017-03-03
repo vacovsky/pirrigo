@@ -4,8 +4,8 @@
         <title>PirriGo</title>
         <link rel="icon" href="static/icon.png">
         <link rel="stylesheet" href="/static/bower_components/bootstrap/dist/css/bootstrap.css">
-        <link rel="stylesheet" href="/static/bower_components/angular-material/angular-material.min.css">
-        <link rel="stylesheet" href="/static/bower_components/ng-responsive-calendar/dist/css/calendar.min.css"/>
+<!--         <link rel="stylesheet" href="/static/bower_components/angular-material/angular-material.min.css">
+ -->        <link rel="stylesheet" href="/static/bower_components/ng-responsive-calendar/dist/css/calendar.min.css"/>
         <link rel="stylesheet" href="/static/style.css">
         <script src="/static/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="/static/bower_components/angular/angular.js"></script>
@@ -20,7 +20,7 @@
         <script src="/static/bower_components/angular-sanitize/angular-sanitize.js"></script>
         <script src="/static/bower_components/angular-route/angular-route.js"></script>
         <script src="/static/bower_components/angular-aria/angular-aria.js"></script>
-        <script type="text/javascript" src="/static/bower_components/angular-material/angular-material.js"></script>
+        <!-- <script type="text/javascript" src="/static/bower_components/angular-material/angular-material.js"></script> -->
         <script type="text/javascript" src="/static/bower_components/angular-messages/angular-messages.js"></script>
         <script src="/static/app.js"></script>
         <script src="/static/table.js"></script>
@@ -109,13 +109,13 @@
                                         <a><span class="glyphicon glyphicon-time"></span></a>
                                         <a><span class="glyphicon glyphicon-stats"></span></a>
                                         -->
-                                        <a><span ng-hide="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = station.ID; singleRunModel.ID = station.ID;" class="glyphicon glyphicon-play"></span></a>
-                                        <a><span ng-show="singleRunModel.ID == station.ID"" ng-click="singleRunModel.ID = undefined; singleRunModel.duration = undefined;" class="glyphicon glyphicon-stop"></span></a>
+                                        <a><span ng-hide="singleRunModel.StationID == station.ID"" ng-click="singleRunModel.Duration = 0; singleRunModel.StationID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                        <a><span ng-show="singleRunModel.StationID == station.ID"" ng-click="singleRunModel = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                         - -
                                         <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteStation(station.ID)"></span></a>
                                     </td>
                                     <td class="col-md-1">
-                                        <div class="dropdown" ng-show="singleRunModel.ID == station.ID && station.tempID != -1">
+                                        <div class="dropdown" ng-show="singleRunModel.StationID == station.ID && stationModel.new != true">
                                             <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
                                             <button ng-show="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
                                             <ul class="dropdown-menu">
@@ -131,17 +131,17 @@
                 <!-- END STATIONS LIST -->
                 <!-- START STATS-->
                 <div ng-show="currentPage == 'stats'">
+                    <div class="col-md-6">
+                        <canvas id="chart1" height="120" class="chart chart-bar" chart-options="chartData1.options" chart-data="chartData1.data" chart-labels="chartData1.labels" chart-series="chartData1.series"></canvas>
+                    </div class="col-md-6">
+                    <div class="col-md-6">
+                        <canvas id="chart2" height="120" class="chart chart-line" chart-options="chartData2.options" chart-data="chartData2.data" chart-labels="chartData2.labels" chart-series="chartData2.series"></canvas>
+                    </div class="col-md-6">
                     <div>
-                        <canvas id="chart1" height="65" class="chart chart-bar" chart-options="chartData1.options" chart-data="chartData1.data" chart-labels="chartData1.labels" chart-series="chartData1.series"></canvas>
+                        <canvas id="chart3" height="120" class="chart chart-bar" chart-options="chartData3.options" chart-data="chartData3.data" chart-labels="chartData3.labels" chart-series="chartData3.series"></canvas>
                     </div>
-                    <div>
-                        <canvas id="chart2" height="65" class="chart chart-line" chart-options="chartData2.options" chart-data="chartData2.data" chart-labels="chartData2.labels" chart-series="chartData2.series"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="chart3" height="65" class="chart chart-bar" chart-options="chartData3.options" chart-data="chartData3.data" chart-labels="chartData3.labels" chart-series="chartData3.series"></canvas>
-                    </div>
-                    <div>
-                        <canvas id="chart4" height="65" class="chart chart-line" chart-options="chartData4.options" chart-data="chartData4.data" chart-labels="chartData4.labels" chart-series="chartData4.series"></canvas>
+                    <div class="col-md-6">
+                        <canvas id="chart4" height="120" class="chart chart-line" chart-options="chartData4.options" chart-data="chartData4.data" chart-labels="chartData4.labels" chart-series="chartData4.series"></canvas>
                     </div>
                 </div>
                 <!-- END STATS -->
