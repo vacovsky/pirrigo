@@ -1,7 +1,7 @@
 # PirriGo
 An (in-progress) rewrite of the Pirri irrigation and garden management application, in Go and Angular.
 
-- Live Demo: http://backwardhat.com:8001
+- Live Demo: http://pirri.vacovsky.us
 - login/password are demo/demo
 
 ## Features
