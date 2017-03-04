@@ -169,10 +169,10 @@
         $scope.weatherData = {};
         $scope.settingsData = {};
         $scope.currentPage = 'home'; // history / home / settings / add
-        $scope.stations = undefined;
+        $scope.stations = [];
         $scope.navTitle = "All Stations";
-        $scope.gpio_pins = undefined;
-        $scope.searchResults = {};
+        $scope.gpio_pins = [];
+        $scope.searchResults = [];
         $scope.searchText = "";
         $scope.showSearchResults = false;
         $scope.history = [];
@@ -185,24 +185,24 @@
         $scope.durationIntervals = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
         $scope.show_gpio_diagram = false;
 
-        this.filterForKeys = function(searchText) {
-            $scope.searchResults = [];
-            $scope.stations.forEach(function(k) {
-                var n = k.search(searchText);
-                if (n >= 0) {
-                    $scope.searchResults[k] = true;
-                }
-            });
-            if (Object.keys($scope.searchResults).length > 0) {
-                $scope.showSearchResults = true;
-            } else {
-                $scope.showSearchResults = false;
-            }
-            if (searchText === "") {
-                $scope.searchResults = [];
-                $scope.showSearchResults = false;
-            }
-        };
+        // this.filterForKeys = function(searchText) {
+        //     $scope.searchResults = [];
+        //     $scope.stations.forEach(function(k) {
+        //         var n = k.search(searchText);
+        //         if (n >= 0) {
+        //             $scope.searchResults[k] = true;
+        //         }
+        //     });
+        //     if (Object.keys($scope.searchResults).length > 0) {
+        //         $scope.showSearchResults = true;
+        //     } else {
+        //         $scope.showSearchResults = false;
+        //     }
+        //     if (searchText === "") {
+        //         $scope.searchResults = [];
+        //         $scope.showSearchResults = false;
+        //     }
+        // };
 
         this.resetAddForm = function() {
             $scope.gpio_add_model = {
@@ -219,7 +219,7 @@
             $scope.currentPage = pageName;
         };
 
-        $scope.dripnodes = {};
+        $scope.dripnodes = [];
         $scope.watercost = 0.0021;
         this.getWaterUsageStats = function() {
             $http.get('/stats/gallons')

@@ -30,7 +30,7 @@
                 <section>
                     <div id="nav" style="padding-bottom: 15px">
                         <div id="searchText" class="col-sm-3 pull-right">
-                            <input type="text" ng-model="searchText" placeholder="Search stations..." class="form-control col-sm-2" ng-change="pc.filterForKeys(searchText)">
+                            <input type="text" ng-model="searchText" placeholder="Search" class="" col-sm-2">
                         </div>
                         <div id="navicons">
                             <div>
@@ -101,7 +101,7 @@
                                             <span ng-hide="stationModel.tempID == station.ID"">{{station.Notes}}</span>
                                             <span>
                                                 <div class="form-group" ng-show="stationModel.tempID == station.ID">
-                                                    <input class="form-control" ng-show="stationModel.tempID == station.ID || stationModel.tempID == -1" type="text" ng-model="stationModel.Notes">
+                                                    <input class="" ng-show="stationModel.tempID == station.ID || stationModel.tempID == -1" type="text" ng-model="stationModel.Notes">
                                                 </div>
                                             </span>
                                         </td>
@@ -176,7 +176,7 @@
                                         <td class="col-md-4">
                                             <p ng-show="scheduleModel.ID != sched.ID"><em>{{sched.StartDate | date:'fullDate' }}</em></p>
                                             <p ng-show="scheduleModel.ID == sched.ID" class="input-group">
-                                                <input type="text" class="form-control"
+                                                <input type="text"
                                                 uib-datepicker-popup="{{format}}"
                                                 ng-model="sched.StartDate"
                                                 is-open="true"
@@ -195,7 +195,7 @@
                                             <span>
                                                 <div class="form-group">
                                                     <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
-                                                    <input class="form-control" placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
+                                                    <input placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
                                                 </div>
                                             </span>
                                         </td>
@@ -319,7 +319,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="notes">Notes:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="notes" placeholder="{{edit_station_model.notes}}">
+                                    <input type="text" id="notes" placeholder="{{edit_station_model.notes}}">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -359,7 +359,7 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="notes">Notes:</label>
                                 <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="notes" placeholder="Any notes regarding this station.">
+                                    <input type="text" id="notes" placeholder="Any notes regarding this station.">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -408,9 +408,11 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div id="costinputdiv">
+                        <div>
                             <label for="costinput">Cost per gallon </label>
-                            <p class="col-sm-5"><input id="costinputfield" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="form-control col-sm-2" ng-change="pc.calcCost()"></p>
+                            <p class="col-sm-5">
+                                <input id="costinput" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="col-sm-2" ng-change="pc.calcCost()">
+                            </p>
                             <p class="pull-right">Estimated total cost / last 30 days: ${{ monthly_cost | number:2 }}</p>
                         </div>
                         
@@ -447,13 +449,13 @@
                                             <td class="col-md-1">
                                                 <span ng-show="waterNodeModel.id != node.id">{{node.gph}}</span>
                                                 <div class="form-group">
-                                                    <input class="form-control" ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.gph">
+                                                    <input ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.gph">
                                                 </div>
                                             </td>
                                             <td class="col-md-1">
                                                 <span ng-show="waterNodeModel.id != node.id">{{node.count}}</span>
                                                 <div class="form-group">
-                                                    <input class="form-control" ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.count">
+                                                    <input ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.count">
                                                 </div>
                                             </td>
                                             <td class="col-md-1">
@@ -503,6 +505,10 @@
             </div>
             <div>
                 <h1 id="pirrilogo"><img height="50" width="75" src="static/icon_text.png"></h1>
+            </div>
+            <div style="padding-top: 30px; align-self: center; align-content: center"; align="center">
+                
+                <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">PirriGo</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://vacovsky.us" property="cc:attributionName" rel="cc:attributionURL">Joe Vacovsky Jr.</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/vacoj/pirrigo" rel="dct:source">https://github.com/vacoj/pirrigo</a>.
             </div>
         </div>
     </body>

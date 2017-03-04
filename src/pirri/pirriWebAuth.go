@@ -44,20 +44,23 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		b, err := base64.StdEncoding.DecodeString(s[1])
 		if err != nil {
 			http.Error(w, err.Error(), 401)
-			// loginAuth(w, r)
 			return
 		}
 
 		pair := strings.SplitN(string(b), ":", 2)
 		if len(pair) != 2 {
 			http.Error(w, "Not authorized", 401)
-			// loginAuth(w, r)
 			return
 		}
 
-		if pair[0] != SETTINGS.WebUser && pair[1] != SETTINGS.WebPassword {
+		if SETTINGS.PirriDebug {
+			spew.Dump(s)
+			spew.Dump(b)
+			spew.Dump(pair)
+		}
+
+		if strings.ToLower(pair[0]) != strings.ToLower(SETTINGS.WebUser) || pair[1] != SETTINGS.WebPassword {
 			http.Error(w, "Not authorized", 401)
-			// loginAuth(w, r)
 			return
 		}
 		h.ServeHTTP(w, r)
