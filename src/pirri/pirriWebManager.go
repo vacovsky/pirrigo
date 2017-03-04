@@ -42,15 +42,11 @@ func startPirriWebApp() {
 		// history
 		"/history": historyAllWeb,
 
-		// static
-		"/static/": (func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, r.URL.Path[1:])
-		}),
+		// authentication
+		"/login/verify": loginCheck,
 
 		// root
-		"/": (func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, "templates/index.html")
-		}),
+		"/home": webHome,
 	}
 
 	if SETTINGS.UseNewRelic {
@@ -62,15 +58,31 @@ func startPirriWebApp() {
 			fmt.Println("Unable to load New Relic Agent using given configuration.")
 		} else {
 			for k, v := range routes {
+				// wrap each route and function in auth handler and new relic
 				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, basicAuth(v)))
-			}
-		}
 
+			}
+			// static content does not require authentication
+			http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, "/static/", func(w http.ResponseWriter, r *http.Request) {
+				http.ServeFile(w, r, r.URL.Path[1:])
+			}))
+
+			// routes to the login page if not authenticated, to the main /home otherwise
+			http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, "/", loginAuth))
+		}
 	} else {
 		for k, v := range routes {
 			fmt.Println("Not using New Relic for", k)
+			// wrap each route and function in auth handler
 			http.HandleFunc(k, basicAuth(v))
 		}
+		// static content does not require authentication
+		http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, r.URL.Path[1:])
+		})
+
+		// routes to the login page if not authenticated, to the main /home otherwise
+		http.HandleFunc("/login", loginAuth)
 	}
 
 	// Host server

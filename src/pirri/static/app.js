@@ -25,6 +25,18 @@
         }];
         $scope.eventSource = [];
 
+
+        this.login = function() {
+            $http.post('/home', {
+                    username: username,
+                    password: password
+                })
+                .then(function(response) {
+                    // callback($window.location.href); or var landingUrl = "http://" + $window.location.host + "/login";
+                    // $window.location.href = landingUrl;
+                });
+        };
+
         $scope.chartData1 = {
             labels: [],
             series: [],
