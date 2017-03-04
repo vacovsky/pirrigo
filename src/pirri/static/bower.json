@@ -37,7 +37,9 @@
     "jquery": "^3.1.1",
     "moment": "^2.17.1",
     "ui-bootstrap": "^2.5.0",
-    "ng-responsive-calendar": "^0.1.16"
+    "ng-responsive-calendar": "^0.1.16",
+    "prefix": "^1.0.3",
+    "angular-base64": "^2.0.5"
   },
   "resolutions": {
     "angular": "^1.6.2",
