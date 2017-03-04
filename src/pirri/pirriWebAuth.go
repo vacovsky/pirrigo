@@ -55,7 +55,13 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		if pair[0] != SETTINGS.WebUser && pair[1] != SETTINGS.WebPassword {
+		if SETTINGS.PirriDebug {
+			spew.Dump(s)
+			spew.Dump(b)
+			spew.Dump(pair)
+		}
+
+		if pair[0] != SETTINGS.WebUser || pair[1] != SETTINGS.WebPassword {
 			http.Error(w, "Not authorized", 401)
 			// loginAuth(w, r)
 			return
