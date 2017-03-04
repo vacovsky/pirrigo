@@ -79,7 +79,7 @@
                         <div class="tbl-content">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
-                                    <tr ng-repeat="station in stations" ng-hide="showSearchResults">
+                                    <tr ng-repeat="station in stations | filter: searchText" ng-hide="showSearchResults">
                                         <td class="col-md-1"><a><span> {{station.ID}}</span></a></td>
                                         
                                         <td class="col-md-1">
@@ -91,7 +91,7 @@
                                                     <div class="dropdown" ng-show="stationModel.tempID == station.ID">
                                                         <button ng-show="stationModel.GPIO != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{stationModel.GPIO}}</button>
                                                         <ul class="dropdown-menu">
-                                                            <li ng-repeat="gpio in availableGpios" ng-click="stationModel.GPIO = gpio.GPIO"><a>{{gpio.GPIO}}</a></li>
+                                                            <li ng-repeat="gpio in availableGpios | filter: searchText" ng-click="stationModel.GPIO = gpio.GPIO"><a>{{gpio.GPIO}}</a></li>
                                                         </ul>
                                                     </div>
                                                 </span>
@@ -118,7 +118,7 @@
                                                 <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
                                                 <button ng-show="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
                                                 <ul class="dropdown-menu">
-                                                    <li ng-repeat="interval in durationIntervals" ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
+                                                    <li ng-repeat="interval in durationIntervals " ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -163,13 +163,13 @@
                         <div class="tbl-content">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
-                                    <tr ng-repeat="sched in schedule">
+                                    <tr ng-repeat="sched in schedule | filter: searchText">
                                         <td class="col-md-1">
                                             <span ng-show="scheduleModel.ID != sched.ID">{{sched.StationID}}</span>
                                             <div class="dropdown" ng-show="scheduleModel.ID == sched.ID">
                                                 <button ng-show="scheduleModel.Duration != undefined && scheduleModel.ID == sched.ID" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{sched.StationID}}</button>
                                                 <ul class="dropdown-menu">
-                                                    <li ng-repeat="s in stations" ng-click="scheduleModel.StationID = s.ID"><a>{{s.ID}} - {{s.Notes}}</a></li>
+                                                    <li ng-repeat="s in stations | filter: searchText" ng-click="scheduleModel.StationID = s.ID"><a>{{s.ID}} - {{s.Notes}}</a></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -289,7 +289,7 @@
                         <div class="tbl-content">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
-                                    <tr ng-repeat="hist in history">
+                                    <tr ng-repeat="hist in history  | filter: searchText">
                                         <td class="col-md-1">{{hist.ID}}</td>
                                         <td class="col-md-1">{{hist.StationID}}</td>
                                         <td class="col-md-3">{{pc.prettyTime(hist.StartTime)}}</td>
@@ -397,7 +397,7 @@
                         <div class="tbl-content">
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <tbody>
-                                    <tr ng-repeat="node in dripnodes">
+                                    <tr ng-repeat="node in dripnodes  | filter: searchText">
                                         <td class="col-md-1">{{node.ID}}</td>
                                         <td class="col-md-4">{{node.Notes}}</td>
                                         <td class="col-md-1">{{node.run_mins}}</td>
@@ -432,7 +432,7 @@
                             <div class="tbl-content">
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tbody>
-                                        <tr ng-repeat="node in waterNodeEntries">
+                                        <tr ng-repeat="node in waterNodeEntries  | filter: searchText">
                                             <td class="col-md-1">{{node.id}}</td>
                                             <td class="col-md-1">
                                                 <div ng-show="">{{node.sid}}</div>
@@ -440,7 +440,7 @@
                                                 <div class="dropdown" ng-show="waterNodeModel.id == node.id">
                                                     <button ng-show="waterNodeModel.sid != undefined && (waterNodeModel.id == node.id)" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{node.sid}}</button>
                                                     <ul class="dropdown-menu">
-                                                        <li ng-repeat="station in stations" ng-click="waterNodeModel.sid = station.sid;"><a >{{station.ID}} - {{station.Notes}}</a></li>
+                                                        <li ng-repeat="station in stations  | filter: searchText " ng-click="waterNodeModel.sid = station.sid;"><a >{{station.ID}} - {{station.Notes}}</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
