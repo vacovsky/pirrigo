@@ -29,7 +29,7 @@
             <div id="station-schedules">
                 <section>
                     <div id="nav" style="padding-bottom: 15px">
-                        <div id="searchText" class="col-sm-3 pull-right">
+                        <div id="searchText" class="pfield col-sm-3 pull-right">
                             <input type="text" ng-model="searchText" placeholder="Search" class="" col-sm-2">
                         </div>
                         <div id="navicons">
@@ -100,7 +100,7 @@
                                         <td class="col-md-4">
                                             <span ng-hide="stationModel.tempID == station.ID"">{{station.Notes}}</span>
                                             <span>
-                                                <div class="form-group" ng-show="stationModel.tempID == station.ID">
+                                                <div class="pfield form-group" ng-show="stationModel.tempID == station.ID">
                                                     <input class="" ng-show="stationModel.tempID == station.ID || stationModel.tempID == -1" type="text" ng-model="stationModel.Notes">
                                                 </div>
                                             </span>
@@ -173,7 +173,7 @@
                                                 </ul>
                                             </div>
                                         </td>
-                                        <td class="col-md-4">
+                                        <td class="pfield col-md-4">
                                             <p ng-show="scheduleModel.ID != sched.ID"><em>{{sched.StartDate | date:'fullDate' }}</em></p>
                                             <p ng-show="scheduleModel.ID == sched.ID" class="input-group">
                                                 <input type="text"
@@ -193,7 +193,7 @@
                                         <td class="col-md-2">
                                             <span ng-show="scheduleModel.ID != sched.ID">{{sched.StartTime}}</span>
                                             <span>
-                                                <div class="form-group">
+                                                <div class="pfield form-group">
                                                     <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
                                                     <input placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
                                                 </div>
@@ -318,7 +318,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="notes">Notes:</label>
-                                <div class="col-sm-8">
+                                <div class="pfield col-sm-8">
                                     <input type="text" id="notes" placeholder="{{edit_station_model.notes}}">
                                 </div>
                             </div>
@@ -358,7 +358,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="notes">Notes:</label>
-                                <div class="col-sm-8">
+                                <div class="pfield col-sm-8">
                                     <input type="text" id="notes" placeholder="Any notes regarding this station.">
                                 </div>
                             </div>
@@ -442,7 +442,7 @@
                         </div>
                         <div>
                             <label for="costinput">Cost per gallon </label>
-                            <p class="col-sm-5">
+                            <p class="pfield col-sm-5">
                                 <input id="costinput" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="col-sm-2" ng-change="pc.calcCost()">
                             </p>
                             <p class="pull-right">Estimated total cost / last 30 days: ${{ monthly_cost | number:2 }}</p>
@@ -458,7 +458,7 @@
                                         <th class="col-md-1">GPH</th>
                                         <th class="col-md-1">Count</th>
                                         <th class="col-md-1">
-                                            <a><span ng-click="pc.addWaterNodeButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
+                                            <a><span ng-show="!waterNodeModel.new" ng-click="pc.addWaterNodeButton()" class="glyphicon glyphicon-plus pull-right"></span></a>
                                         </th>
                                     </thead>
                                 </table>
@@ -467,35 +467,34 @@
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tbody>
                                         <tr ng-repeat="node in waterNodeEntries  | filter: searchText">
-                                            <td class="col-md-1">{{node.id}}</td>
+                                            <td class="col-md-1">{{node.ID}}</td>
                                             <td class="col-md-1">
-                                                <div ng-show="">{{node.sid}}</div>
-                                                <span ng-show="waterNodeModel.id != node.id">{{node.sid}}</span>
-                                                <div class="dropdown" ng-show="waterNodeModel.id == node.id">
-                                                    <button ng-show="waterNodeModel.sid != undefined && (waterNodeModel.id == node.id)" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{node.sid}}</button>
+                                                <span ng-hide="waterNodeModel.ID == node.ID">{{node.StationID}}</span>
+                                                <div class="dropdown" ng-show="waterNodeModel.ID == node.ID && waterNodeModel.new">
+                                                    <button ng-show="waterNodeModel.StationID == node.StationID && waterNodeModel.new" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{node.StationID}}</button>
                                                     <ul class="dropdown-menu">
-                                                        <li ng-repeat="station in stations  | filter: searchText " ng-click="waterNodeModel.sid = station.sid;"><a >{{station.ID}} - {{station.Notes}}</a></li>
+                                                        <li ng-repeat="station in stations" ng-click="waterNodeModel.StationID = station.ID;"><a >{{station.ID}} - {{station.Notes}}</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                             <td class="col-md-1">
-                                                <span ng-show="waterNodeModel.id != node.id">{{node.gph}}</span>
-                                                <div class="form-group">
-                                                    <input ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.gph">
+                                                <span ng-show="waterNodeModel.ID != node.ID">{{node.GPH}}</span>
+                                                <div class="pfield form-group">
+                                                    <input ng-show="waterNodeModel.ID == node.ID || waterNodeModel.new" type="number" ng-model="waterNodeModel.GPH">
                                                 </div>
                                             </td>
                                             <td class="col-md-1">
-                                                <span ng-show="waterNodeModel.id != node.id">{{node.count}}</span>
-                                                <div class="form-group">
-                                                    <input ng-show="waterNodeModel.id == node.id" type="number" ng-model="waterNodeModel.count">
+                                                <span ng-show="waterNodeModel.ID != node.ID">{{node.Count}}</span>
+                                                <div class="pfield form-group">
+                                                    <input ng-show="waterNodeModel.ID == node.ID || waterNodeModel.new" type="number" ng-model="waterNodeModel.Count">
                                                 </div>
                                             </td>
                                             <td class="col-md-1">
-                                                <a href><span ng-show="waterNodeModel.id == node.id && waterNodeModel.new != true" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditNodeEntry(); pc.getWaterUsageStats(); pc.getWaterNodeEntries();"></span></a>
-                                                <a href><span ng-show="waterNodeModel.id == node.id && waterNodeModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddNodeEntry(); pc.getWaterUsageStats(); pc.getWaterNodeEntries();"></span></a>
-                                                <a href><span ng-show="waterNodeModel.id == node.id" class="glyphicon glyphicon-ban-circle" ng-click="waterNodeModel = undefined; "></span></a>
+                                                <a href><span ng-show="waterNodeModel.ID == node.ID && waterNodeModel.new != true" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditNode();"></span></a>
+                                                <a href><span ng-show="waterNodeModel.ID == node.ID || waterNodeModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddNode();"></span></a>
+                                                <!-- <a href><span ng-show="waterNodeModel.id == node.id" class="glyphicon glyphicon-ban-circle" ng-click="waterNodeModel = undefined; "></span></a> -->
                                                 <a href><span ng-hide="waterNodeModel.id == node.id" class="glyphicon glyphicon-pencil" ng-click="pc.mapModelForWaterNodeEdit(node)"></span></a>
-                                                - - <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteNodeEntry(node.id); pc.getWaterUsageStats(); pc.getWaterNodeEntries(); pc.getWaterUsageStats()"></span></a>
+                                                <a href><span ng-show="waterNodeModel.ID == node.ID || waterNodeModel.new" class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteNodeEntry(node.id);"></span></a>
                                             </td>
                                         </tr>
                                     </tbody>

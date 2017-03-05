@@ -63,7 +63,7 @@
                     $scope.runStatus = response.data;
                 });
         };
-        
+
         this.login = function() {
             $http.post('/home', {
                     username: username,
@@ -260,11 +260,11 @@
         $scope.dripnodes = [];
         $scope.watercost = 0.0021;
         this.getWaterUsageStats = function() {
-            $http.get('/stats/gallons')
+            $http.get('/nodes/usage')
                 .then(function(response) {
-                    $scope.dripnodes = response.data.water_usage;
+                    $scope.dripnodes = response.data.waterUsage;
                 });
-            this.getWaterNodeEntries();
+            // this.getWaterNodeEntries();
         };
 
         this.getChartData = function(chartNum) {
@@ -526,64 +526,50 @@
 
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
-        this.getWaterNodeEntries = function() {
-            $http.get('/station/nodes')
+        this.getWaterNodes = function() {
+            $http.get('/nodes')
                 .then(function(response) {
-                    $scope.waterNodeEntries = response.data.dripnodes;
+                    $scope.waterNodeEntries = response.data.nodes;
                 });
         };
         this.submitEditNodeEntry = function() {
-            $http.post('/station/nodes', $scope.waterNodeModel)
+            $http.post('/nodes/edit', $scope.waterNodeModel)
                 .then(function(response) {
-                    // console.log($scope.singleRunModel, data)
+                    $scope.waterNodeEntries = response.data.nodes;
                 });
             // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
 
-        this.submitAddNodeEntry = function() {
-            $scope.waterNodeModel.new = true;
-            $http.post('/station/nodes', $scope.waterNodeModel)
-                .then(function(response) {
-                    // console.log($scope.singleRunModel, data)
-                });
-            // cleanup
-            $scope.waterNodeModel = undefined;
-            $scope.waterNodeModel = {};
-        };
-
-        this.submitDeleteNodeEntry = function(nodeid) {
-            $scope.waterNodeModel.id = nodeid;
-            $http.post('/station/nodes/delete', $scope.waterNodeModel)
-                .then(function(response) {
-                    // console.log($scope.singleRunModel, data)
-                });
-            // cleanup
-            $scope.waterNodeModel = undefined;
-            $scope.waterNodeModel = {};
-        };
-
-        this.mapModelForWaterNodeEdit = function(currentModel) {
-            $scope.waterNodeModel = currentModel;
-            // console.log($scope.scheduleModel)
-        };
-
+        $scope.waterNodeEntries = [];
         this.addWaterNodeButton = function() {
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {
-                id: '-',
-                sid: 'Select Station ID',
-                gph: '',
-                count: 0,
+                StationID: 'Select Station ID',
+                GPH: 0,
+                Count: 0,
                 new: true
             };
-            // console.log($scope.scheduleModel)
-            $scope.waterNodeEntries.unshift($scope.waterNodeModel);
+            if ($scope.waterNodeEntries.length > 0) {
+                $scope.waterNodeEntries.unshift($scope.waterNodeModel);
+            } else {
+                $scope.waterNodeEntries = [$scope.waterNodeModel];
+            }
         };
 
-        $scope.loader = this.autoLoader;
+        this.submitAddNode = function(){
+            $http.post('/nodes/add', $scope.waterNodeModel)
+                .then(function(response) {
+                    $scope.waterNodeEntries = response.data.nodes;
+                });
+            // cleanup
+            $scope.waterNodeModel = undefined;
+            $scope.waterNodeModel = {};
+        }
 
+
+        $scope.loader = this.autoLoader;
         // START CAL
 
         var date = new Date();
@@ -688,7 +674,7 @@
             this.getCalEvents();
             this.loadStations();
             // this.getLastStationRun();
-            // this.getNextStationRun();
+            this.getWaterNodes();
             $scope.getRunStatus();
             this.loadGPIO();
             this.loadStatsData();
