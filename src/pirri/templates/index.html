@@ -71,7 +71,7 @@
                                     <th class="col-md-4">Notes</th>
                                     <th class="col-md-2">Controls</th>
                                     <th class="col-md-1">
-                                        <a><span ng-show="showAddStationButton" ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus"></a></span></a>
+                                        <a><span ng-show="showAddStationButton" ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus pull-right"></a></span></a>
                                     </th>
                                 </thead>
                             </table>
@@ -120,6 +120,19 @@
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="interval in durationIntervals " ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
                                                 </ul>
+                                            </div>
+                                            <div ng-show="runStatus.StationID == station.ID" style="padding-top: 20px">
+                                                <div  class="progress">
+                                                    <div class="progress-bar"
+                                                        role="progressbar"
+                                                        aria-valuenow="{{ runStatus.pComplete * 100 }}"
+                                                        aria-valuemin="0"
+                                                        aria-valuemax="100"
+                                                        style="width:{{ runStatus.pComplete * 100}}%">
+                                                        <span style="padding-left: 50%">{{runStatus.pComplete * 100 | limitTo:4 }}% Complete</span>
+                                                    </div>
+                                                </div>
+                                                <span style="font-weight: bold;">ETC: <a>{{ runStatus.fin | date:"h:mm a" }} </a></span> (<a>{{(runStatus.Duration - runStatus.td) / 60 | limitTo:4}} min</a>)
                                             </div>
                                         </td>
                                     </tr>
@@ -175,7 +188,7 @@
                                         </td>
                                         <td class="pfield col-md-4">
                                             <p ng-show="scheduleModel.ID != sched.ID"><em>{{sched.StartDate | date:'fullDate' }}</em></p>
-                                            <p ng-show="scheduleModel.ID == sched.ID" class="input-group">
+                                            <p  style="padding-top: 10px" ng-show="scheduleModel.ID == sched.ID" class="input-group">
                                                 <input type="text"
                                                 uib-datepicker-popup="{{format}}"
                                                 ng-model="sched.StartDate"
@@ -193,7 +206,7 @@
                                         <td class="col-md-2">
                                             <span ng-show="scheduleModel.ID != sched.ID">{{sched.StartTime}}</span>
                                             <span>
-                                                <div class="pfield form-group">
+                                                <div style="padding-top: 10px" class="pfield form-group">
                                                     <!--                                          <div uib-timepicker ng-model="scheduleModel.timepicker" ng-change="changed()" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></div>-->
                                                     <input placeholder="HHmm" ng-show="scheduleModel.ID == sched.ID" type="number" ng-model="scheduleModel.StartTime">
                                                 </div>
@@ -211,7 +224,7 @@
                                             </span>
                                         </td>
                                         <td class="col-md-3">
-                                            <div class="checkbox" ng-show="scheduleModel.ID == sched.ID">
+                                            <div class="checkbox" style="padding-top: 10px" ng-show="scheduleModel.ID == sched.ID">
                                                 <label><input type="checkbox" ng-model="scheduleModel.Sunday">Sun<br/> </label>
                                                 <label><input type="checkbox" ng-model="scheduleModel.Monday">Mon<br/> </label>
                                                 <label><input type="checkbox" ng-model="scheduleModel.Tuesday">Tue<br/> </label>
@@ -244,7 +257,7 @@
                                             <a href><span ng-show="scheduleModel.ID == sched.ID && scheduleModel.new" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddSchedule();"></span></a>
                                             <a href><span ng-show="scheduleModel.ID == sched.ID" class="glyphicon glyphicon-ban-circle" ng-click="scheduleModel = undefined; pc.refresh();"></span></a>
                                             <a href><span ng-hide="scheduleModel.ID == sched.ID" class="glyphicon glyphicon-pencil" ng-click="pc.mapModelForSchedEdit(sched)"></span></a>
-                                            - - <a href><span class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteSchedule(sched.ID);"></span></a>
+                                            <a href><span ng-show="scheduleModel.ID || sched.ID && scheduleModel.new"class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteSchedule(sched.ID);"></span></a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -440,12 +453,12 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div>
-                            <label for="costinput">Cost per gallon </label>
+                        <div style="padding-top: 15px">
+                            <label style="padding: 15px;" for="costinput">Cost per gallon </label>
                             <p class="pfield col-sm-5">
                                 <input id="costinput" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="col-sm-2" ng-change="pc.calcCost()">
                             </p>
-                            <p class="pull-right">Estimated total cost / last 30 days: ${{ monthly_cost | number:2 }}</p>
+                            <h4 style="padding: 10px;, font-size: 13px" class="pull-right">Estimated total cost / last 30 days: <a>${{ monthly_cost | number:2 }}</a></h4>
                         </div>
                         
                         <div>
