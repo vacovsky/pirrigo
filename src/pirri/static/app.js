@@ -223,25 +223,6 @@
         $scope.durationIntervals = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
         $scope.show_gpio_diagram = false;
 
-        // this.filterForKeys = function(searchText) {
-        //     $scope.searchResults = [];
-        //     $scope.stations.forEach(function(k) {
-        //         var n = k.search(searchText);
-        //         if (n >= 0) {
-        //             $scope.searchResults[k] = true;
-        //         }
-        //     });
-        //     if (Object.keys($scope.searchResults).length > 0) {
-        //         $scope.showSearchResults = true;
-        //     } else {
-        //         $scope.showSearchResults = false;
-        //     }
-        //     if (searchText === "") {
-        //         $scope.searchResults = [];
-        //         $scope.showSearchResults = false;
-        //     }
-        // };
-
         this.resetAddForm = function() {
             $scope.gpio_add_model = {
                 default_message: "Select GPIO",
@@ -259,12 +240,14 @@
 
         $scope.dripnodes = [];
         $scope.watercost = 0.0021;
-        this.getWaterUsageStats = function() {
+        $scope.getWaterUsageStats = function() {
             $http.get('/nodes/usage')
                 .then(function(response) {
+                    $scope.dripnodes = undefined;
                     $scope.dripnodes = response.data.waterUsage;
-                });
-            // this.getWaterNodeEntries();
+                }).then(function() {
+                    $scope.calcMonthlyCost();
+                })
         };
 
         this.getChartData = function(chartNum) {
@@ -277,10 +260,10 @@
         };
 
         $scope.monthly_cost = 0;
-        this.calcMonthlyCost = function() {
+        $scope.calcMonthlyCost = function() {
             $scope.monthly_cost = 0;
             angular.forEach($scope.dripnodes, function(value, key) {
-                $scope.monthly_cost += value.usage_last_30 * $scope.watercost;
+                $scope.monthly_cost += value.Total30Days * $scope.watercost;
             });
         };
 
@@ -459,7 +442,7 @@
             this.loadStations();
             this.loadGPIO();
             this.loadStatsData();
-            this.getWaterUsageStats();
+            $scope.getWaterUsageStats();
             this.loadSettings();
             this.loadWeather();
         };
@@ -526,18 +509,30 @@
 
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
+        $scope.mapWaterNodeModel = function(node) {
+            $scope.waterNodeModel = node;
+        };
+
         this.getWaterNodes = function() {
             $http.get('/nodes')
                 .then(function(response) {
                     $scope.waterNodeEntries = response.data.nodes;
                 });
         };
-        this.submitEditNodeEntry = function() {
+
+        this.submitEditNode = function() {
             $http.post('/nodes/edit', $scope.waterNodeModel)
                 .then(function(response) {
-                    $scope.waterNodeEntries = response.data.nodes;
+                    $scope.waterNodeEntries = response.data.nodes
+                }).then(function() {
+                    $scope.getWaterUsageStats();
+                }).then(function() {
+                    $scope.calcMonthlyCost();
                 });
             // cleanup
+
+
+
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };
@@ -558,16 +553,35 @@
             }
         };
 
-        this.submitAddNode = function(){
+        this.submitAddNode = function() {
             $http.post('/nodes/add', $scope.waterNodeModel)
                 .then(function(response) {
                     $scope.waterNodeEntries = response.data.nodes;
+                }).then(function() {
+                    $scope.getWaterUsageStats();
+                }).then(function() {
+                    $scope.calcMonthlyCost();
                 });
             // cleanup
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         }
 
+        this.submitDeleteNode = function(id) {
+            $http.post('/nodes/delete', {
+                    ID: id
+                })
+                .then(function(response) {
+                    $scope.waterNodeEntries = response.data.nodes;
+                }).then(function() {
+                    $scope.getWaterUsageStats();
+                }).then(function() {
+                    $scope.calcMonthlyCost();
+                });
+            // cleanup
+            $scope.waterNodeModel = undefined;
+            $scope.waterNodeModel = {};
+        }
 
         $scope.loader = this.autoLoader;
         // START CAL
@@ -673,17 +687,14 @@
         this.autoLoader = function() {
             this.getCalEvents();
             this.loadStations();
-            // this.getLastStationRun();
+            $scope.getWaterUsageStats();
             this.getWaterNodes();
             $scope.getRunStatus();
             this.loadGPIO();
             this.loadStatsData();
             this.loadHistory();
-            this.calcMonthlyCost();
-            //this.loadSettings();
-            //this.loadWeather();
+            $scope.calcMonthlyCost();
             this.getGpios();
-            // this.loadCalEvents();
             if ($cookies.get('lastTab') !== undefined) {
                 $scope.currentPage = $cookies.get('lastTab');
             }

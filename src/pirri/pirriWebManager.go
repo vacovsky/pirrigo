@@ -25,10 +25,11 @@ func startPirriWebApp() {
 		"/status/cancel": statusRunCancel,
 
 		// nodes
-		"/nodes":       nodeAllWeb,
-		"/nodes/add":   nodeAddWeb,
-		"/nodes/edit":  nodeEditWeb,
-		"/nodes/usage": nodeUsageStatsWeb,
+		"/nodes":        nodeAllWeb,
+		"/nodes/add":    nodeAddWeb,
+		"/nodes/edit":   nodeEditWeb,
+		"/nodes/usage":  nodeUsageStatsWeb,
+		"/nodes/delete": nodeDeleteWeb,
 
 		// weather
 		// TODO write a better algorithm for weather handling

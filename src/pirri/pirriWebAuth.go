@@ -5,8 +5,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func loginCheck(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +23,7 @@ func loginAuth(rw http.ResponseWriter, req *http.Request) {
 func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
-		spew.Dump(r.Header.Get("Authorization"))
+		// spew.Dump(r.Header.Get("Authorization"))
 
 		s := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 		if len(s) != 2 {
@@ -54,9 +52,9 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		}
 
 		if SETTINGS.PirriDebug {
-			spew.Dump(s)
-			spew.Dump(b)
-			spew.Dump(pair)
+			// spew.Dump(s)
+			// spew.Dump(b)
+			// spew.Dump(pair)
 		}
 
 		if strings.ToLower(pair[0]) != strings.ToLower(SETTINGS.WebUser) || pair[1] != SETTINGS.WebPassword {
