@@ -3,7 +3,6 @@ package main
 import (
 	//	"encoding/json"
 	"fmt"
-	"strconv"
 	"time"
 )
 
@@ -27,28 +26,12 @@ type StationSchedule struct {
 	Repeating bool      `sql:"DEFAULT:false" gorm:"not null"`
 }
 
-func createNewStationSchedule() {
-	nowTime := time.Now()
-	startTime, ERR := strconv.Atoi(fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
-	failOnError(ERR, "Unable to create new station schedule entry.")
-	sched := &StationSchedule{
-		StationID: 23,
-		StartTime: startTime,
-		Duration:  300,
-	}
-	db.Create(&sched)
-}
-
 func checkForTasks() {
 	scheds := []StationSchedule{}
 	nowTime := time.Now()
 	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s", nowTime.Weekday(), fmt.Sprintf("%02d%02d", nowTime.Hour(), nowTime.Minute()))
-
 	db.Where(sqlFilter).Find(&scheds)
 	sendFoundScheduleItems(scheds)
-	if ERR != nil {
-		panic(ERR.Error())
-	}
 }
 
 func startTaskMonitor() {
