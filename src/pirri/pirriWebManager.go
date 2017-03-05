@@ -20,6 +20,10 @@ func startPirriWebApp() {
 		"/stats/3": statsActivityPerStationByDOW,
 		"/stats/4": statsStationActivity,
 
+		// run status
+		"/status/run":    statusRunWeb,
+		"/status/cancel": statusRunCancel,
+
 		// nodes
 		// TODO bleh
 

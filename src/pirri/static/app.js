@@ -25,7 +25,45 @@
         }];
         $scope.eventSource = [];
 
+        $scope.runStatus = {
+            IsIdle: true
+        };
 
+        $scope.intervalFunction = function() {
+            $timeout(function() {
+                $scope.getRunStatus();
+                $scope.intervalFunction();
+            }, $rootScope.updateInterval);
+        };
+
+        $scope.intervalFunction();
+
+        $scope.getRunStatus = function() {
+            $http.get('/status/run')
+                .then(function(response) {
+                    $scope.runStatus = response.data;
+                    var st = new Date(response.data.StartTime);
+                    var fin = new Date(
+                        st.getFullYear(),
+                        st.getMonth(),
+                        st.getDate(),
+                        st.getHours(),
+                        st.getMinutes(),
+                        st.getSeconds() + $scope.runStatus.Duration
+                    );
+                    $scope.runStatus.fin = fin;
+                    $scope.runStatus.td = (new Date() - new Date($scope.runStatus.StartTime).getTime()) / 1000;
+                    $scope.runStatus.pComplete = $scope.runStatus.td / $scope.runStatus.Duration;
+                });
+        };
+
+        this.cancelStationRun = function() {
+            $http.get('/status/cancel')
+                .then(function(response) {
+                    $scope.runStatus = response.data;
+                });
+        };
+        
         this.login = function() {
             $http.post('/home', {
                     username: username,
@@ -651,6 +689,7 @@
             this.loadStations();
             // this.getLastStationRun();
             // this.getNextStationRun();
+            $scope.getRunStatus();
             this.loadGPIO();
             this.loadStatsData();
             this.loadHistory();

@@ -45,7 +45,26 @@ func (t *Task) execute() {
 		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
 		spew.Dump(t)
 	}
+	t.setStatus(true)
 	if t.Station.GPIO > 0 {
 		gpioActivator(t.Station.GPIO, true, t.StationSchedule.Duration)
+	}
+	t.setStatus(false)
+}
+
+func (t *Task) setStatus(active bool) {
+	if active {
+		manual := t.StationSchedule.ID == 0
+		RUNSTATUS = RunStatus{
+			Duration:  t.StationSchedule.Duration,
+			StationID: t.Station.ID,
+			IsIdle:    false,
+			StartTime: time.Now(),
+			IsManual:  manual,
+		}
+	} else {
+		RUNSTATUS = RunStatus{
+			IsIdle: true,
+		}
 	}
 }

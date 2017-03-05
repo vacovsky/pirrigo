@@ -380,6 +380,38 @@
                         </center>
                     </div>
                     <!-- END ADD STATION FORM -->
+                    <!-- BEGIN SETTINGS TAB -->
+                    <div ng-show="currentPage == 'settings'">
+                        <div ng-show="runStatus.IsIdle">
+                            <h4>No active stations.</h4>
+                        </div>
+                        <div ng-show="!runStatus.IsIdle">
+                            <br/>
+                            <h3>Station {{ runStatus.StationID }} is active
+                            <a>
+                                <span ng-click="pc.cancelStationRun()" class="glyphicon glyphicon-ban-circle"></span>
+                            </a>
+                            </h3>
+                            <h4>Started manually: {{ runStatus.IsManual }}</h4>
+                            <br/>
+                            <h4>Expected time of completion: <span style="font-weight: bold;">{{ runStatus.fin | date:"h:mm a" }} </span> ({{(runStatus.Duration - runStatus.td) / 60 | limitTo:4}} minutes from now)</h4>
+                            <br/>
+                        </div>
+                        <br/>
+                        <div>
+                            <div ng-show="!runStatus.IsIdle" class="progress">
+                                <div class="progress-bar"
+                                    role="progressbar"
+                                    aria-valuenow="{{ runStatus.pComplete * 100 }}"
+                                    aria-valuemin="0"
+                                    aria-valuemax="100"
+                                    style="width:{{ runStatus.pComplete * 100}}%">
+                                    <span>{{runStatus.pComplete * 100 | limitTo:4 }}% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END SETTINGS TAB -->
                     <!-- BEGIN WATER USAGE -->
                     <div ng-show="currentPage == 'waterusage'">
                         <div class="tbl-header">
@@ -507,7 +539,6 @@
                 <h1 id="pirrilogo"><img height="50" width="75" src="static/icon_text.png"></h1>
             </div>
             <div style="padding-top: 30px; align-self: center; align-content: center"; align="center">
-                
                 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">PirriGo</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://vacovsky.us" property="cc:attributionName" rel="cc:attributionURL">Joe Vacovsky Jr.</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/vacoj/pirrigo" rel="dct:source">https://github.com/vacoj/pirrigo</a>.
             </div>
         </div>
