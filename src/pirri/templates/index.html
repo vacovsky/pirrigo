@@ -63,14 +63,10 @@
                             <table cellpadding="0" cellspacing="0" border="0">
                                 <thead>
                                     <th class="col-md-1">Station</th>
-                                    <!--
-                                    <th class="col-md-2">Last Run</th>
-                                    <th class="col-md-3">Next Run</th>
-                                    -->
                                     <th class="col-md-1">GPIO</th>
                                     <th class="col-md-4">Notes</th>
                                     <th class="col-md-2">Controls</th>
-                                    <th class="col-md-1">
+                                    <th class="col-md-4">
                                         <a><span ng-show="showAddStationButton" ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus pull-right"></a></span></a>
                                     </th>
                                 </thead>
@@ -112,15 +108,15 @@
                                             <a><span ng-hide="singleRunModel.StationID == station.ID"" ng-click="singleRunModel.Duration = 0; singleRunModel.StationID = station.ID;" class="glyphicon glyphicon-play"></span></a>
                                             <a><span ng-show="singleRunModel.StationID == station.ID"" ng-click="singleRunModel = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                             <a href><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteStation(station.ID)"></span></a>
-                                        </td>
-                                        <td class="col-md-1">
-                                            <div class="dropdown" ng-show="singleRunModel.StationID == station.ID && stationModel.new != true">
+                                            <div class=" dropdown" ng-show="singleRunModel.StationID == station.ID && stationModel.new != true">
                                                 <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
                                                 <button ng-show="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{singleRunModel.Duration}} min</button>
                                                 <ul class="dropdown-menu">
                                                     <li ng-repeat="interval in durationIntervals " ng-click="singleRunModel.Duration = interval * 60; pc.submitSingleRun()"><a >{{interval}} min</a></li>
                                                 </ul>
                                             </div>
+                                        </td>
+                                        <td class="col-md-4">
                                             <div ng-show="runStatus.StationID == station.ID" style="padding-top: 20px">
                                                 <div  class="progress">
                                                     <div class="progress-bar"
