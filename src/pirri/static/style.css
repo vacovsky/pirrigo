@@ -225,10 +225,16 @@ body {
   width: 100%;
   height: 100%;
   color: #fff;
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans', sans-serif;/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#627d4d+0,1f3b08+100;Olive+3D */
+  background: #627d4d; /* Old browsers */
+  background: -moz-linear-gradient(top, #627d4d 0%, #1f3b08 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #627d4d 0%, #1f3b08 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #627d4d 0%, #1f3b08 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#627d4d', endColorstr='#1f3b08', GradientType=0); /* IE6-9 */
 
-  /* background: -webkit-linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); /* FF3.6+ */ background: linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%);  */
-  background: -webkit-linear-gradient(90deg,#00537E 10%,#3AA17E 90%); background: linear-gradient(90deg,#00537E 10%,#3AA17E 90%);
+  /* background: -webkit-linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); /* FF3.6+ */
+  /* background: linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); */
+  /* background: -webkit-linear-gradient(90deg,#00537E 10%,#3AA17E 90%); background: linear-gradient(90deg,#00537E 10%,#3AA17E 90%); */
 }
 .login {
   position: absolute;
