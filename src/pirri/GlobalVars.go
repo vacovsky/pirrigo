@@ -32,6 +32,10 @@ var WG sync.WaitGroup
 //NRAPPMON is used for NewRelic's newrelic.Application struct
 var NRAPPMON newrelic.Application
 
+var RUNSTATUS RunStatus = RunStatus{
+	IsIdle: true,
+}
+
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
