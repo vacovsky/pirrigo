@@ -50,6 +50,10 @@ table {
 }
 .tbl-header {
   background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 26px 26px 0px 0px;
+  -moz-border-radius: 26px 26px 0px 0px;
+  -webkit-border-radius: 26px 26px 0px 0px;
+  border: 0px solid #000000;
 }
 .tbl-content {
   margin-top: 0px;
@@ -226,14 +230,9 @@ body {
   height: 100%;
   color: #fff;
   font-family: 'Open Sans', sans-serif;/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#627d4d+0,1f3b08+100;Olive+3D */
-  background: rgba(68, 85, 73, 1);
-  background: -moz-linear-gradient(left, rgba(68, 85, 73, 1) 0%, rgba(50, 68, 55, 1) 35%, rgba(16, 35, 21, 1) 100%);
-  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(68, 85, 73, 1)), color-stop(35%, rgba(50, 68, 55, 1)), color-stop(100%, rgba(16, 35, 21, 1)));
-  background: -webkit-linear-gradient(left, rgba(68, 85, 73, 1) 0%, rgba(50, 68, 55, 1) 35%, rgba(16, 35, 21, 1) 100%);
-  background: -o-linear-gradient(left, rgba(68, 85, 73, 1) 0%, rgba(50, 68, 55, 1) 35%, rgba(16, 35, 21, 1) 100%);
-  background: -ms-linear-gradient(left, rgba(68, 85, 73, 1) 0%, rgba(50, 68, 55, 1) 35%, rgba(16, 35, 21, 1) 100%);
-  background: linear-gradient(to right, rgba(68, 85, 73, 1) 0%, rgba(50, 68, 55, 1) 35%, rgba(16, 35, 21, 1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#445549', endColorstr='#102315', GradientType=1);
+  background: #485563; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #485563, #29323c); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #485563, #29323c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .login {
   position: absolute;
