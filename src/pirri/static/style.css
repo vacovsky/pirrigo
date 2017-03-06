@@ -50,6 +50,10 @@ table {
 }
 .tbl-header {
   background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 26px 26px 0px 0px;
+  -moz-border-radius: 26px 26px 0px 0px;
+  -webkit-border-radius: 26px 26px 0px 0px;
+  border: 0px solid #000000;
 }
 .tbl-content {
   margin-top: 0px;
@@ -225,10 +229,10 @@ body {
   width: 100%;
   height: 100%;
   color: #fff;
-  font-family: 'Open Sans', sans-serif;
-
-  /* background: -webkit-linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); /* Chrome 10+, Saf5.1+ */ background: -moz-linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%); /* FF3.6+ */ background: linear-gradient(90deg, #b6eae1 10%, #D2FBAD 90%);  */
-  background: -webkit-linear-gradient(90deg,#00537E 10%,#3AA17E 90%); background: linear-gradient(90deg,#00537E 10%,#3AA17E 90%);
+  font-family: 'Open Sans', sans-serif;/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#627d4d+0,1f3b08+100;Olive+3D */
+  background: #485563; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #485563, #29323c); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #485563, #29323c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 .login {
   position: absolute;
