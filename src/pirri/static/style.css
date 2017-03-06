@@ -54,10 +54,15 @@ table {
   -moz-border-radius: 26px 26px 0px 0px;
   -webkit-border-radius: 26px 26px 0px 0px;
   border: 0px solid #000000;
+    box-shadow: 2px 2px 2px #282828;
+
 }
 .tbl-content {
   margin-top: 0px;
   border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 2px 2px 2px #282828;
+  box-shadow: 2px 2px 2px #282828;
+
 }
 th {
   padding: 20px 15px;
