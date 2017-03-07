@@ -130,6 +130,15 @@ func parseConfig(config map[string]string) {
 	if pirridebug, ok := config["pirridebug"]; ok {
 		SETTINGS.PirriDebug, ERR = strconv.ParseBool(pirridebug)
 	}
+	if wundergroundkey, ok := config["wundergroundkey"]; ok {
+		SETTINGS.WundergroundKey = wundergroundkey
+	}
+	if stateabbreviation, ok := config["stateabbreviation"]; ok {
+		SETTINGS.StateAbbreviation = stateabbreviation
+	}
+	if city, ok := config["city"]; ok {
+		SETTINGS.City = city
+	}
 
 	if (SETTINGS.RabbitUser != "" || SETTINGS.RabbitPass != "") || SETTINGS.RabbitServer == "" {
 		RMQCONNSTRING = "amqp://" + SETTINGS.RabbitUser + ":" + SETTINGS.RabbitPass + "@" + SETTINGS.RabbitServer + ":" + SETTINGS.RabbitPort + "/"
