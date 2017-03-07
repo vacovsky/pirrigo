@@ -32,7 +32,7 @@ func startPirriWebApp() {
 		"/nodes/delete": nodeDeleteWeb,
 
 		// weather
-		// TODO write a better algorithm for weather handling
+		"/weather/current": weatherCurrentWeb,
 
 		// station
 		"/station/run":    stationRunWeb,

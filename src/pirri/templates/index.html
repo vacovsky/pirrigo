@@ -64,9 +64,9 @@
                                 <thead>
                                     <th class="col-md-1">Station</th>
                                     <th class="col-md-1">GPIO</th>
-                                    <th class="col-md-4">Notes</th>
+                                    <th class="col-md-6">Notes</th>
                                     <th class="col-md-2">Controls</th>
-                                    <th class="col-md-4">
+                                    <th class="col-md-2">
                                         <a><span ng-show="showAddStationButton" ng-click="pc.addStationButton()" class="glyphicon glyphicon-plus pull-right"></a></span></a>
                                     </th>
                                 </thead>
@@ -93,7 +93,7 @@
                                                 </span>
                                             </span>
                                         </td>
-                                        <td class="col-md-4">
+                                        <td class="col-md-6">
                                             <span ng-hide="stationModel.tempID == station.ID"">{{station.Notes}}</span>
                                             <span>
                                                 <div class="pfield form-group" ng-show="stationModel.tempID == station.ID">
@@ -116,7 +116,7 @@
                                                 </ul>
                                             </div>
                                         </td>
-                                        <td class="col-md-4">
+                                        <td class="col-md-2">
                                             <div ng-show="runStatus.StationID == station.ID" style="padding-top: 20px">
                                                 <div  class="progress">
                                                     <div class="progress-bar"
@@ -536,9 +536,12 @@
                                 <h5> - sunset: {{ weatherData.current.sys.sunset_t }}</h5>
                             </div>
                         </div>
-                        <div>Weather data provided by OpenWeatherStation API.</div>
-                        <!-- li ng-repeat=" day in weatherData.forecast.list " ng-click="pc.setGPIO(gpio.gpio)"
-                        <img src="http://openweathermap.org/img/w/02d.png" alt="" -->
+                                            <br/><br/><br/><br/>
+
+                    <div class="" style="font-size: 8px; align-content: center; align-self: center">
+                        Weather Powered by <a href="http://www.wunderground.com">Weather Underground</a> API
+                    </div>
+                    <img width="90px" src="https://icons.wxug.com/logos/PNG/wundergroundLogo_4c_rev_horz.png" alt="">
                     </div>
                     <!-- END WEATHER ADJUST PAGE -->
                 </section>

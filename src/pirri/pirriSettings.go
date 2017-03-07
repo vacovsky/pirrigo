@@ -39,4 +39,7 @@ type Settings struct {
 	WebUser              string
 	WebPassword          string
 	WeatherStation       string
+	WundergroundKey      string
+	StateAbbreviation    string
+	City                 string
 }
