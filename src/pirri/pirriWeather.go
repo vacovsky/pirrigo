@@ -109,12 +109,12 @@ type WeatherUndergroundCurrentWeatherResponse struct {
 func getCurrentWeather() WeatherUndergroundCurrentWeatherResponse {
 	weather := WeatherUndergroundCurrentWeatherResponse{}
 
-	if SETTINGS.WundergroundKey != "" && SETTINGS.StateAbbreviation != "" && SETTINGS.City != "" {
-		weatherEndpoint := fmt.Sprintf("http://api.wunderground.com/api/%s/conditions/q/%s/%s.json", SETTINGS.WundergroundKey, SETTINGS.StateAbbreviation, SETTINGS.City)
+	if SETTINGS.Weather.WundergroundKey != "" && SETTINGS.Weather.StateAbbreviation != "" && SETTINGS.Weather.City != "" {
+		weatherEndpoint := fmt.Sprintf("http://api.wunderground.com/api/%s/conditions/q/%s/%s.json", SETTINGS.Weather.WundergroundKey, SETTINGS.Weather.StateAbbreviation, SETTINGS.Weather.City)
 
 		r, err := http.Get(weatherEndpoint)
 		if err != nil {
-			fmt.Sprintln("Unable to obtain weather for %s, %s.", SETTINGS.StateAbbreviation, SETTINGS.City)
+			fmt.Sprintln("Unable to obtain weather for %s, %s.", SETTINGS.Weather.StateAbbreviation, SETTINGS.Weather.City)
 		}
 		defer r.Body.Close()
 		body, err := ioutil.ReadAll(r.Body)

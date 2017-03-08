@@ -22,7 +22,7 @@ func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
 func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	ERR = json.NewDecoder(req.Body).Decode(&node)
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		spew.Dump(node)
 	}
 	db.Create(&node)
@@ -32,7 +32,7 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	ERR = json.NewDecoder(req.Body).Decode(&node)
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		spew.Dump(node)
 	}
 	db.Delete(&node)
@@ -43,7 +43,7 @@ func nodeEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	ERR = json.NewDecoder(req.Body).Decode(&node)
 	db.Save(&node)
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		spew.Dump(node)
 	}
 	nodeAllWeb(rw, req)

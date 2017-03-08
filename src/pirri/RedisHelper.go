@@ -6,7 +6,7 @@ import (
 
 func redisWriter(message string, channel string) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     SETTINGS.RedisServer + ":" + SETTINGS.RedisPort,
+		Addr:     SETTINGS.Redis.Server + ":" + SETTINGS.Redis.Port,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})

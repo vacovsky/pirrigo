@@ -76,11 +76,7 @@ func rabbitReceive(queueName string) {
 }
 
 func messageHandler(queueName string, message []byte) {
-	if queueName == SETTINGS.RabbitStopQueue {
-		fmt.Println(queueName, string(message[:]))
-		reactToStopMessage(message)
-	}
-	if queueName == SETTINGS.RabbitTaskQueue {
+	if queueName == SETTINGS.RabbitMQ.TaskQueue {
 		fmt.Println(queueName, message)
 		reactToGpioMessage(message)
 	}
