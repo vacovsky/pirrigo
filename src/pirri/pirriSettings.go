@@ -1,45 +1,122 @@
 package main
 
+import (
+	"bufio"
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+)
+
 //Settings Describes general-purpose application settings for PirriGo as derived from the configuration file (used created/populated).
 type Settings struct {
-	IDSettings           int
-	OpenWeatherKey       string
-	Zip                  int
-	WeatherUnits         string //imperial or metric
-	RabbitServer         string
-	RabbitUser           string
-	RabbitPass           string
-	RabbitTaskQueue      string
-	RabbitStopQueue      string
-	PirriUsername        string
-	PirriPassword        string
-	AdjustForWeather     bool
-	AdjustForForecast    bool
-	GpioOnState          int // 1 or 0
-	GpioOffState         int // 1 or 0
-	UseNewRelic          bool
-	NewRelicLicense      string
-	NewRelicLicensePath  string // path to a text file containing nothing but the key
-	UtcOffset            int
-	HTTPPort             string
-	SQLDBType            string
-	SQLServer            string
-	SQLUser              string
-	SQLPass              string
-	SQLPort              string
-	SQLDbName            string
-	RedisServer          string
-	RedisPort            string
-	RabbitPort           string
-	GormDebug            bool
-	ShowSettings         bool
-	SimulateGpioActivity bool
-	MonitorInterval      int
-	PirriDebug           bool
-	WebUser              string
-	WebPassword          string
-	WeatherStation       string
-	WundergroundKey      string
-	StateAbbreviation    string
-	City                 string
+	Pirri struct {
+		MonitorInterval int  `json:"monitor_interval"`
+		UtcOffset       int  `json:"utc_offset"`
+		RainSkip        bool `json:"rain_skip"`
+	} `json:"pirri"`
+	RabbitMQ struct {
+		Server    string `json:"server"`
+		User      string `json:"user"`
+		Secret    string `json:"secret"`
+		TaskQueue string `json:"task_queue"`
+		Port      string `json:"port"`
+	} `json:"rabbitmq"`
+	SQL struct {
+		DBType string `json:"dbtype"`
+		Server string `json:"server"`
+		User   string `json:"user"`
+		Secret string `json:"secret"`
+		Port   string `json:"port"`
+		DB     string `json:"db"`
+	} `json:"sql"`
+	NewRelic struct {
+		Active              bool   `json:"active"`
+		NewRelicLicensePath string `json:"license_path"` // path to a text file containing nothing but the key
+		Key                 string `json:"key"`
+	} `json:"newrelic"`
+	Redis struct {
+		Server string `json:"server"`
+		Port   string `json:"port"`
+	} `json:"redis"`
+	Web struct {
+		Port   string `json:"port"`
+		User   string `json:"user"`
+		Secret string `json:"secret"`
+	} `json:"web"`
+	Weather struct {
+		Units             string `json:"units"` //imperial or metric
+		Station           string `json:"station"`
+		WundergroundKey   string `json:"wunderground_key"`
+		StateAbbreviation string `json:"state_abbreviation"`
+		City              string `json:"city"`
+	} `json:"weather"`
+	Debug struct {
+		Pirri        bool `json:"pirri"`
+		GORM         bool `json:"gorm"`
+		Settings     bool `json:"settings"`
+		SimulateGPIO bool `json:"simulate_gpio"`
+	} `json:"debug"`
+}
+
+func (s *Settings) parseSettingsFile() {
+	confFile := "../../init/appconfig.json"
+	if len(os.Args) > 1 {
+		confFile = os.Args[1]
+	}
+
+	file, err := os.Open(confFile)
+	defer file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fileContent, err := os.Open(confFile)
+	if err != nil {
+		fmt.Println("Could not open config file", err.Error())
+	}
+
+	jsonParser := json.NewDecoder(fileContent)
+	if err = jsonParser.Decode(&s); err != nil {
+		fmt.Println("Could not load config file. Check JSON formatting.", err.Error())
+	}
+
+	// set rabbitmq connection string
+	setRabbitMQConnectionString()
+
+	// set sql connection string
+	setSQLConnectionString()
+
+	// load new relic key from file
+	loadNewRelicKey()
+
+}
+
+func setRabbitMQConnectionString() {
+	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitMQ.User + ":" + SETTINGS.RabbitMQ.Secret + "@" + SETTINGS.RabbitMQ.Server + ":" + SETTINGS.RabbitMQ.Port + "/"
+	s := SETTINGS
+	c := RMQCONNSTRING
+	fmt.Println(c, s)
+}
+
+func setSQLConnectionString() {
+	SQLCONNSTRING = SETTINGS.SQL.User + ":" + SETTINGS.SQL.Secret + "@tcp(" + SETTINGS.SQL.Server + ":" + SETTINGS.SQL.Port + ")/" + SETTINGS.SQL.DB + "?parseTime=true"
+	c := SQLCONNSTRING
+	fmt.Println(c)
+}
+
+func loadNewRelicKey() {
+	if SETTINGS.NewRelic.Active {
+		file, err := os.Open(SETTINGS.NewRelic.NewRelicLicensePath)
+		defer file.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+		key := ""
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			key = scanner.Text()
+		}
+		SETTINGS.NewRelic.Key = key
+	}
 }

@@ -57,9 +57,8 @@ func startPirriWebApp() {
 		"/home": webHome,
 	}
 
-	if SETTINGS.UseNewRelic {
-		SETTINGS.NewRelicLicense = loadNewRelicKey(SETTINGS.NewRelicLicensePath)
-		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelicLicense)
+	if SETTINGS.NewRelic.Active {
+		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelic.Key)
 		NRAPPMON, ERR := newrelic.NewApplication(config)
 		fmt.Println("Using New Relic Monitoring Agent")
 		if NRAPPMON == nil || ERR != nil {
@@ -94,7 +93,7 @@ func startPirriWebApp() {
 	}
 
 	// Host server
-	panic(http.ListenAndServe(":"+SETTINGS.HTTPPort, nil))
+	panic(http.ListenAndServe(":"+SETTINGS.Web.Port, nil))
 }
 
 func logTraffic() string {

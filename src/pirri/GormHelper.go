@@ -12,8 +12,8 @@ import (
 var db *gorm.DB
 
 func gormDbConnect() {
-	db, ERR = gorm.Open(SETTINGS.SQLDBType, SQLCONNSTRING)
-	db.LogMode(SETTINGS.GormDebug)
+	db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLCONNSTRING)
+	db.LogMode(SETTINGS.Debug.GORM)
 	if ERR != nil {
 		panic(ERR.Error())
 	}

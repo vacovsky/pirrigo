@@ -1,0 +1,48 @@
+{
+    "pirri": {
+        "utc_offset": -8,
+        "monitor_interval": 60,
+        "rain_skip": true
+    },
+    "rabbitmq": {
+        "server": "192.168.111.50",
+        "port": "5672",
+        "user": "rabbit",
+        "secret": "bunnyrabbit!!",
+        "task_queue": "pirri_go_work"
+    },
+    "sql": {
+        "dbtype": "mysql",
+        "server": "192.168.111.50",
+        "user": "pirri",
+        "secret": "pirri",
+        "db": "pirri_go",
+        "port": "3306"
+    },
+    "newrelic": {
+        "active": true,
+        "license_path": "../../../nr_key"
+    },
+    "redis": {
+        "host": "192.168.111.50",
+        "port": "6379"
+    },
+    "web": {
+        "port": "8001",
+        "user": "admin",
+        "secret": "password"
+    },
+    "weather": {
+        "wunderground_key": "",
+        "state_abbreviation": "CA",
+        "city": "Atascadero",
+        "units": "imperial",
+        "station": "KCAATASC69"
+    },
+    "debug": {
+        "pirri": true,
+        "gorm": true,
+        "settings": true,
+        "simulate_gpio": true
+    }
+}

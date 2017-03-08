@@ -15,7 +15,7 @@ type Task struct {
 }
 
 func (t *Task) log() {
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
 	}
 	if t.Station.GPIO > 0 {
@@ -31,17 +31,17 @@ func (t *Task) log() {
 func (t *Task) send() {
 	taskBlob, ERR := json.Marshal(&t)
 	failOnError(ERR, "Could not jsonify task.")
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		fmt.Println("Sending Task:", string(taskBlob))
 		spew.Dump(t)
 	}
 	if t.Station.GPIO > 0 {
-		rabbitSend(SETTINGS.RabbitTaskQueue, string(taskBlob))
+		rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 	}
 }
 
 func (t *Task) execute() {
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
 		spew.Dump(t)
 	}

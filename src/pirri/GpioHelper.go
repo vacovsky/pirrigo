@@ -8,7 +8,7 @@ import (
 )
 
 func gpioActivator(gpio int, state bool, seconds int) {
-	if SETTINGS.SimulateGpioActivity {
+	if SETTINGS.Debug.SimulateGPIO {
 		gpioSimulation(gpio, state, seconds)
 	} else {
 		gpioActivate(gpio, state, seconds)

@@ -78,7 +78,7 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		spew.Dump(rawResult1)
 		spew.Dump(seriesTracker)
 	}
@@ -130,9 +130,9 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
             GROUP BY day
             ORDER BY day ASC`)
 
-	db.Raw(sqlQuery0, SETTINGS.UtcOffset, 7).Scan(&rawResults0)
-	db.Raw(sqlQuery1, SETTINGS.UtcOffset, 7).Scan(&rawResults1)
-	db.Raw(sqlQuery2, SETTINGS.UtcOffset, 7).Scan(&rawResults2)
+	db.Raw(sqlQuery0, SETTINGS.Pirri.UtcOffset, 7).Scan(&rawResults0)
+	db.Raw(sqlQuery1, SETTINGS.Pirri.UtcOffset, 7).Scan(&rawResults1)
+	db.Raw(sqlQuery2, SETTINGS.Pirri.UtcOffset, 7).Scan(&rawResults2)
 
 	result.Data = [][]int{
 		[]int{0, 0, 0, 0, 0, 0, 0},
@@ -150,7 +150,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		result.Data[2][v.Day-1] = v.Secs / 60
 	}
 
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		//		spew.Dump(rawResults1)
 	}
 
@@ -179,7 +179,7 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 		Labels:     []string{},
 		Series:     []string{},
 	}
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		//		spew.Dump(rawResults1)
 	}
 
@@ -223,7 +223,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				JOIN stations ON stations.id = station_histories.station_id
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
 					AND stations.id > 0
-				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.UtcOffset))
+				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.Pirri.UtcOffset))
 
 	seriesTracker := map[int]int{}
 
@@ -243,7 +243,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs / 60
 	}
 
-	if SETTINGS.PirriDebug {
+	if SETTINGS.Debug.Pirri {
 		spew.Dump(&seriesTracker)
 	}
 	blob, err := json.Marshal(&result)

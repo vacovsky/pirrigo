@@ -10,19 +10,18 @@ func showVersion() {
 }
 
 func main() {
-	configInit()
+	SETTINGS.parseSettingsFile()
+	// parseSettingsFile()
 	gormSetup()
 	firstRunDBSetup()
-	WG.Add(4)
+	WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
 	go startPirriWebApp()
 	// Monitor database for pre-scheduled tasks
 	go startTaskMonitor()
 	// Listen for tasks to execute
-	go rabbitReceive(SETTINGS.RabbitTaskQueue)
-	// Listen for stop commands
-	go rabbitReceive(SETTINGS.RabbitStopQueue)
+	go rabbitReceive(SETTINGS.RabbitMQ.TaskQueue)
 	// Cleanly exit after all goroutines are finished
 	WG.Wait()
 }
