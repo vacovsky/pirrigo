@@ -14,10 +14,10 @@ func main() {
 	// parseSettingsFile()
 	gormSetup()
 	firstRunDBSetup()
-	WG.Add(3)
-
-	setCommonWire()
 	gpioClear()
+	setCommonWire()
+
+	WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
 	go startPirriWebApp()

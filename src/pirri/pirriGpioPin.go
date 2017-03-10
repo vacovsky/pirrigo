@@ -52,6 +52,7 @@ func gpioClear() {
 	defer rpio.Close()
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
+		pin.High()
 		pin.Low()
 	}
 }
