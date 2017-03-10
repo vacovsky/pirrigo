@@ -50,8 +50,10 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 		fmt.Println(err, err.Error())
 	}
 	gpio.Common = true
-	spew.Dump(gpio)
-	db.Exec("UPDATE `gpio_pins` SET `common` = 'false'")
-	db.Exec("UPDATE `gpio_pins` SET `common` = 'true' WHERE (gpio = ?)", gpio.GPIO)
+	if SETTINGS.Debug.Pirri {
+		spew.Dump(gpio)
+	}
+	db.Exec("UPDATE `gpio_pins` SET `common` = false")
+	db.Exec("UPDATE `gpio_pins` SET `common` = true WHERE (gpio = ?)", gpio.GPIO)
 	gpioPinsCommonWeb(rw, req)
 }

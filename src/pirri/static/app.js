@@ -682,7 +682,7 @@
         $scope.setGpioCommon = function(gpio) {
             $http.post("/gpio/common/set", {GPIO: gpio})
             .then(function(response) {
-                console.log({GPIO: $scope.commonGpioModel})
+                console.log({GPIO: gpio})
                 $scope.commonGpio = response.data.gpio.GPIO
                 $scope.commonGpioModel = undefined;
             });
