@@ -11,9 +11,10 @@ import (
 //Settings Describes general-purpose application settings for PirriGo as derived from the configuration file (used created/populated).
 type Settings struct {
 	Pirri struct {
-		MonitorInterval int  `json:"monitor_interval"`
-		UtcOffset       int  `json:"utc_offset"`
-		RainSkip        bool `json:"rain_skip"`
+		MonitorInterval int    `json:"monitor_interval"`
+		UtcOffset       int    `json:"utc_offset"`
+		RainSkip        bool   `json:"rain_skip"`
+		WelcomeMessage  string `json:"welcome_message"`
 	} `json:"pirri"`
 	RabbitMQ struct {
 		Server    string `json:"server"`
