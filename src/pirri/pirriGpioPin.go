@@ -58,34 +58,27 @@ func gpioClear() {
 	}
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		fmt.Println("Activating GPIO:", gpios[i].GPIO)
-		pin.High()
 		fmt.Println("Deactivating GPIO:", gpios[i].GPIO)
 		pin.Low()
 	}
 }
 
 func gpioActivate(gpio int, state bool, seconds int) {
+	defer rpio.Close()
 	rpio.Open()
 	pin := rpio.Pin(gpio)
 	common := rpio.Pin(COMMONWIRE)
 	pin.Output()
 	common.Output()
 
-	// activate gpio
-	if state {
-		common.High()
-		pin.High()
-	} else {
-		common.Low()
-		pin.Low()
-	}
+	common.High()
+	pin.High()
 
 	// start countdown
 	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
-
-	gpioClear()
+	common.Low()
+	pin.Low()
 }
