@@ -22,7 +22,7 @@ func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 func gpioPinsAvailableWeb(rw http.ResponseWriter, req *http.Request) {
 	gpios := []GpioPin{}
-	sql := "SELECT gpio_pins.* FROM gpio_pins WHERE NOT EXISTS(SELECT 1 FROM stations WHERE stations.gpio=gpio_pins.gpio) && gpio_pins.common = false"
+	sql := "SELECT gpio_pins.* FROM gpio_pins WHERE NOT EXISTS(SELECT 1 FROM stations WHERE stations.gpio=gpio_pins.gpio) AND gpio_pins.common = false"
 	db.Raw(sql).Find(&gpios)
 
 	blob, err := json.Marshal(&gpios)

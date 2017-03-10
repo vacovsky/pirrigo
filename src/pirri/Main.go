@@ -17,6 +17,7 @@ func main() {
 	WG.Add(3)
 
 	setCommonWire()
+	gpioClear()
 
 	// Start the Web application for management of schedule etc.
 	go startPirriWebApp()
