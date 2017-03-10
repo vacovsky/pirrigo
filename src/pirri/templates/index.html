@@ -420,15 +420,13 @@
                             </div>
                         </div>
                         <div>
-                            <div>
-                                Current Common Wire GPIO: 
-                                <a ng-show="commonGpioModel == undefined">{{ commonGpio }}</a>
-                                <div id="gpiobutton" class="dropdown col-sm-8">
-                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{commonGpioModel.GPIO}}</button>
-                                    <ul class="dropdown-menu">
-                                        <li ng-repeat="gpio in gpio_pins" ng-click="commonGpioModel.GPIO = gpio.gpio"><a >{{gpio.GPIO}}</a></li>
-                                    </ul>
-                                </div>
+                            Current Common Wire GPIO: 
+                            <a ng-show="commonGpioModel == undefined">{{ commonGpio }}</a>
+                            <div id="gpiobutton" class="dropdown col-sm-8">
+                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{ commonGpio }}</button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="gpio in availableGpios" ng-click="setGpioCommon(gpio.GPIO)"><a >{{gpio.GPIO}}</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>

@@ -306,7 +306,7 @@
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
                 });
-            this.getGpios();
+            $scope.getGpios();
         };
 
         this.submitDeleteStation = function(stationID) {
@@ -318,7 +318,7 @@
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
                 });
-            this.getGpios();
+            $scope.getGpios();
         };
 
         this.submitAddStation = function() {
@@ -328,7 +328,7 @@
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
                 });
-            this.getGpios();
+            $scope.getGpios();
 
         };
 
@@ -440,7 +440,7 @@
             // this.getSchedule();
             this.getCalEvents();
             this.loadStations();
-            this.getGpios();
+            $scope.getGpios();
             this.loadStatsData();
             $scope.getWaterUsageStats();
             this.loadSettings();
@@ -670,7 +670,7 @@
 
 
         $scope.availableGpios = [1];
-        this.getGpios = function() {
+        $scope.getGpios = function() {
             $http.get('/gpio/available')
                 .then(function(response) {
                     $scope.availableGpios = response.data.gpios;
@@ -679,20 +679,23 @@
 
         $scope.commonGpio = "unset";
         $scope.commonGpioModel = undefined;
-        $scope.setGpioCommon = function() {
-            $http.post("/gpio/common/set", $scope.commonGpioModel)
+        $scope.setGpioCommon = function(gpio) {
+            $http.post("/gpio/common/set", {GPIO: gpio})
             .then(function(response) {
-                $scope.commonGpio = response.data.GPIO
+                console.log({GPIO: $scope.commonGpioModel})
+                $scope.commonGpio = response.data.gpio.GPIO
+                $scope.commonGpioModel = undefined;
             });
-            this.getGpios();
+            $scope.getGpios();
         };
 
         $scope.getGpioCommon = function() {
             $http.get("/gpio/common")
             .then(function(response) {
-                $scope.commonGpio = response.data.GPIO
+                console.log(response.data)
+                $scope.commonGpio = response.data.gpio.GPIO
             });
-            this.getGpios();
+            $scope.getGpios();
         };
 
         this.autoLoader = function() {
@@ -704,7 +707,8 @@
             this.loadStatsData();
             this.loadHistory();
             $scope.calcMonthlyCost();
-            this.getGpios();
+            $scope.getGpios();
+            $scope.getGpioCommon();
             if ($cookies.get('lastTab') !== undefined) {
                 $scope.currentPage = $cookies.get('lastTab');
             }
