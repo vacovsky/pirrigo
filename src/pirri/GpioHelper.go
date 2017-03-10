@@ -31,6 +31,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 
 func gpioActivate(gpio int, state bool, seconds int) {
 	pin := rpio.Pin(gpio)
+	pin.Output()
 	defer rpio.Close()
 
 	// activate gpio
