@@ -22,12 +22,14 @@ func setCommonWire() {
 	COMMONWIRE = gpio.GPIO
 }
 
-func gpioActivator(gpio int, state bool, seconds int) {
+func gpioActivator(t *Task) {
+	t.setStatus(true)
 	if SETTINGS.Debug.SimulateGPIO {
-		gpioSimulation(gpio, state, seconds)
+		gpioSimulation(t.Station.GPIO, true, t.StationSchedule.Duration)
 	} else {
-		gpioActivate(gpio, state, seconds)
+		gpioActivate(t.Station.GPIO, true, t.StationSchedule.Duration)
 	}
+	t.setStatus(false)
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
@@ -56,9 +58,9 @@ func gpioClear() {
 	}
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		fmt.Println("Activating", gpios[i].GPIO)
+		fmt.Println("Activating GPIO:", gpios[i].GPIO)
 		pin.High()
-		fmt.Println("Activating", gpios[i].GPIO)
+		fmt.Println("Deactivating GPIO:", gpios[i].GPIO)
 		pin.Low()
 	}
 }
@@ -80,7 +82,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	}
 
 	// start countdown
-	for seconds > 0 && RUNSTATUS.Cancel {
+	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}

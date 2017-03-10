@@ -129,6 +129,9 @@
                                                     </div>
                                                 </div>
                                                 <span style="font-weight: bold;">ETC: <a>{{ runStatus.fin | date:"h:mm a" }} </a></span> (<a>{{(runStatus.Duration - runStatus.td) / 60 | limitTo:4}} min</a>)
+                                                 | <a>
+                                                    <span ng-click="pc.cancelStationRun()" class="glyphicon glyphicon-ban-circle"></span>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>

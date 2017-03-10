@@ -14,7 +14,9 @@ func main() {
 	// parseSettingsFile()
 	gormSetup()
 	firstRunDBSetup()
-	gpioClear()
+	if !SETTINGS.Debug.SimulateGPIO {
+		gpioClear()
+	}
 	setCommonWire()
 
 	WG.Add(3)
