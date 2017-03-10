@@ -28,12 +28,13 @@ func gormSetup() {
 	db.DB().SetConnMaxLifetime(time.Second * 300)
 
 	db.AutoMigrate(
+		&Station{},
 		&DripNode{},
 		&GpioPin{},
 		&StationHistory{},
 		&StationSchedule{},
 		&Settings{},
-		&Station{})
+	)
 }
 
 func jsonifySQLResults(input *gorm.DB) []string {

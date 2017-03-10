@@ -471,13 +471,6 @@
                 });
         };
 
-        this.loadGPIO = function() {
-            $http.get('/gpio/list')
-                .then(function(response) {
-                    $scope.gpio_pins = response.data.gpio_pins;
-                });
-        };
-
         this.loadHistory = function(station) {
             var query = '?station=' + station + '&earliest=-168';
             $http.get('/history' + query)
@@ -690,7 +683,6 @@
             $scope.getWaterUsageStats();
             this.getWaterNodes();
             $scope.getRunStatus();
-            this.loadGPIO();
             this.loadStatsData();
             this.loadHistory();
             $scope.calcMonthlyCost();
