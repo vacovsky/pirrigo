@@ -16,19 +16,19 @@ An (in-progress) rewrite of the Pirri irrigation and garden management applicati
 ## Setup
 
 ### Clone repository to your Pi
-```
+```bash
 git clone https://github.com/vacoj/pirrigo.git
 ```
 
 ### Installing Go in Raspbian
-```
+```bash
 wget https://storage.googleapis.com/golang/go1.7.linux-armv6l.tar.gz
 sudo tar -C /usr/local -xzf go1.7.linux-armv6l.tar.gz
 export PATH=/usr/local/go/bin:$PATH
 ```
 
 ### Install required Go packages
-```
+```bash
 go get "github.com/davecgh/go-spew/spew"
 go get "github.com/jinzhu/gorm"
 go get "github.com/jinzhu/gorm/dialects/mysql"
@@ -38,7 +38,11 @@ go get "github.com/streadway/amqp"
 go get "gopkg.in/redis.v5"
 ```
 
-
+### Install javascript libraries for web
+```bash
+cd pirrigo/src/pirri/static
+bower install
+```
 
 ## Notes
 
