@@ -17,8 +17,8 @@ var SQLCONNSTRING string
 //RMQCONNSTRING stores the fully-constructed RabbitMQ connection string
 var RMQCONNSTRING string
 
-//KILL is going to be a goroutine kill switch, but isn't implemented
-var KILL bool
+//COMMONWIRE is the GPIO pin which is connected to the relay port for the common wire needed to activate the solenoid
+var COMMONWIRE int
 
 //VERSION is the version of the application
 var VERSION = "0.0.1"
@@ -32,7 +32,8 @@ var WG sync.WaitGroup
 //NRAPPMON is used for NewRelic's newrelic.Application struct
 var NRAPPMON newrelic.Application
 
-var RUNSTATUS RunStatus = RunStatus{
+//RUNSTATUS indicates progress for a running task, and also indicates if the routine is idle
+var RUNSTATUS = RunStatus{
 	IsIdle: true,
 }
 

@@ -4,9 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/stianeikeland/go-rpio"
 )
+
+func setCommonWire() {
+	var gpio GpioPin
+	db.Where("common = ?", true).Limit(1).Find(&gpio)
+	COMMONWIRE = gpio.GPIO
+}
 
 func gpioActivator(gpio int, state bool, seconds int) {
 	if SETTINGS.Debug.SimulateGPIO {
@@ -34,13 +39,16 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	rpio.Open()
 	defer rpio.Close()
 	pin := rpio.Pin(gpio)
-	spew.Dump(pin)
+	common := rpio.Pin(COMMONWIRE)
 	pin.Output()
+	common.Output()
 
 	// activate gpio
 	if state {
+		common.High()
 		pin.High()
 	} else {
+		common.Low()
 		pin.Low()
 	}
 
@@ -50,30 +58,12 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		seconds--
 	}
 
+	// undo what we just did
 	if !state {
+		common.Low()
 		pin.High()
 	} else {
+		common.Low()
 		pin.Low()
 	}
 }
-
-/*func Example() {
-//	pin := rpio.Pin(10)
-
-//	pin.Output() // Output mode
-//	pin.High()   // Set pin High
-//	pin.Low()    // Set pin Low
-//	pin.Toggle() // Toggle pin (Low -> High -> Low)
-
-//	pin.Input()       // Input mode
-//	res := pin.Read() // Read state from pin (High / Low)
-//	fmt.Println(res)
-//	pin.Mode(rpio.Output) // Alternative syntax
-//	pin.Write(rpio.High)  // Alternative syntax
-//	pin.PullUp()
-//	pin.PullDown()
-//	pin.PullOff()
-
-//	pin.Pull(rpio.PullUp)
-//	rpio.Close()
-}*/

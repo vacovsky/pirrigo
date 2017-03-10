@@ -677,6 +677,24 @@
                 });
         };
 
+        $scope.commonGpio = "unset";
+        $scope.commonGpioModel = undefined;
+        $scope.setGpioCommon = function() {
+            $http.post("/gpio/common/set", $scope.commonGpioModel)
+            .then(function(response) {
+                $scope.commonGpio = response.data.GPIO
+            });
+            this.getGpios();
+        };
+
+        $scope.getGpioCommon = function() {
+            $http.get("/gpio/common")
+            .then(function(response) {
+                $scope.commonGpio = response.data.GPIO
+            });
+            this.getGpios();
+        };
+
         this.autoLoader = function() {
             this.getCalEvents();
             this.loadStations();

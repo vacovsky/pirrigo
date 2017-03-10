@@ -419,6 +419,18 @@
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <div>
+                                Current Common Wire GPIO: 
+                                <a ng-show="commonGpioModel == undefined">{{ commonGpio }}</a>
+                                <div id="gpiobutton" class="dropdown col-sm-8">
+                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{commonGpioModel.GPIO}}</button>
+                                    <ul class="dropdown-menu">
+                                        <li ng-repeat="gpio in gpio_pins" ng-click="commonGpioModel.GPIO = gpio.gpio"><a >{{gpio.GPIO}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- END SETTINGS TAB -->
                     <!-- BEGIN WATER USAGE -->
@@ -454,7 +466,7 @@
                             <p class="pfield col-sm-5">
                                 <input id="costinput" type="number" step="0.0001" min="0" ng-model="watercost" placeholder="Cost per gallon" class="col-sm-2" ng-change="calcMonthlyCost();">
                             </p>
-                            <h4 style="padding: 10px;, font-size: 13px" class="pull-right">Estimated total cost / last 30 days: <a>${{ monthly_cost | number:2 }}</a></h4>
+                            <h4 style="padding: 10px; font-size: 13px" class="pull-right">Estimated total cost / last 30 days: <a>${{ monthly_cost | number:2 }}</a></h4>
                         </div>
                         
                         <div>
