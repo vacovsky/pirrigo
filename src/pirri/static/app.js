@@ -440,7 +440,7 @@
             // this.getSchedule();
             this.getCalEvents();
             this.loadStations();
-            this.loadGPIO();
+            this.getGpios();
             this.loadStatsData();
             $scope.getWaterUsageStats();
             this.loadSettings();

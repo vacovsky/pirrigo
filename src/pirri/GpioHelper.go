@@ -31,10 +31,11 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 }
 
 func gpioActivate(gpio int, state bool, seconds int) {
+	rpio.Open()
 	defer rpio.Close()
 	pin := rpio.Pin(gpio)
-	pin.Output()
 	spew.Dump(pin)
+	pin.Output()
 
 	// activate gpio
 	if state {
