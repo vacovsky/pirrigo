@@ -71,6 +71,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	pin.Output()
 	common.Output()
 
+	fmt.Println("Activating GPIOs: ", COMMONWIRE, gpio)
 	common.High()
 	pin.High()
 
@@ -79,6 +80,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
+	fmt.Println("Deactivating GPIOs: ", COMMONWIRE, gpio)
 	common.Low()
 	pin.Low()
 }
