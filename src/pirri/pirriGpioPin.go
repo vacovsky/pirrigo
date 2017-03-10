@@ -17,7 +17,7 @@ type GpioPin struct {
 
 func setCommonWire() {
 	var gpio GpioPin
-	db.Where("common = ?", true).Limit(1).Find(&gpio)
+	db.Where("common = true").Limit(1).Find(&gpio)
 	COMMONWIRE = gpio.GPIO
 }
 
