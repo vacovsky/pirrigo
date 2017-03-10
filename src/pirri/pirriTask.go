@@ -44,12 +44,15 @@ func (t *Task) execute() {
 	if SETTINGS.Debug.Pirri {
 		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
 		spew.Dump(t)
+		spew.Dump(RUNSTATUS)
 	}
-	t.setStatus(true)
 	if t.Station.GPIO > 0 {
-		gpioActivator(t.Station.GPIO, true, t.StationSchedule.Duration)
+		gpioActivator(t)
 	}
-	t.setStatus(false)
+	if SETTINGS.Debug.Pirri {
+		fmt.Println("Execution of task complete.")
+		spew.Dump(RUNSTATUS)
+	}
 }
 
 func (t *Task) setStatus(active bool) {

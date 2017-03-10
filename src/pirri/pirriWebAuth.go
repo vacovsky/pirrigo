@@ -31,7 +31,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			// try cookie auth!
 			c, err := r.Cookie("Authorization")
 			q, err := url.ParseQuery(c.Value)
-			for k, _ := range q {
+			for k := range q {
 				s = strings.SplitN(k, " ", 2)
 			}
 			if len(s) != 2 || err != nil {

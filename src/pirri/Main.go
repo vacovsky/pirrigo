@@ -14,6 +14,11 @@ func main() {
 	// parseSettingsFile()
 	gormSetup()
 	firstRunDBSetup()
+	if !SETTINGS.Debug.SimulateGPIO {
+		gpioClear()
+	}
+	setCommonWire()
+
 	WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
@@ -24,4 +29,6 @@ func main() {
 	go rabbitReceive(SETTINGS.RabbitMQ.TaskQueue)
 	// Cleanly exit after all goroutines are finished
 	WG.Wait()
+
+	fmt.Println("Waitgroup finished - exiting!")
 }

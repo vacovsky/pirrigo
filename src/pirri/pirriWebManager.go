@@ -11,8 +11,10 @@ import (
 func startPirriWebApp() {
 	routes := map[string]func(http.ResponseWriter, *http.Request){
 		// GPIO Pins
-		"/gpio/all":       gpioPinsAllWeb,
-		"/gpio/available": gpioPinsAvailableWeb,
+		"/gpio/all":        gpioPinsAllWeb,
+		"/gpio/available":  gpioPinsAvailableWeb,
+		"/gpio/common":     gpioPinsCommonWeb,
+		"/gpio/common/set": gpioPinsCommonSetWeb,
 
 		// charts and reporting
 		"/stats/1": statsActivityByStation,
