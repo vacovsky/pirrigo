@@ -93,7 +93,11 @@ func (s *Settings) parseSettingsFile() {
 }
 
 func setRabbitMQConnectionString() {
-	RMQCONNSTRING = "amqp://" + SETTINGS.RabbitMQ.User + ":" + SETTINGS.RabbitMQ.Secret + "@" + SETTINGS.RabbitMQ.Server + ":" + SETTINGS.RabbitMQ.Port + "/"
+	if (SETTINGS.RabbitMQ.User != "" || SETTINGS.RabbitMQ.Secret != "") || SETTINGS.RabbitMQ.Server == "" {
+		RMQCONNSTRING = "amqp://" + SETTINGS.RabbitMQ.User + ":" + SETTINGS.RabbitMQ.Secret + "@" + SETTINGS.RabbitMQ.Server + ":" + SETTINGS.RabbitMQ.Port + "/"
+	} else {
+		RMQCONNSTRING = "amqp://localhost:" + SETTINGS.RabbitMQ.Port + "/"
+	}
 	s := SETTINGS
 	c := RMQCONNSTRING
 	fmt.Println(c, s)
