@@ -55,8 +55,8 @@ func firstRunDBSetup() {
 			Common: false,
 		})
 	}
-	db.Create(&Station{
-		GPIO:  5,
-		Notes: "",
-	})
+	// db.Create(&Station{
+	// 	GPIO:  0,
+	// 	Notes: "Delete or edit me.",
+	// })
 }

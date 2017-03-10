@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/stianeikeland/go-rpio"
 )
 
@@ -30,9 +31,10 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 }
 
 func gpioActivate(gpio int, state bool, seconds int) {
+	defer rpio.Close()
 	pin := rpio.Pin(gpio)
 	pin.Output()
-	defer rpio.Close()
+	spew.Dump(pin)
 
 	// activate gpio
 	if state {
