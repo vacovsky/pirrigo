@@ -44,6 +44,12 @@ cd pirrigo/src/pirri/static
 bower install
 ```
 
+### Running app
+```bash
+cd pirrigo/src/pirri
+./pirri /path/to/config.json
+```
+
 ## Notes
 
 #### TODO
