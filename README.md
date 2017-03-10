@@ -6,6 +6,33 @@ An (in-progress) rewrite of the Pirri irrigation and garden management applicati
 
 ## Screenshots
 
+### Login page
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/login.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/login.png" alt="Stations" height="150"></a>
+
+### Main / Stations
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/main.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/main.png" alt="Stations" height="150"></a>
+
+### Calendar
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/calendar.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/calendar.png" alt="Stations"  height="150"></a>
+
+### Station Scheduler
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/scheduler.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/scheduler.png" alt="Stations"  height="150"></a>
+
+### History of Activity
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/history.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/history.png" alt="Stations" height="150"></a>
+
+### Charted Run Stats
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/charts.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/charts.png" alt="Stations" height="150"></a>
+
+### Usage
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/usage.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/usage.png" alt="Stations" height="150"></a>
 
 ## Features
 - Activate irrigation zones on a schedule, or manually
