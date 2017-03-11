@@ -105,8 +105,8 @@
                                             <a><span ng-hide="stationModel.tempID == station.ID" ng-click="pc.setEditingStationInfo(station)" class="glyphicon glyphicon-pencil"></span></a>
                                             <a><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitEditStation();"></span></a>
                                             <a><span ng-show="stationModel.tempID == -1" class="glyphicon glyphicon-floppy-disk" ng-click="pc.submitAddStation();"></span></a>
-                                            <a><span ng-hide="singleRunModel.StationID == station.ID"" ng-click="singleRunModel.Duration = 0; singleRunModel.StationID = station.ID;" class="glyphicon glyphicon-play"></span></a>
-                                            <a><span ng-show="singleRunModel.StationID == station.ID"" ng-click="singleRunModel = undefined;" class="glyphicon glyphicon-stop"></span></a>
+                                            <a><span ng-hide="singleRunModel.StationID == station.ID" ng-click="singleRunModel.Duration = 0; singleRunModel.StationID = station.ID;" class="glyphicon glyphicon-play"></span></a>
+                                            <a><span ng-show="singleRunModel.StationID == station.ID" ng-click="singleRunModel = undefined;" class="glyphicon glyphicon-stop"></span></a>
                                             <a href><span ng-show="stationModel.tempID == station.ID" class="glyphicon glyphicon-trash" ng-click="pc.submitDeleteStation(station.ID)"></span></a>
                                             <div class=" dropdown" ng-show="singleRunModel.StationID == station.ID && stationModel.new != true">
                                                 <button ng-hide="singleRunModel.Duration != undefined" class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">0 min</button>
@@ -394,44 +394,52 @@
                     <!-- END ADD STATION FORM -->
                     <!-- BEGIN SETTINGS TAB -->
                     <div ng-show="currentPage == 'settings'">
-                        <div ng-show="runStatus.IsIdle">
-                            <h4>No active stations.</h4>
-                        </div>
-                        <div ng-show="!runStatus.IsIdle">
-                            <br/>
-                            <h3>Station {{ runStatus.StationID }} is active
-                            <a>
-                                <span ng-click="pc.cancelStationRun()" class="glyphicon glyphicon-ban-circle"></span>
-                            </a>
-                            </h3>
-                            <h4>Started manually: {{ runStatus.IsManual }}</h4>
-                            <br/>
-                            <h4>Expected time of completion: <span style="font-weight: bold;">{{ runStatus.fin | date:"h:mm a" }} </span> ({{(runStatus.Duration - runStatus.td) / 60 | limitTo:4}} minutes from now)</h4>
-                            <br/>
-                        </div>
-                        <br/>
-                        <div>
-                            <div ng-show="!runStatus.IsIdle" class="progress">
-                                <div class="progress-bar"
-                                    role="progressbar"
-                                    aria-valuenow="{{ runStatus.pComplete * 100 }}"
-                                    aria-valuemin="0"
-                                    aria-valuemax="100"
-                                    style="width:{{ runStatus.pComplete * 100}}%">
-                                    <span>{{runStatus.pComplete * 100 | limitTo:4 }}% Complete</span>
+                        <div class="col-md-4">
+                            <div ng-show="runStatus.IsIdle">
+                                <h4>No active stations.</h4>
+                            </div>
+                            <div ng-show="!runStatus.IsIdle">
+                                <br/>
+                                <h3>Station {{ runStatus.StationID }} is active
+                                <a>
+                                    <span ng-click="pc.cancelStationRun()" class="glyphicon glyphicon-ban-circle"></span>
+                                </a>
+                                </h3>
+                                <h4>Started manually: {{ runStatus.IsManual }}</h4>
+                                <br/>
+                                <h4>Expected time of completion: <span style="font-weight: bold;">{{ runStatus.fin | date:"h:mm a" }} </span> ({{(runStatus.Duration - runStatus.td) / 60 | limitTo:4}} minutes from now)</h4>
+                                <br/>
+                            </div>
+                            <div>
+                                <div ng-show="!runStatus.IsIdle" class="progress">
+                                    <div class="progress-bar"
+                                        role="progressbar"
+                                        aria-valuenow="{{ runStatus.pComplete * 100 }}"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        style="width:{{ runStatus.pComplete * 100 }}%">
+                                        <span>{{runStatus.pComplete * 100 | limitTo:4 }}% Complete</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div class="col-md-4">
                             Current Common Wire GPIO: 
                             <a ng-show="commonGpioModel == undefined">{{ commonGpio }}</a>
-                            <div id="gpiobutton" class="dropdown col-sm-8">
+                            <div id="gpiobutton" class="center">
                                 <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">{{ commonGpio }}</button>
                                 <ul class="dropdown-menu">
                                     <li ng-repeat="gpio in availableGpios" ng-click="setGpioCommon(gpio.GPIO)"><a >{{gpio.GPIO}}</a></li>
                                 </ul>
                             </div>
                         </div>
+                    <div class="col-md-4">
+                        Initiate System Run Test (activate each station for 90 seconds, in sequence)
+                        <a><button class="btn btn-info" ng-click="startTestRun()">
+                            <span class="glyphicon glyphicon-play"></span>
+                        </button></a>
+
+                    </div>
                     </div>
                     <!-- END SETTINGS TAB -->
                     <!-- BEGIN WATER USAGE -->

@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
     var app = angular.module('pirriweb', [
         'chart.js',
@@ -11,12 +11,12 @@
         // 'ui.bootstrap',
         'ui.rCalendar',
         'angularMoment'
-    ]).factory('moment', function($window) {
+    ]).factory('moment', function ($window) {
         return $window.moment;
     });
     app.Root = '/';
 
-    app.controller('PirriControl', function($scope, $rootScope, $http, $timeout, $filter, $cookies, $scope, $compile) {
+    app.controller('PirriControl', function ($scope, $rootScope, $http, $timeout, $filter, $cookies, $scope, $compile) {
         $rootScope.updateInterval = 6000;
         $scope.events = [{
             title: 'All Day Event',
@@ -29,8 +29,8 @@
             IsIdle: true
         };
 
-        $scope.intervalFunction = function() {
-            $timeout(function() {
+        $scope.intervalFunction = function () {
+            $timeout(function () {
                 $scope.getRunStatus();
                 $scope.intervalFunction();
             }, $rootScope.updateInterval);
@@ -38,9 +38,9 @@
 
         $scope.intervalFunction();
 
-        $scope.getRunStatus = function() {
+        $scope.getRunStatus = function () {
             $http.get('/status/run')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.runStatus = response.data;
                     var st = new Date(response.data.StartTime);
                     var fin = new Date(
@@ -57,19 +57,19 @@
                 });
         };
 
-        this.cancelStationRun = function() {
+        this.cancelStationRun = function () {
             $http.get('/status/cancel')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.runStatus = response.data;
                 });
         };
 
-        this.login = function() {
+        this.login = function () {
             $http.post('/home', {
-                    username: username,
-                    password: password
-                })
-                .then(function(response) {
+                username: username,
+                password: password
+            })
+                .then(function (response) {
                     // callback($window.location.href); or var landingUrl = "http://" + $window.location.host + "/login";
                     // $window.location.href = landingUrl;
                 });
@@ -167,8 +167,8 @@
 
 
         // END datepicker crap
-        $scope.openCalPicker = function(scheduleid) {
-            var result = $.grep($scope.schedule, function(e) {
+        $scope.openCalPicker = function (scheduleid) {
+            var result = $.grep($scope.schedule, function (e) {
                 return e.ID == scheduleid;
             });
             result[0].calOpen = true;
@@ -176,7 +176,7 @@
         };
 
 
-        $scope.randomColor = function() {
+        $scope.randomColor = function () {
             var letters = '0123456789ABCDEF';
             var color = '#';
             for (var i = 0; i < 6; i++) {
@@ -186,20 +186,20 @@
         };
 
         $scope.calEvents = [];
-        this.getCalEvents = function() {
+        this.getCalEvents = function () {
             $scope.beatheart = true;
             $http.get('/schedule/all')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.schedule = response.data.stationSchedules;
                     $scope.loadCalEvents();
                     $scope.beatheart = false;
                 });
         };
 
-        $scope.StrToDate = function(str) {
+        $scope.StrToDate = function (str) {
             return new Date(str);
         };
-        $scope.setTabCookie = function() {
+        $scope.setTabCookie = function () {
             $cookies.put('lastTab', $scope.currentPage);
         };
 
@@ -223,36 +223,36 @@
         $scope.durationIntervals = [1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
         $scope.show_gpio_diagram = false;
 
-        this.resetAddForm = function() {
+        this.resetAddForm = function () {
             $scope.gpio_add_model = {
                 default_message: "Select GPIO",
                 GPIO: undefined
             };
         };
 
-        this.setGPIO = function(gpio) {
+        this.setGPIO = function (gpio) {
             $scope.gpio_add_model.GPIO = gpio;
         };
 
-        this.setPage = function(pageName) {
+        this.setPage = function (pageName) {
             $scope.currentPage = pageName;
         };
 
         $scope.dripnodes = [];
         $scope.watercost = 0.0021;
-        $scope.getWaterUsageStats = function() {
+        $scope.getWaterUsageStats = function () {
             $http.get('/nodes/usage')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.dripnodes = undefined;
                     $scope.dripnodes = response.data.waterUsage;
-                }).then(function() {
+                }).then(function () {
                     $scope.calcMonthlyCost();
                 })
         };
 
-        this.getChartData = function(chartNum) {
+        this.getChartData = function (chartNum) {
             $http.get('/stats/' + chartNum)
-                .then(function(response) {
+                .then(function (response) {
                     $scope['chartData' + chartNum].labels = response.data.Labels;
                     $scope['chartData' + chartNum].series = response.data.Series;
                     $scope['chartData' + chartNum].data = response.data.Data;
@@ -260,15 +260,15 @@
         };
 
         $scope.monthly_cost = 0;
-        $scope.calcMonthlyCost = function() {
+        $scope.calcMonthlyCost = function () {
             $scope.monthly_cost = 0;
-            angular.forEach($scope.dripnodes, function(value, key) {
+            angular.forEach($scope.dripnodes, function (value, key) {
                 $scope.monthly_cost += value.Total30Days * $scope.watercost;
             });
         };
 
 
-        this.loadStatsData = function() {
+        this.loadStatsData = function () {
             $scope.beatheart = true;
             Chart.defaults.global.defaultFontColor = "#fff";
             this.getChartData(1);
@@ -279,7 +279,7 @@
         };
 
         $scope.stationModel = {};
-        this.addStationButton = function() {
+        this.addStationButton = function () {
             $scope.showAddStationButton = false;
             $scope.stationModel = {
                 tempID: -1,
@@ -292,39 +292,39 @@
         };
         $scope.showAddStationButton = true;
 
-        this.setEditingStationInfo = function(station) {
+        this.setEditingStationInfo = function (station) {
             $scope.stationModel = station;
             $scope.stationModel.tempID = station.ID;
             $scope.stationModel.GPIO = 0 + station.GPIO;
         };
 
-        this.submitEditStation = function(newStation) {
+        this.submitEditStation = function (newStation) {
             $scope.showAddStationButton = true;
             $scope.stationModel.ID = $scope.stationModel.tempID;
             $http.post('/station/edit', $scope.stationModel)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
                 });
             $scope.getGpios();
         };
 
-        this.submitDeleteStation = function(stationID) {
+        this.submitDeleteStation = function (stationID) {
             $scope.showAddStationButton = true;
             $http.post('/station/delete', {
-                    ID: stationID
-                })
-                .then(function(response) {
+                ID: stationID
+            })
+                .then(function (response) {
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
                 });
             $scope.getGpios();
         };
 
-        this.submitAddStation = function() {
+        this.submitAddStation = function () {
             $scope.showAddStationButton = true;
             $http.post('/station/add', $scope.stationModel)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.stations = response.data.stations;
                     $scope.stationModel = undefined;
                 });
@@ -333,7 +333,7 @@
         };
 
         $scope.scheduleModel = {};
-        this.addScheduleButton = function() {
+        this.addScheduleButton = function () {
             $scope.scheduleModel = undefined;
             var d = new Date();
             var year = d.getFullYear();
@@ -361,7 +361,7 @@
             $scope.schedule.unshift($scope.scheduleModel);
         };
 
-        this.addScheduleButtonFromCalendar = function(startTime) {
+        this.addScheduleButtonFromCalendar = function (startTime) {
             $scope.scheduleModel = undefined;
             $scope.scheduleModel = {
                 ID: 0,
@@ -385,9 +385,9 @@
             $scope.schedule.unshift($scope.scheduleModel);
         };
 
-        this.submitEditSchedule = function() {
+        this.submitEditSchedule = function () {
             $http.post('/schedule/edit', $scope.scheduleModel)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.schedule = response.data.stationSchedules;
                 });
             $scope.scheduleModel = {};
@@ -395,21 +395,21 @@
             this.refresh();
         };
 
-        this.submitAddSchedule = function() {
+        this.submitAddSchedule = function () {
             this.convertScheduleBoolToInt();
             $http.post('/schedule/add', $scope.scheduleModel)
-                .success(function(response) {});
+                .success(function (response) { });
             // cleanup
             $scope.scheduleModel = {};
             $scope.scheduleModel = undefined;
             this.refresh();
         };
 
-        this.mapModelForSchedEdit = function(currentModel) {
+        this.mapModelForSchedEdit = function (currentModel) {
             $scope.scheduleModel = currentModel;
         };
 
-        this.mapModelForSchedEditFromCalClick = function(id) {
+        this.mapModelForSchedEditFromCalClick = function (id) {
             $scope.currentPage = 'calendar';
             var sch = $filter('filter')($scope.schedule, {
                 id: id
@@ -417,26 +417,36 @@
             $scope.scheduleModel = sch;
         };
 
-        this.submitDeleteSchedule = function(schedule_id) {
+        this.submitDeleteSchedule = function (schedule_id) {
             $http.post('/schedule/delete', {
-                    ID: schedule_id
-                })
-                .then(function(response) {});
+                ID: schedule_id
+            })
+                .then(function (response) { });
             $scope.scheduleModel = undefined;
             this.refresh();
         };
 
+        $scope.startTestRun = function () {
+            $scope.stations.forEach(function (station) {
+                var r = {
+                    StationID: station.ID,
+                    Duration: 90
+                };
+                $http.post('/station/run', r);
+            })
+        };
+
         $scope.singleRunModel = {};
-        this.submitSingleRun = function() {
+        this.submitSingleRun = function () {
             $http.post('/station/run', $scope.singleRunModel)
-                .then(function(response) {
+                .then(function (response) {
                     console.log($scope.singleRunModel);
                 });
             $scope.singleRunModel = undefined;
             $scope.singleRunModel = {};
         };
 
-        this.refresh = function() {
+        this.refresh = function () {
             // this.getSchedule();
             this.getCalEvents();
             this.loadStations();
@@ -446,24 +456,24 @@
             this.loadSettings();
             this.loadWeather();
         };
-        this.loadStations = function() {
+        this.loadStations = function () {
             $http.get('/station/all')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.stations = response.data.stations;
                 });
         };
 
-        this.loadSettings = function() {
+        this.loadSettings = function () {
             $http.get('/settings/load')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.settingsData = response.data.data;
                 });
         };
 
-        this.loadWeather = function() {
+        this.loadWeather = function () {
             $scope.beatheart = true;
             $http.get('/weather')
-                .then(function(response) {
+                .then(function (response) {
                     //                    $scope.weatherData = response.data;
                     //                    $scope.weatherData.current.sys.sunrise_t = moment(data.current.sys.sunrise * 1000).fromNow();
                     //                    $scope.weatherData.current.sys.sunset_t = moment(data.current.sys.sunset * 1000).fromNow();
@@ -471,15 +481,15 @@
                 });
         };
 
-        this.loadHistory = function(station) {
+        this.loadHistory = function (station) {
             var query = '?station=' + station + '&earliest=-168';
             $http.get('/history' + query)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.history = response.data.history;
                 });
         };
 
-        this.prettyTime = function(uglyTime) {
+        this.prettyTime = function (uglyTime) {
             if (uglyTime !== undefined && uglyTime !== null) {
                 // console.log(uglyTime)
                 var pt = moment(uglyTime).calendar();
@@ -489,7 +499,7 @@
             }
         };
 
-        $scope.addDays = function(startDate, numberOfDays) {
+        $scope.addDays = function (startDate, numberOfDays) {
             var returnDate = new Date(
                 startDate.getFullYear(),
                 startDate.getMonth(),
@@ -502,24 +512,24 @@
 
         $scope.waterNodeEntries = [];
         $scope.waterNodeModel = {};
-        $scope.mapWaterNodeModel = function(node) {
+        $scope.mapWaterNodeModel = function (node) {
             $scope.waterNodeModel = node;
         };
 
-        this.getWaterNodes = function() {
+        this.getWaterNodes = function () {
             $http.get('/nodes')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.waterNodeEntries = response.data.nodes;
                 });
         };
 
-        this.submitEditNode = function() {
+        this.submitEditNode = function () {
             $http.post('/nodes/edit', $scope.waterNodeModel)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.waterNodeEntries = response.data.nodes
-                }).then(function() {
+                }).then(function () {
                     $scope.getWaterUsageStats();
-                }).then(function() {
+                }).then(function () {
                     $scope.calcMonthlyCost();
                 });
             // cleanup
@@ -531,7 +541,7 @@
         };
 
         $scope.waterNodeEntries = [];
-        this.addWaterNodeButton = function() {
+        this.addWaterNodeButton = function () {
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {
                 StationID: 'Select Station ID',
@@ -546,13 +556,13 @@
             }
         };
 
-        this.submitAddNode = function() {
+        this.submitAddNode = function () {
             $http.post('/nodes/add', $scope.waterNodeModel)
-                .then(function(response) {
+                .then(function (response) {
                     $scope.waterNodeEntries = response.data.nodes;
-                }).then(function() {
+                }).then(function () {
                     $scope.getWaterUsageStats();
-                }).then(function() {
+                }).then(function () {
                     $scope.calcMonthlyCost();
                 });
             // cleanup
@@ -560,15 +570,15 @@
             $scope.waterNodeModel = {};
         }
 
-        this.submitDeleteNode = function(id) {
+        this.submitDeleteNode = function (id) {
             $http.post('/nodes/delete', {
-                    ID: id
-                })
-                .then(function(response) {
+                ID: id
+            })
+                .then(function (response) {
                     $scope.waterNodeEntries = response.data.nodes;
-                }).then(function() {
+                }).then(function () {
                     $scope.getWaterUsageStats();
-                }).then(function() {
+                }).then(function () {
                     $scope.calcMonthlyCost();
                 });
             // cleanup
@@ -592,7 +602,7 @@
             return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
         }
 
-        $scope.loadCalEvents = function() {
+        $scope.loadCalEvents = function () {
             $scope.eventSource = [];
             for (i = 0; i < $scope.schedule.length; i++) {
                 var entry = $scope.schedule[i];
@@ -664,41 +674,41 @@
         };
 
         $scope.mode = "week";
-        $scope.changeMode = function(mode) {
+        $scope.changeMode = function (mode) {
             $scope.mode = mode;
         };
 
 
         $scope.availableGpios = [1];
-        $scope.getGpios = function() {
+        $scope.getGpios = function () {
             $http.get('/gpio/available')
-                .then(function(response) {
+                .then(function (response) {
                     $scope.availableGpios = response.data.gpios;
                 });
         };
 
         $scope.commonGpio = "unset";
         $scope.commonGpioModel = undefined;
-        $scope.setGpioCommon = function(gpio) {
-            $http.post("/gpio/common/set", {GPIO: gpio})
-            .then(function(response) {
-                console.log({GPIO: gpio})
-                $scope.commonGpio = response.data.gpio.GPIO
-                $scope.commonGpioModel = undefined;
-            });
+        $scope.setGpioCommon = function (gpio) {
+            $http.post("/gpio/common/set", { GPIO: gpio })
+                .then(function (response) {
+                    console.log({ GPIO: gpio })
+                    $scope.commonGpio = response.data.gpio.GPIO
+                    $scope.commonGpioModel = undefined;
+                });
             $scope.getGpios();
         };
 
-        $scope.getGpioCommon = function() {
+        $scope.getGpioCommon = function () {
             $http.get("/gpio/common")
-            .then(function(response) {
-                console.log(response.data)
-                $scope.commonGpio = response.data.gpio.GPIO
-            });
+                .then(function (response) {
+                    console.log(response.data)
+                    $scope.commonGpio = response.data.gpio.GPIO
+                });
             $scope.getGpios();
         };
 
-        this.autoLoader = function() {
+        this.autoLoader = function () {
             this.getCalEvents();
             this.loadStations();
             $scope.getWaterUsageStats();
