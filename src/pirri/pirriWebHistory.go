@@ -14,7 +14,7 @@ func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Order("id desc").Limit(100).Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"history\": "+string(blob)+"}")
 }

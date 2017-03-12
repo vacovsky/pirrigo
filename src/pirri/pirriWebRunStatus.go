@@ -10,7 +10,7 @@ import (
 func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -18,7 +18,7 @@ func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 func statusRunCancel(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	RUNSTATUS.Cancel = true
 	io.WriteString(rw, string(blob))

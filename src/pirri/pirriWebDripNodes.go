@@ -14,7 +14,7 @@ func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Find(&nodes)
 	blob, err := json.Marshal(&nodes)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"nodes\": "+string(blob)+"}")
 }
@@ -77,7 +77,7 @@ SELECT DISTINCT drip_nodes.station_id,
 	}
 	blob, err := json.Marshal(&results)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"waterUsage\": "+string(blob)+"}")
 }

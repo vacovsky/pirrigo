@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/streadway/amqp"
 )
@@ -10,7 +11,13 @@ var conn *amqp.Connection
 
 func rabbitConnect() {
 	conn, ERR = amqp.Dial(RMQCONNSTRING)
-	failOnError(ERR, "Failed to connect to RabbitMQ")
+	if ERR != nil {
+		for conn == nil {
+			fmt.Println("Waiting 15 seconds and attempting to connect to RabbitMQ again.")
+			time.Sleep(time.Duration(15) * time.Second)
+			conn, ERR = amqp.Dial(RMQCONNSTRING)
+		}
+	}
 }
 
 func rabbitSend(queueName string, body string) {
@@ -64,14 +71,13 @@ func rabbitReceive(queueName string) {
 
 		msgs, ERR := ch.Consume(q.Name, "", autoAck, false, false, false, nil)
 		if ERR != nil {
-			panic(ERR.Error())
+			fmt.Println(ERR)
 		}
 
 		for d := range msgs { // the d stands for Delivery
 			fmt.Println(string(d.Body[:]))
 			messageHandler(queueName, d.Body)
 		}
-		failOnError(ERR, "Failed to declare a queue")
 	}
 }
 

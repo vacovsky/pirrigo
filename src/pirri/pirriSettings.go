@@ -74,12 +74,12 @@ func (s *Settings) parseSettingsFile() {
 
 	fileContent, err := os.Open(confFile)
 	if err != nil {
-		fmt.Println("Could not open config file", err.Error())
+		fmt.Println("Could not open config file\n", err)
 	}
 
 	jsonParser := json.NewDecoder(fileContent)
 	if err = jsonParser.Decode(&s); err != nil {
-		fmt.Println("Could not load config file. Check JSON formatting.", err.Error())
+		fmt.Println("Could not load config file. Check JSON formatting.\n", err)
 	}
 
 	// set rabbitmq connection string

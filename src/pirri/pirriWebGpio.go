@@ -15,7 +15,7 @@ func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
 }
@@ -27,7 +27,7 @@ func gpioPinsAvailableWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
 }
@@ -38,7 +38,7 @@ func gpioPinsCommonWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpio)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"gpio\": "+string(blob)+"}")
 }
@@ -47,7 +47,7 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 	gpio := GpioPin{}
 	err := json.NewDecoder(req.Body).Decode(&gpio)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	gpio.Common = true
 	if SETTINGS.Debug.Pirri {

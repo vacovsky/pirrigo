@@ -16,7 +16,7 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	var msr ManualStationRun
 	err := json.NewDecoder(req.Body).Decode(&msr)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	fmt.Println("START MSR OBJECT")
 	spew.Dump(msr)
@@ -35,7 +35,7 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Limit(100).Find(&stations)
 	blob, err := json.Marshal(&stations)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, "{ \"stations\": "+string(blob)+"}")
 }
@@ -47,7 +47,7 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Where("id = ?", stationID).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {
-		fmt.Println(err, err.Error())
+		fmt.Println(err)
 	}
 	io.WriteString(rw, string(blob))
 }
