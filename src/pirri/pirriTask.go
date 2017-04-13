@@ -30,7 +30,7 @@ func (t *Task) log() {
 
 func (t *Task) send() {
 	taskBlob, ERR := json.Marshal(&t)
-	failOnError(ERR, "Could not jsonify task.")
+	fmt.Println(ERR, "Could not jsonify task.")
 	if SETTINGS.Debug.Pirri {
 		fmt.Println("Sending Task:", string(taskBlob))
 		spew.Dump(t)
