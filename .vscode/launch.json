@@ -12,9 +12,9 @@
             "program": "${workspaceRoot}/src/pirri/",
             "env": {
                 "go": {
-                    "gopath": "/home/joe/Projects/go"
+                    "gopath": "/home/joe/.go/"
                 },
-                "GOPATH": "/home/joe/Projects/go"
+                "GOPATH": "/home/joe/.go/"
             },
             "args": [],
             "showLog": true

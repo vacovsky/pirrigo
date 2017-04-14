@@ -13,7 +13,7 @@ func rabbitConnect() {
 	conn, ERR = amqp.Dial(RMQCONNSTRING)
 	if ERR != nil {
 		for conn == nil {
-			fmt.Println("Waiting 15 seconds and attempting to connect to RabbitMQ again.")
+			fmt.Println(ERR, "Waiting 15 seconds and attempting to connect to RabbitMQ again.")
 			time.Sleep(time.Duration(15) * time.Second)
 			conn, ERR = amqp.Dial(RMQCONNSTRING)
 		}
@@ -35,7 +35,7 @@ func rabbitSend(queueName string, body string) {
 		false,     // no-wait
 		nil,       // arguments
 	)
-	failOnError(ERR, "Failed to declare a queue")
+	fmt.Println(ERR, "Failed to declare a queue")
 
 	ERR = ch.Publish(
 		"",     // exchange
@@ -46,7 +46,7 @@ func rabbitSend(queueName string, body string) {
 			ContentType: "text/plain",
 			Body:        []byte(body),
 		})
-	failOnError(ERR, "Failed to publish a message")
+	fmt.Println(ERR, "Failed to publish a message")
 }
 
 func rabbitReceive(queueName string) {
@@ -54,9 +54,9 @@ func rabbitReceive(queueName string) {
 	defer conn.Close()
 
 	for {
-		failOnError(ERR, "Failed to connect to RabbitMQ")
+		fmt.Println(ERR, "Failed to connect to RabbitMQ")
 		ch, ERR := conn.Channel()
-		failOnError(ERR, "Failed to open a channel")
+		fmt.Println(ERR, "Failed to open a channel")
 		defer ch.Close()
 
 		q, ERR := ch.QueueDeclare(
@@ -73,6 +73,8 @@ func rabbitReceive(queueName string) {
 		if ERR != nil {
 			fmt.Println(ERR)
 		}
+
+		time.Sleep(500 * time.Millisecond)
 
 		for d := range msgs { // the d stands for Delivery
 			fmt.Println(string(d.Body[:]))
