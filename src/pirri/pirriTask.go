@@ -30,13 +30,21 @@ func (t *Task) log() {
 
 func (t *Task) send() {
 	taskBlob, ERR := json.Marshal(&t)
-	fmt.Println(ERR, "Could not jsonify task.")
+	if ERR != nil {
+		fmt.Println(ERR, "Could not JSONify task.")
+	}
 	if SETTINGS.Debug.Pirri {
-		fmt.Println("Sending Task:", string(taskBlob))
-		spew.Dump(t)
+		fmt.Println("Enqueueing Task for Station ID ", t.Station.GPIO)
 	}
 	if t.Station.GPIO > 0 {
-		rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
+		if SETTINGS.Pirri.UseRabbitMQ {
+			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
+		} else {
+			ORQMutex.Lock()
+			OfflineRunQueue = append(OfflineRunQueue, t)
+			spew.Dump(OfflineRunQueue)
+			ORQMutex.Unlock()
+		}
 	}
 }
 

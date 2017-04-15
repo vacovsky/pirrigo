@@ -23,10 +23,17 @@ func main() {
 
 	// Start the Web application for management of schedule etc.
 	go startPirriWebApp()
+
 	// Monitor database for pre-scheduled tasks
 	go startTaskMonitor()
+
 	// Listen for tasks to execute
-	go rabbitReceive(SETTINGS.RabbitMQ.TaskQueue)
+	if SETTINGS.Pirri.UseRabbitMQ {
+		go rabbitReceive(SETTINGS.RabbitMQ.TaskQueue)
+	} else {
+		go listenForTasks()
+	}
+
 	// Cleanly exit after all goroutines are finished
 	WG.Wait()
 

@@ -12,14 +12,14 @@ import (
 var db *gorm.DB
 
 func gormDbConnect() {
-	db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLCONNSTRING)
+	db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
 	db.LogMode(SETTINGS.Debug.GORM)
 	if ERR != nil {
 		fmt.Println(ERR)
 		for db == nil {
 			fmt.Println("Waiting 15 seconds and attempting to connect to SQL again.")
 			time.Sleep(time.Duration(15) * time.Second)
-			db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLCONNSTRING)
+			db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
 		}
 	}
 	fmt.Println(db.DB().Ping())

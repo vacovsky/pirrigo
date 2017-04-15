@@ -3,7 +3,8 @@
         "login_banner":"Demo login & password are Demo / demo",
         "utc_offset": -8,
         "monitor_interval": 60,
-        "rain_skip": true
+        "rain_skip": true,
+        "use_rabbit": false
     },
     "rabbitmq": {
         "server": "192.168.111.50",
