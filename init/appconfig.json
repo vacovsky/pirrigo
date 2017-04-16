@@ -43,8 +43,8 @@
     },
     "debug": {
         "pirri": true,
-        "gorm": true,
-        "settings": true,
+        "gorm": false,
+        "settings": false,
         "simulate_gpio": true
     }
 }
