@@ -65,7 +65,6 @@ go get "github.com/jinzhu/gorm/dialects/mysql"
 go get "github.com/newrelic/go-agent"
 go get "github.com/stianeikeland/go-rpio"
 go get "github.com/streadway/amqp"
-go get "gopkg.in/redis.v5"
 ```
 
 ### Install javascript libraries for web

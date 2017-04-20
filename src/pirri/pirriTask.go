@@ -34,7 +34,7 @@ func (t *Task) send() {
 		fmt.Println(ERR, "Could not JSONify task.")
 	}
 	if SETTINGS.Debug.Pirri {
-		fmt.Println("Enqueueing Task for GPIO ", t.Station.GPIO)
+		fmt.Println("Queuing Task for GPIO activation cr", t.Station.GPIO)
 		spew.Dump(OfflineRunQueue)
 	}
 	if t.Station.GPIO > 0 {
