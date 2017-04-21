@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	//SETTINGS stores global iables (connection string data, ports, etc)
+	//SETTINGS stores global variables (connection string data, ports, etc) which are poplated at start/reload
 	SETTINGS Settings
 
 	//SQLConnString stores the fully-constructed SQL connection string

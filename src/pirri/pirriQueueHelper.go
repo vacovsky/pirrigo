@@ -104,13 +104,17 @@ func messageHandler(queueName string, message []byte) {
 }
 
 func listenForTasks() {
+	defer WG.Done()
 	for {
-		var task *Task
 		ORQMutex.Lock()
-		if len(OfflineRunQueue) > 0 {
+		q := OfflineRunQueue
+		ORQMutex.Unlock()
+
+		var task *Task
+		if len(q) > 0 {
 			fmt.Println("Task found.")
-			task, OfflineRunQueue = OfflineRunQueue[len(
-				OfflineRunQueue)-1],
+			ORQMutex.Lock()
+			task, OfflineRunQueue = OfflineRunQueue[len(OfflineRunQueue)-1],
 				OfflineRunQueue[:len(OfflineRunQueue)-1]
 			ORQMutex.Unlock()
 			task.execute()
