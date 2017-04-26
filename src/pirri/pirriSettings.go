@@ -15,6 +15,7 @@ type Settings struct {
 		UtcOffset       int    `json:"utc_offset"`
 		RainSkip        bool   `json:"rain_skip"`
 		WelcomeMessage  string `json:"welcome_message"`
+		UseRabbitMQ     bool   `json:"use_rabbit"`
 	} `json:"pirri"`
 	RabbitMQ struct {
 		Server    string `json:"server"`
@@ -104,8 +105,8 @@ func setRabbitMQConnectionString() {
 }
 
 func setSQLConnectionString() {
-	SQLCONNSTRING = SETTINGS.SQL.User + ":" + SETTINGS.SQL.Secret + "@tcp(" + SETTINGS.SQL.Server + ":" + SETTINGS.SQL.Port + ")/" + SETTINGS.SQL.DB + "?parseTime=true"
-	c := SQLCONNSTRING
+	SQLConnString = SETTINGS.SQL.User + ":" + SETTINGS.SQL.Secret + "@tcp(" + SETTINGS.SQL.Server + ":" + SETTINGS.SQL.Port + ")/" + SETTINGS.SQL.DB + "?parseTime=true"
+	c := SQLConnString
 	fmt.Println("SQL Connection String:", c)
 }
 

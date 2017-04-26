@@ -26,6 +26,10 @@ func rabbitSend(queueName string, body string) {
 
 	fmt.Println("Sending", body, "to", queueName)
 	ch, ERR := conn.Channel()
+	if ERR != nil {
+		fmt.Println(ERR, "Unable to open channel.")
+		return
+	}
 
 	q, ERR := ch.QueueDeclare(
 		queueName, // name
@@ -35,7 +39,10 @@ func rabbitSend(queueName string, body string) {
 		false,     // no-wait
 		nil,       // arguments
 	)
-	fmt.Println(ERR, "Failed to declare a queue")
+	if ERR != nil {
+		fmt.Println(ERR, "Failed to declare a queue")
+		return
+	}
 
 	ERR = ch.Publish(
 		"",     // exchange
@@ -46,7 +53,10 @@ func rabbitSend(queueName string, body string) {
 			ContentType: "text/plain",
 			Body:        []byte(body),
 		})
-	fmt.Println(ERR, "Failed to publish a message")
+	if ERR != nil {
+		fmt.Println(ERR, "Failed to publish message")
+	}
+
 }
 
 func rabbitReceive(queueName string) {
@@ -55,8 +65,11 @@ func rabbitReceive(queueName string) {
 
 	for {
 		fmt.Println(ERR, "Failed to connect to RabbitMQ")
+
 		ch, ERR := conn.Channel()
-		fmt.Println(ERR, "Failed to open a channel")
+		if ERR != nil {
+			fmt.Println(ERR, "Failed to open a channel")
+		}
 		defer ch.Close()
 
 		q, ERR := ch.QueueDeclare(
@@ -87,5 +100,25 @@ func messageHandler(queueName string, message []byte) {
 	if queueName == SETTINGS.RabbitMQ.TaskQueue {
 		fmt.Println(queueName, message)
 		reactToGpioMessage(message)
+	}
+}
+
+func listenForTasks() {
+	defer WG.Done()
+	for {
+		ORQMutex.Lock()
+		q := OfflineRunQueue
+		ORQMutex.Unlock()
+
+		var task *Task
+		if len(q) > 0 {
+			fmt.Println("Task found.")
+			ORQMutex.Lock()
+			task, OfflineRunQueue = OfflineRunQueue[len(OfflineRunQueue)-1],
+				OfflineRunQueue[:len(OfflineRunQueue)-1]
+			ORQMutex.Unlock()
+			task.execute()
+		}
+		time.Sleep(time.Duration(1000) * time.Millisecond)
 	}
 }

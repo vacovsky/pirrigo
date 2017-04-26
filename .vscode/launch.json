@@ -11,10 +11,7 @@
             "host": "127.0.0.1",
             "program": "${workspaceRoot}/src/pirri/",
             "env": {
-                "go": {
-                    "gopath": "/home/joe/.go/"
-                },
-                "GOPATH": "/home/joe/.go/"
+                "GOPATH": "/home/joe/.go/installed_packages"
             },
             "args": [],
             "showLog": true

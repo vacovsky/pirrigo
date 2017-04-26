@@ -65,7 +65,6 @@ go get "github.com/jinzhu/gorm/dialects/mysql"
 go get "github.com/newrelic/go-agent"
 go get "github.com/stianeikeland/go-rpio"
 go get "github.com/streadway/amqp"
-go get "gopkg.in/redis.v5"
 ```
 
 ### Install javascript libraries for web
@@ -82,13 +81,14 @@ bower install
     "pirri": {
         "utc_offset": -8,
         "monitor_interval": 60,
-        "rain_skip": true
+        "rain_skip": true,
+        "use_rabbit": false
     },
     "rabbitmq": {
-        "server": "192.168.111.50",
+        "server": "123.213.21.111",
         "port": "5672",
-        "user": "rabbit",
-        "secret": "bunnyrabbit!!",
+        "user": "",
+        "secret": "",
         "task_queue": "pirri_go_work"
     },
     "sql": {
@@ -121,8 +121,8 @@ bower install
     },
     "debug": {
         "pirri": true,
-        "gorm": true,
-        "settings": true,
+        "gorm": false,
+        "settings": false,
         "simulate_gpio": true
     }
 }
