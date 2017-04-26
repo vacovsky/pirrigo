@@ -56,6 +56,7 @@ func rabbitSend(queueName string, body string) {
 	if ERR != nil {
 		fmt.Println(ERR, "Failed to publish message")
 	}
+
 }
 
 func rabbitReceive(queueName string) {
@@ -69,7 +70,6 @@ func rabbitReceive(queueName string) {
 		if ERR != nil {
 			fmt.Println(ERR, "Failed to open a channel")
 		}
-
 		defer ch.Close()
 
 		q, ERR := ch.QueueDeclare(
