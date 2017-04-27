@@ -58,6 +58,7 @@ func (t *Task) execute() {
 		spew.Dump(RUNSTATUS)
 	}
 	if t.Station.GPIO > 0 {
+		t.log()
 		gpioActivator(t)
 	}
 	if SETTINGS.Debug.Pirri {

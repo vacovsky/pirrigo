@@ -5,6 +5,5 @@ import "encoding/json"
 func reactToGpioMessage(m []byte) {
 	task := Task{}
 	json.Unmarshal(m, &task)
-	task.log()
 	task.execute()
 }
