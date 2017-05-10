@@ -20,6 +20,7 @@ func loginAuth(rw http.ResponseWriter, req *http.Request) {
 }
 
 // Leverages nemo's answer in http://stackoverflow.com/a/21937924/556573, modified to also check cookie for auth stuff
+// TODO: Clean this sucker up
 func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
