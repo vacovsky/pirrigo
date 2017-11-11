@@ -1,88 +1,63 @@
 package main
 
 import (
-	"os"
+	"encoding/json"
 	"sync"
 
-	"github.com/op/go-logging"
+	"go.uber.org/zap"
 )
 
-type logHelper struct {
-	Format logging.Formatter
-	Logger *logging.Logger
-	// BackEnd *logging.LogBackend
-	Mutex sync.Mutex
+var instance *Logger
+var once sync.Once
+
+type Logger struct {
+	lock sync.Mutex
 }
 
-// var format = logging.MustStringFormatter(
-// 	`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
-// )
+func getLogger() *Logger {
+	once.Do(func() {
+		instance = &Logger{
+			lock: sync.Mutex{},
+		}
+	})
+	return instance
+}
 
-// Example format string. Everything except the message has a custom color
-// which is dependent on the log level. Many fields have a custom output
-// formatting too, eg. the time returns the hour down to the milli second.
+func (l *Logger) LogEvent() {
 
-// Password is just an example type implementing the Redactor interface. Any
-// time this is logged, the Redacted() function will be called.
-func (l *logHelper) createLogFile() {
-	if _, err := os.Stat(SETTINGS.Debug.LogPath); os.IsNotExist(err) {
-		os.Create(SETTINGS.Debug.LogPath)
+}
+
+func logToFile(message, stacktrace string) {
+	rawJSON := []byte(`{
+		"level": "debug",
+		"encoding": "json",
+		"initialFields": {"application": "PirriGo"},
+		"encoderConfig": {
+		  "messageKey": "message",
+		  "levelKey": "level",
+		  "levelEncoder": "lowercase"
+		}
+	  }`)
+
+	var cfg zap.Config
+	if err := json.Unmarshal(rawJSON, &cfg); err != nil {
+		panic(err)
 	}
-}
+	cfg.EncoderConfig.StacktraceKey = "stacktrace"
+	cfg.ErrorOutputPaths = []string{SETTINGS.Debug.LogPath}
+	cfg.OutputPaths = []string{SETTINGS.Debug.LogPath}
 
-func (l *logHelper) NewLogHelper() {
-	l.createLogFile()
-	l.Format = logging.MustStringFormatter(`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`)
-	l.Logger = logging.MustGetLogger("PirriGo")
-	l.Mutex = sync.Mutex{}
-}
+	logger, err := cfg.Build()
 
-func (l *logHelper) logEvent() {
-	l.Mutex.Lock()
-	defer l.Mutex.Unlock()
-	writer, err := os.OpenFile(SETTINGS.Debug.LogPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-
+		panic(err)
 	}
-	logging.NewLogBackend(writer, "", 0)
+	defer logger.Sync()
 
+	stack := zap.Stack("a stack trace")
+	logger.Error("test", stack)
+	logger.Debug("logger construction succeeded")
+
+	// Output:
+	// {"level":"info","message":"logger construction succeeded","foo":"bar"}
 }
-
-func testLogging() {
-	loggy := logHelper{}
-	loggy.NewLogHelper()
-
-	loggy.Logger.Debugf("debug %s")
-	// log.Info("info")
-	// log.Notice("notice")
-	// log.Warning("warning")
-	// log.Error("err")
-	// log.Critical("crit")
-
-}
-
-// func (l *logHelper) logStuff() {
-// 	// For demo purposes, create two backend for os.Stderr.
-// 	backend1 := logging.NewLogBackend(os.Stderr, "", 0)
-// 	backend2 := logging.NewLogBackend(os.Stderr, "", 0)
-
-// 	// For messages written to backend2 we want to add some additional
-// 	// information to the output, including the used log level and the name of
-// 	// the function.
-
-// 	// backend2Formatter := logging.NewBackendFormatter(backend2, format)
-
-// 	// Only errors and more severe messages should be sent to backend1
-// 	backend1Leveled := logging.AddModuleLevel(backend1)
-// 	backend1Leveled.SetLevel(logging.ERROR, "")
-
-// 	// Set the backends to be used.
-// 	l.Logger.SetBackend(backend1Leveled, backend2Formatter)
-
-// 	log.Debugf("debug %s")
-// 	log.Info("info")
-// 	log.Notice("notice")
-// 	log.Warning("warning")
-// 	log.Error("err")
-// 	log.Critical("crit")
-// }

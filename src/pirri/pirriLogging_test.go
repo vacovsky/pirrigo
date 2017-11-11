@@ -1,17 +1,29 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
-func Test_testLogging(t *testing.T) {
+func Test_logToFile(t *testing.T) {
 	SETTINGS.parseSettingsFile()
+	type args struct {
+		message    string
+		stackTrace string
+	}
 	tests := []struct {
 		name string
+		args args
 	}{
-		{},
+		{
+			name: "test",
+			args: args{
+				message: "teest loggyef febsifbesibfif",
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			testLogging()
+			logToFile(tt.args.message, tt.args.stackTrace)
 		})
 	}
 }

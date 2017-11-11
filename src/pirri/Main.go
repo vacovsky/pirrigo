@@ -16,12 +16,11 @@ func main() {
 	// load settings from the configuration file
 	SETTINGS.parseSettingsFile()
 
-	// create a log file, if missing
-	Logger.NewLogHelper()
-	Logger.createLogFile()
-
 	// prep ORM for usage
 	gormSetup()
+
+	// Log Startup
+	logToFile("Starting PirriGO v"+VERSION, "")
 
 	// migrate DB schema and populate with seed data
 	firstRunDBSetup()

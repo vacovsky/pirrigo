@@ -36,8 +36,4 @@ var (
 
 	// ORQMutex protects the OFFLINE_RUN_QUEUE from race conditions
 	ORQMutex = &sync.Mutex{}
-
-	// Log is the struct for logging stuff
-	// Logger = logging.MustGetLogger("pirri")
-	Logger = logHelper{}
 )

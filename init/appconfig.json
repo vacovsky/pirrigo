@@ -46,6 +46,6 @@
         "gorm": false,
         "settings": false,
         "simulate_gpio": true,
-        "log_path": "pirrigo.log"
+        "log_path": "/home/joe/GoProjects/pirrigo/src/pirri/pirrigo.log"
     }
 }
