@@ -45,6 +45,7 @@
         "pirri": true,
         "gorm": false,
         "settings": false,
-        "simulate_gpio": true
+        "simulate_gpio": true,
+        "log_path": "pirrigo.log"
     }
 }

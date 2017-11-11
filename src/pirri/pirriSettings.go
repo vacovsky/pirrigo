@@ -54,10 +54,11 @@ type Settings struct {
 		City              string `json:"city"`
 	} `json:"weather"`
 	Debug struct {
-		Pirri        bool `json:"pirri"`
-		GORM         bool `json:"gorm"`
-		Settings     bool `json:"settings"`
-		SimulateGPIO bool `json:"simulate_gpio"`
+		Pirri        bool   `json:"pirri"`
+		GORM         bool   `json:"gorm"`
+		Settings     bool   `json:"settings"`
+		SimulateGPIO bool   `json:"simulate_gpio"`
+		LogPath      string `json:"log_path"`
 	} `json:"debug"`
 }
 

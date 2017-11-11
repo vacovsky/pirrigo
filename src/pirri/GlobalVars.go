@@ -18,7 +18,7 @@ var (
 	COMMONWIRE int
 
 	//VERSION is the version of the application
-	VERSION = "0.2.1"
+	VERSION = "0.3.0"
 
 	//ERR is a global bucket to hold errors.  Will be going away as the application matures.
 	ERR error
@@ -36,4 +36,8 @@ var (
 
 	// ORQMutex protects the OFFLINE_RUN_QUEUE from race conditions
 	ORQMutex = &sync.Mutex{}
+
+	// Log is the struct for logging stuff
+	// Logger = logging.MustGetLogger("pirri")
+	Logger = logHelper{}
 )

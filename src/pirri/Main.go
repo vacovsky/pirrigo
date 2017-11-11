@@ -10,15 +10,31 @@ func showVersion() {
 }
 
 func main() {
+
+	fmt.Printf("Launching PirriGo v%s", VERSION)
+
+	// load settings from the configuration file
 	SETTINGS.parseSettingsFile()
-	// parseSettingsFile()
+
+	// create a log file, if missing
+	Logger.NewLogHelper()
+	Logger.createLogFile()
+
+	// prep ORM for usage
 	gormSetup()
+
+	// migrate DB schema and populate with seed data
 	firstRunDBSetup()
+
+	// check if we are in local debug mode, or actually doing work
 	if !SETTINGS.Debug.SimulateGPIO {
 		gpioClear()
 	}
+
+	// set the common wire for powering solenoids
 	setCommonWire()
 
+	// init waitgroups for concurrent processing
 	WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
