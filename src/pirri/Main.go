@@ -20,7 +20,8 @@ func main() {
 	gormSetup()
 
 	// Log Startup
-	logToFile("Starting PirriGO v"+VERSION, "")
+	// logToFile("Starting PirriGO v"+VERSION, "")
+	getLogger().LogEvent("PirriGo v" + VERSION + " starting up")
 
 	// migrate DB schema and populate with seed data
 	firstRunDBSetup()
@@ -49,8 +50,13 @@ func main() {
 		go listenForTasks()
 	}
 
+	fmt.Println("Waitgroup finished - exiting!")
+
+	// func {	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	// }
 	// Cleanly exit after all goroutines are finished
+
 	WG.Wait()
 
-	fmt.Println("Waitgroup finished - exiting!")
+	getLogger().LogEvent("PirriGo v" + VERSION + " exiting.")
 }
