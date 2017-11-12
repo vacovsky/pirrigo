@@ -24,6 +24,7 @@ func main() {
 	getLogger().LogEvent("PirriGo v" + VERSION + " starting up")
 
 	// migrate DB schema and populate with seed data
+	// TODO: make this nicer.  check before running anything.
 	firstRunDBSetup()
 
 	// check if we are in local debug mode, or actually doing work
@@ -51,7 +52,7 @@ func main() {
 	}
 
 	fmt.Println("Waitgroup finished - exiting!")
-
+	// TODO: make a clean exit
 	// func {	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	// }
 	// Cleanly exit after all goroutines are finished
