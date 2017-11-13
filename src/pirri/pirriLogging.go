@@ -58,12 +58,21 @@ func (l *PirriLogger) LogEvent(message string) {
 	defer l.logger.Sync()
 	defer l.lock.Unlock()
 	l.lock.Lock()
-	l.logger.Debug(message, zap.String("time", time.Now().Format("2006-01-02 15:04:05")))
+	l.logger.Debug(
+		message,
+		zap.String("version", VERSION),
+		zap.String("time", time.Now().Format("2006-01-02 15:04:05")),
+	)
 }
 func (l *PirriLogger) LogError(message, stackTrace string) {
 	defer l.logger.Sync()
 	defer l.lock.Unlock()
 	l.lock.Lock()
-	stack := zap.Stack(stackTrace)
-	l.logger.Error(message, stack, zap.String("time", time.Now().Format("2006-01-02 15:04:05")))
+	// stack := zap.Stack(stackTrace)
+	l.logger.Error(
+		message,
+		zap.String("version", VERSION),
+		zap.String("error", stackTrace),
+		zap.String("time", time.Now().Format("2006-01-02 15:04:05")),
+	)
 }
