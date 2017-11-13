@@ -16,8 +16,7 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println("START MSR OBJECT")
-	// spew.Dump(msr)
+	getLogger().LogEvent(fmt.Sprintf("Run event received from web interface for station: %d for a duration of %d seconds", msr.StationID, msr.Duration))
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
 	t.send()

@@ -57,7 +57,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Not authorized", 401)
 			return
 		}
-
+		
 		if strings.ToLower(pair[0]) != strings.ToLower(SETTINGS.Web.User) || pair[1] != SETTINGS.Web.Secret {
 			http.Error(w, "Not authorized", 401)
 			getLogger().LogError("HTTP Authentication Error.", err.Error())

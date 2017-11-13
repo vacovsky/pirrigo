@@ -25,11 +25,9 @@ func (t *Task) log() {
 }
 
 func (t *Task) send() {
-
-	getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ: %d", t.Station.GPIO))
-
 	if t.Station.GPIO > 0 {
 		if SETTINGS.Pirri.UseRabbitMQ {
+			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ: %d", t.Station.GPIO))
 			taskBlob, err := json.Marshal(&t)
 			if err != nil {
 				getLogger().LogError("Could not JSONify task for sending.", err.Error())

@@ -42,7 +42,7 @@
         "station": "KCAATASC69"
     },
     "debug": {
-        "pirri": false,
+        "pirri": true,
         "gorm": false,
         "settings": false,
         "simulate_gpio": true,
