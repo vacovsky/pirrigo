@@ -1,13 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
-
-func showVersion() {
-	name := "PirriGo v" + VERSION
-	fmt.Println(name)
-}
 
 func main() {
 
@@ -52,13 +49,19 @@ func main() {
 		go listenForTasks()
 	}
 
-	// TODO: make a clean exit
-	// func {	bufio.NewReader(os.Stdin).ReadBytes('\n')
-	// }
-	// Cleanly exit after all goroutines are finished
+	go listenForExit()
 
 	WG.Wait()
-	fmt.Println("Waitgroup finished - exiting!")
+	fmt.Println("Exit key received - exiting!")
+}
 
-	getLogger().LogEvent("PirriGo v" + VERSION + " exiting.")
+func showVersion() {
+	name := "PirriGo v" + VERSION
+	fmt.Println(name)
+}
+
+func listenForExit() {
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	getLogger().LogEvent("PirriGo v" + VERSION + " exiting due to the exit key being pressed.  You did this...")
+	WG.Done()
 }

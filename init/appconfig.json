@@ -15,9 +15,9 @@
     },
     "sql": {
         "dbtype": "mysql",
-        "server": "localhost",
+        "server": "192.168.111.55",
         "user": "root",
-        "secret": "",
+        "secret": "root",
         "db": "pirri",
         "port": "3306"
     },
