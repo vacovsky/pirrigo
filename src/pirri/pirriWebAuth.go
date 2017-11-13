@@ -32,10 +32,10 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		if len(s) != 2 {
 
 			// try cookie auth!
-			c, err := r.Cookie("Authorization")
-			getLogger().LogError("Unable to parse authorization cookie.", err.Error())
+			c, _ := r.Cookie("Authorization")
+			// getLogger().LogError("Unable to parse authorization cookie.", err.Error())
 			q, err := url.ParseQuery(c.Value)
-			getLogger().LogError("Unable to parse query string.", err.Error())
+			// getLogger().LogError("Unable to parse query string.", err.Error())
 			for k := range q {
 				s = strings.SplitN(k, " ", 2)
 			}

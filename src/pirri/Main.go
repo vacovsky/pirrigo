@@ -61,7 +61,7 @@ func showVersion() {
 }
 
 func listenForExit() {
-	fmt.Println("=================== PRESS ANY KEY TO EXIT ===================\n")
+	fmt.Println("=================== PRESS <ENTER> KEY TO EXIT ===================\n")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	getLogger().LogEvent("PirriGo v" + VERSION + " exiting due to the exit key being pressed.  You did this...")
 	WG.Done()

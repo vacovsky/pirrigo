@@ -19,7 +19,7 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 		fmt.Println(err)
 	}
 	fmt.Println("START MSR OBJECT")
-	spew.Dump(msr)
+	// spew.Dump(msr)
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
 	if SETTINGS.Debug.Pirri {

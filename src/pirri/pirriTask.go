@@ -44,7 +44,7 @@ func (t *Task) send() {
 			ORQMutex.Lock()
 			fmt.Println("Queuing Task for GPIO activation in OfflineRunQueue:", t.Station.GPIO)
 			OfflineRunQueue = append(OfflineRunQueue, t)
-			spew.Dump(t)
+			// spew.Dump(t)
 			ORQMutex.Unlock()
 		}
 	}
