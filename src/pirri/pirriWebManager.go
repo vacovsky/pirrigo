@@ -62,7 +62,9 @@ func startPirriWebApp() {
 	if SETTINGS.NewRelic.Active {
 		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelic.Key)
 		NRAPPMON, err := newrelic.NewApplication(config)
-		fmt.Println("Using New Relic Monitoring Agent")
+		if SETTINGS.Debug.Pirri {
+			fmt.Println("Using New Relic Monitoring Agent")
+		}
 		if NRAPPMON == nil || err != nil {
 			getLogger().LogEvent("NewRelic being used.")
 		} else {
@@ -81,7 +83,9 @@ func startPirriWebApp() {
 		}
 	} else {
 		for k, v := range routes {
-			fmt.Println("Not using New Relic for", k)
+			if SETTINGS.Debug.Pirri {
+				fmt.Println("Not using New Relic for", k)
+			}
 			// wrap each route and function in auth handler
 			http.HandleFunc(k, basicAuth(v))
 		}

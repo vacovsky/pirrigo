@@ -8,7 +8,7 @@ import (
 
 func main() {
 
-	fmt.Printf("Launching PirriGo v%s", VERSION)
+	fmt.Printf("\nLaunching PirriGo v%s\n\n", VERSION)
 
 	// load settings from the configuration file
 	SETTINGS.parseSettingsFile()
@@ -61,7 +61,7 @@ func showVersion() {
 }
 
 func listenForExit() {
-	fmt.Println("=================== PRESS ANY KEY TO EXIT ===================")
+	fmt.Println("=================== PRESS ANY KEY TO EXIT ===================\n")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	getLogger().LogEvent("PirriGo v" + VERSION + " exiting due to the exit key being pressed.  You did this...")
 	WG.Done()
