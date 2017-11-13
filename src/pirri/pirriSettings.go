@@ -116,7 +116,7 @@ func loadNewRelicKey() {
 		file, err := os.Open(SETTINGS.NewRelic.NewRelicLicensePath)
 		defer file.Close()
 		if err != nil {
-			log.Fatal(err)
+			getLogger().LogError("Unable to load New Relic license key.", err.Error())
 		}
 		key := ""
 		scanner := bufio.NewScanner(file)

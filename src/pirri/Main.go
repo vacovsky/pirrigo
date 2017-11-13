@@ -24,10 +24,11 @@ func main() {
 	getLogger().LogEvent("PirriGo v" + VERSION + " starting up")
 
 	// migrate DB schema and populate with seed data
-	// TODO: make this nicer.  check before running anything.
+	// TODO: make this nicer.  Check before running anything.
 	firstRunDBSetup()
 
-	// check if we are in local debug mode, or actually doing work
+	// check if we are in local debug mode, or actually doing work.
+	// If not debug, reset the GPIO state
 	if !SETTINGS.Debug.SimulateGPIO {
 		gpioClear()
 	}
@@ -51,13 +52,13 @@ func main() {
 		go listenForTasks()
 	}
 
-	fmt.Println("Waitgroup finished - exiting!")
 	// TODO: make a clean exit
 	// func {	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	// }
 	// Cleanly exit after all goroutines are finished
 
 	WG.Wait()
+	fmt.Println("Waitgroup finished - exiting!")
 
 	getLogger().LogEvent("PirriGo v" + VERSION + " exiting.")
 }

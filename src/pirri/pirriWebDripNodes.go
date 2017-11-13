@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -14,14 +13,17 @@ func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Find(&nodes)
 	blob, err := json.Marshal(&nodes)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error displaying all nodes.", err.Error())
 	}
 	io.WriteString(rw, "{ \"nodes\": "+string(blob)+"}")
 }
 
 func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
-	ERR = json.NewDecoder(req.Body).Decode(&node)
+	err := json.NewDecoder(req.Body).Decode(&node)
+	if err != nil {
+		getLogger().LogError("Could not add a node through the web interface.", err.Error())
+	}
 	if SETTINGS.Debug.Pirri {
 		spew.Dump(node)
 	}
@@ -31,7 +33,10 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 
 func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
-	ERR = json.NewDecoder(req.Body).Decode(&node)
+	err := json.NewDecoder(req.Body).Decode(&node)
+	if err != nil {
+		getLogger().LogError("Could not delete a node through the web interface.", err.Error())
+	}
 	if SETTINGS.Debug.Pirri {
 		spew.Dump(node)
 	}
@@ -41,7 +46,10 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 
 func nodeEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
-	ERR = json.NewDecoder(req.Body).Decode(&node)
+	err := json.NewDecoder(req.Body).Decode(&node)
+	if err != nil {
+		getLogger().LogError("Could not edit a node through the web interface.", err.Error())
+	}
 	db.Save(&node)
 	if SETTINGS.Debug.Pirri {
 		spew.Dump(node)
@@ -77,7 +85,7 @@ SELECT DISTINCT drip_nodes.station_id,
 	}
 	blob, err := json.Marshal(&results)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Unable to parse node usage stats from SQL.", err.Error())
 	}
 	io.WriteString(rw, "{ \"waterUsage\": "+string(blob)+"}")
 }

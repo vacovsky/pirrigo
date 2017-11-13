@@ -30,16 +30,15 @@ func (t *Task) log() {
 
 func (t *Task) send() {
 	if SETTINGS.Debug.Pirri {
-		fmt.Println("Queuing Task for GPIO activation in RabbitMQ:", t.Station.GPIO)
+		fmt.Println("Queuing Task for GPIO activation in RabbitMQ: ", t.Station.GPIO)
 		spew.Dump(OfflineRunQueue)
 	}
 	if t.Station.GPIO > 0 {
 		if SETTINGS.Pirri.UseRabbitMQ {
-			taskBlob, ERR := json.Marshal(&t)
-			if ERR != nil {
-				fmt.Println(ERR, "Could not JSONify task.")
+			taskBlob, err := json.Marshal(&t)
+			if err != nil {
+				getLogger().LogError("Could not JSONify task for sending.", err.Error())
 			}
-			fmt.Println("Queuing Task for GPIO activation in RabbitMQ:", t.Station.GPIO)
 			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 		} else {
 			ORQMutex.Lock()

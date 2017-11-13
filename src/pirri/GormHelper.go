@@ -12,14 +12,15 @@ import (
 var db *gorm.DB
 
 func gormDbConnect() {
-	db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+	db, err := gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
 	db.LogMode(SETTINGS.Debug.GORM)
-	if ERR != nil {
-		fmt.Println(ERR)
+	if err != nil {
+		getLogger().LogError("Unable to connect to SQL.  Trying again in 15 seconds.", err.Error())
 		for db == nil {
 			fmt.Println("Waiting 15 seconds and attempting to connect to SQL again.")
 			time.Sleep(time.Duration(15) * time.Second)
-			db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+			db, err = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+			getLogger().LogError("Unable to connect to SQL on second attempt.  Fatal?  Probably.", err.Error())
 		}
 	}
 	fmt.Println(db.DB().Ping())
@@ -44,7 +45,10 @@ func gormSetup() {
 
 func jsonifySQLResults(input *gorm.DB) []string {
 	var result = []string{}
-	r, _ := json.Marshal(input.Value)
+	r, err := json.Marshal(input.Value)
+	if err != nil {
+		getLogger().LogError("Problem parsing SQL results.", err.Error())
+	}
 	result = append(result, string(r))
 	fmt.Println(string(r))
 	return result

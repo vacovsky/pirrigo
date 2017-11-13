@@ -60,7 +60,7 @@ func (l *PirriLogger) LogEvent(message string) {
 	l.lock.Lock()
 	l.logger.Debug(message, zap.String("time", time.Now().Format("2006-01-02 15:04:05")))
 }
-func (l *PirriLogger) logError(message, stackTrace string) {
+func (l *PirriLogger) LogError(message, stackTrace string) {
 	defer l.logger.Sync()
 	defer l.lock.Unlock()
 	l.lock.Lock()
