@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	//	"strconv"
@@ -14,7 +13,7 @@ func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
 	blob, err := json.Marshal(&stationSchedules)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Unable to retrieve station schedules via web interface.", err.Error())
 	}
 	io.WriteString(rw, "{ \"stationSchedules\": "+string(blob)+"}")
 }

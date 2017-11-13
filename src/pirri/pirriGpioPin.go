@@ -32,17 +32,12 @@ func gpioActivator(t *Task) {
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
-	fmt.Println("GPIO Simulation starting:",
-		"\nTime:", time.Now(),
-		"\nGPIO:", gpio,
-		"\nDesired State:", state,
-		"\nDuration (seconds):", seconds)
-	fmt.Println("Active!", time.Now())
+	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation starting. Time: %s; GPIO: %d, State: %t, Duration: %d`, time.Now(), gpio, state, seconds))
 	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Second)
 		seconds--
 	}
-	fmt.Println("Deactivated!", time.Now())
+	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation ending.. Time: %s; GPIO: %d, State: %t, Duration: %d`, time.Now(), gpio, state, seconds))
 }
 
 func gpioClear() {
@@ -55,7 +50,7 @@ func gpioClear() {
 
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		fmt.Println("Deactivating GPIO:", gpios[i].GPIO)
+		getLogger().LogEvent(fmt.Sprintf("Deactivating GPIO: %d", gpios[i].GPIO))
 		pin.High()
 	}
 }
@@ -68,7 +63,8 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	pin.Output()
 	common.Output()
 
-	fmt.Println("Activating GPIOs: ", COMMONWIRE, gpio)
+	getLogger().LogEvent(fmt.Sprintf("Activating GPIOs: %d (Common Wire), %d", COMMONWIRE, gpio))
+
 	common.Low()
 	pin.Low()
 
@@ -77,7 +73,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
-	fmt.Println("Deactivating GPIOs: ", COMMONWIRE, gpio)
+	getLogger().LogEvent(fmt.Sprintf("Deactivating GPIOs: %d (Common Wire), %d", COMMONWIRE, gpio))
 	common.High()
 	pin.High()
 }

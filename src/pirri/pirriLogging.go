@@ -57,7 +57,7 @@ func (l *PirriLogger) init() {
 
 func (l *PirriLogger) LogEvent(message string) {
 	if SETTINGS.Debug.Pirri {
-		fmt.Println("DEBUG: ", message)
+		fmt.Println("EVENT: ", message)
 		defer l.logger.Sync()
 		defer l.lock.Unlock()
 		l.lock.Lock()

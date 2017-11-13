@@ -224,7 +224,6 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				0, 0, 0, 0, 0, 0})
 			result.Series = append(result.Series, i.ID)
 		}
-		fmt.Println(seriesTracker, i.ID, i.Hour, i.RunSecs/60)
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs / 60
 	}
 

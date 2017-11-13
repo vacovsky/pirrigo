@@ -26,8 +26,8 @@ func rabbitConnect() {
 func rabbitSend(queueName string, body string) {
 	rabbitConnect()
 	defer conn.Close()
+	getLogger().LogEvent(fmt.Sprintf(`Sending message [%s] to queue [%s]`, body, queueName))
 
-	fmt.Println("Sending", body, "to", queueName)
 	ch, err := conn.Channel()
 	if err != nil {
 		getLogger().LogError("Unable to open AMQP channel for sending message.", err.Error())
@@ -89,8 +89,7 @@ func rabbitReceive(queueName string) {
 
 		time.Sleep(500 * time.Millisecond)
 
-		for d := range msgs { // the d stands for Delivery
-			// fmt.Println(string(d.Body[:]))
+		for d := range msgs {
 			messageHandler(queueName, d.Body)
 		}
 	}
@@ -98,7 +97,7 @@ func rabbitReceive(queueName string) {
 
 func messageHandler(queueName string, message []byte) {
 	if queueName == SETTINGS.RabbitMQ.TaskQueue {
-		fmt.Println(queueName, message)
+		getLogger().LogEvent(fmt.Sprintf(`Sending message to RabbitMQ Server.  Queue: [%s], Message: [%s]`, queueName, message))
 		reactToGpioMessage(message)
 	}
 }
@@ -112,7 +111,7 @@ func listenForTasks() {
 
 		var task *Task
 		if len(q) > 0 {
-			fmt.Println("Task found.")
+			// getLogger().LogEvent(fmt.Sprintf(`Task detected on queue.`))
 			ORQMutex.Lock()
 			task, OfflineRunQueue = OfflineRunQueue[len(OfflineRunQueue)-1],
 				OfflineRunQueue[:len(OfflineRunQueue)-1]

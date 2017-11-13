@@ -8,8 +8,8 @@ import (
 
 //Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
 type Task struct {
-	Station         Station         `json:"station`         //`gorm:"ForeignKey:Station"`
-	StationSchedule StationSchedule `json:"stationSchedule` //`gorm:"ForeignKey:StationSchedule"`
+	Station         Station         `json:"station"`         //`gorm:"ForeignKey:Station"`
+	StationSchedule StationSchedule `json:"stationSchedule"` //`gorm:"ForeignKey:StationSchedule"`
 }
 
 func (t *Task) log() {

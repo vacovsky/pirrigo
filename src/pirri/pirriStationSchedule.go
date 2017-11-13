@@ -35,7 +35,7 @@ func checkForTasks() {
 }
 
 func startTaskMonitor() {
-	fmt.Println("Starting monitoring at interval:", SETTINGS.Pirri.MonitorInterval, "seconds.")
+	getLogger().LogEvent(fmt.Sprintf(`Starting monitoring at interval: %d seconds.`, SETTINGS.Pirri.MonitorInterval))
 	for {
 		checkForTasks()
 		time.Sleep(time.Duration(SETTINGS.Pirri.MonitorInterval) * time.Second)

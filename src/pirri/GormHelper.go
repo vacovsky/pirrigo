@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"github.com/jinzhu/gorm"
@@ -18,7 +17,6 @@ func gormDbConnect() {
 	if err != nil {
 		getLogger().LogError("Unable to connect to SQL.  Trying again in 15 seconds.", err.Error())
 		for db == nil {
-			fmt.Println("Waiting 15 seconds and attempting to connect to SQL again.")
 			time.Sleep(time.Duration(15) * time.Second)
 			db, err = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
 			getLogger().LogError("Unable to connect to SQL on second attempt.  Fatal?  Probably.", err.Error())
@@ -54,7 +52,6 @@ func jsonifySQLResults(input *gorm.DB) []string {
 		getLogger().LogError("Problem parsing SQL results.", err.Error())
 	}
 	result = append(result, string(r))
-	fmt.Println(string(r))
 	return result
 }
 
@@ -68,8 +65,4 @@ func firstRunDBSetup() {
 			Common: false,
 		})
 	}
-	// db.Create(&Station{
-	// 	GPIO:  0,
-	// 	Notes: "Delete or edit me.",
-	// })
 }
