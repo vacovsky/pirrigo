@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/stianeikeland/go-rpio"
 )
 
@@ -53,9 +52,7 @@ func gpioClear() {
 	gpios := []GpioPin{}
 	sql := "SELECT gpio_pins.* FROM gpio_pins WHERE EXISTS(SELECT 1 FROM stations WHERE stations.gpio=gpio_pins.gpio) OR gpio_pins.common = true"
 	db.Raw(sql).Find(&gpios)
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(gpios)
-	}
+
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
 		fmt.Println("Deactivating GPIO:", gpios[i].GPIO)

@@ -7,13 +7,10 @@ import (
 	"net/http"
 	//	"strconv"
 	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stationSchedules := []StationSchedule{}
-
 	db.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
 	blob, err := json.Marshal(&stationSchedules)
 	if err != nil {
@@ -31,19 +28,15 @@ func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
 	} else {
 		db.Save(&scheduleItem)
 	}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(scheduleItem)
-	}
 	stationScheduleAllWeb(rw, req)
 }
 
 func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
-	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
-
-	db.Delete(&scheduleItem)
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(scheduleItem)
+	err := json.NewDecoder(req.Body).Decode(&scheduleItem)
+	if err != nil {
+		getLogger().LogError("Problem while attempting to decode request body into a station schedule.", err.Error())
 	}
+	db.Delete(&scheduleItem)
 	stationScheduleAllWeb(rw, req)
 }

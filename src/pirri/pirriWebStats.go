@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	//	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 // TODO parameterize the inputs for date ranges and add selectors on stats page
@@ -78,11 +76,6 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(rawResult1)
-		spew.Dump(seriesTracker)
-	}
-
 	blob, err := json.Marshal(&result)
 	if err != nil {
 		getLogger().LogError("Error while marshalling usage stats.", err.Error())
@@ -149,10 +142,6 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		result.Data[2][v.Day-1] = v.Secs / 60
 	}
 
-	if SETTINGS.Debug.Pirri {
-		//		spew.Dump(rawResults1)
-	}
-
 	blob, err := json.Marshal(&result)
 	if err != nil {
 		getLogger().LogError("Error while marshalling usage stats.", err.Error())
@@ -177,9 +166,6 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 		ReportType: 2,
 		Labels:     []string{},
 		Series:     []string{},
-	}
-	if SETTINGS.Debug.Pirri {
-		//		spew.Dump(rawResults1)
 	}
 
 	blob, err := json.Marshal(&result)
@@ -242,9 +228,6 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs / 60
 	}
 
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(&seriesTracker)
-	}
 	blob, err := json.Marshal(&result)
 	if err != nil {
 		getLogger().LogError("Error while marshalling usage stats.", err.Error())

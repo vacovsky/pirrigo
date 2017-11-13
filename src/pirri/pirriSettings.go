@@ -101,18 +101,12 @@ func setRabbitMQConnectionString() {
 	} else {
 		RMQCONNSTRING = "amqp://localhost:" + SETTINGS.RabbitMQ.Port + "/"
 	}
-	c := RMQCONNSTRING
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("RabbitMQ Connection String:", c)
-	}
+	getLogger().LogEvent("Connecting to RabbitMQ with: " + RMQCONNSTRING)
 }
 
 func setSQLConnectionString() {
 	SQLConnString = SETTINGS.SQL.User + ":" + SETTINGS.SQL.Secret + "@tcp(" + SETTINGS.SQL.Server + ":" + SETTINGS.SQL.Port + ")/" + SETTINGS.SQL.DB + "?parseTime=true"
-	c := SQLConnString
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("SQL Connection String:", c)
-	}
+	getLogger().LogEvent("Connecting to SQL with: " + SQLConnString)
 }
 
 func loadNewRelicKey() {

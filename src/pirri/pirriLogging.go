@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"sync"
 	"time"
 
@@ -55,24 +56,26 @@ func (l *PirriLogger) init() {
 }
 
 func (l *PirriLogger) LogEvent(message string) {
-	defer l.logger.Sync()
-	defer l.lock.Unlock()
-	l.lock.Lock()
-	l.logger.Debug(
-		message,
-		zap.String("version", VERSION),
-		zap.String("time", time.Now().Format("2006-01-02 15:04:05")),
-	)
+	if SETTINGS.Debug.Pirri {
+		fmt.Println("DEBUG: ", message)
+		defer l.logger.Sync()
+		defer l.lock.Unlock()
+		l.lock.Lock()
+		l.logger.Debug(
+			message,
+			zap.String("version", VERSION),
+			zap.String("time", time.Now().Format("2006-01-02 15:04:05 -700")),
+		)
+	}
 }
 func (l *PirriLogger) LogError(message, stackTrace string) {
 	defer l.logger.Sync()
 	defer l.lock.Unlock()
 	l.lock.Lock()
-	// stack := zap.Stack(stackTrace)
 	l.logger.Error(
 		message,
 		zap.String("version", VERSION),
 		zap.String("error", stackTrace),
-		zap.String("time", time.Now().Format("2006-01-02 15:04:05")),
+		zap.String("time", time.Now().Format("2006-01-02 15:04:05 -700")),
 	)
 }

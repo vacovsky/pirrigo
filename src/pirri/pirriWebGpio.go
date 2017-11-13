@@ -2,11 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
@@ -47,13 +44,9 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 	gpio := GpioPin{}
 	err := json.NewDecoder(req.Body).Decode(&gpio)
 	if err != nil {
-		fmt.Println(err)
 		getLogger().LogError("Unable to decode request body when setting common GPIO pin.", err.Error())
 	}
 	gpio.Common = true
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(gpio)
-	}
 	db.Exec("UPDATE `gpio_pins` SET `common` = false")
 	db.Exec("UPDATE `gpio_pins` SET `common` = true WHERE (gpio = ?)", gpio.GPIO)
 	gpioPinsCommonWeb(rw, req)

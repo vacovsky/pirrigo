@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 //Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
@@ -15,9 +13,7 @@ type Task struct {
 }
 
 func (t *Task) log() {
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
-	}
+	getLogger().LogEvent(fmt.Sprintf("Logging task for station ID: %d at %d", t.Station.ID, t.StationSchedule.StartTime))
 	if t.Station.GPIO > 0 {
 		db.Create(&StationHistory{
 			StationID:  t.Station.ID,
@@ -29,10 +25,9 @@ func (t *Task) log() {
 }
 
 func (t *Task) send() {
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Queuing Task for GPIO activation in RabbitMQ: ", t.Station.GPIO)
-		spew.Dump(OfflineRunQueue)
-	}
+
+	getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ: %d", t.Station.GPIO))
+
 	if t.Station.GPIO > 0 {
 		if SETTINGS.Pirri.UseRabbitMQ {
 			taskBlob, err := json.Marshal(&t)
@@ -42,28 +37,21 @@ func (t *Task) send() {
 			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 		} else {
 			ORQMutex.Lock()
-			fmt.Println("Queuing Task for GPIO activation in OfflineRunQueue:", t.Station.GPIO)
+			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in OfflineRunQueue: %d", t.Station.GPIO))
 			OfflineRunQueue = append(OfflineRunQueue, t)
-			// spew.Dump(t)
 			ORQMutex.Unlock()
 		}
 	}
 }
 
 func (t *Task) execute() {
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
-		spew.Dump(t)
-		spew.Dump(RUNSTATUS)
-	}
+	getLogger().LogEvent(fmt.Sprintf("Executing task for station: %d", t.Station.ID))
+
 	if t.Station.GPIO > 0 {
 		t.log()
 		gpioActivator(t)
 	}
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Execution of task complete.")
-		spew.Dump(RUNSTATUS)
-	}
+	getLogger().LogEvent(fmt.Sprintf("Task execution complete for station: %d", t.Station.ID))
 }
 
 func (t *Task) setStatus(active bool) {

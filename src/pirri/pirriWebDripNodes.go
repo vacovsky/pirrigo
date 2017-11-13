@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
@@ -24,9 +22,6 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		getLogger().LogError("Could not add a node through the web interface.", err.Error())
 	}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(node)
-	}
 	db.Create(&node)
 	nodeAllWeb(rw, req)
 }
@@ -37,9 +32,7 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		getLogger().LogError("Could not delete a node through the web interface.", err.Error())
 	}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(node)
-	}
+
 	db.Delete(&node)
 	nodeAllWeb(rw, req)
 }
@@ -51,9 +44,6 @@ func nodeEditWeb(rw http.ResponseWriter, req *http.Request) {
 		getLogger().LogError("Could not edit a node through the web interface.", err.Error())
 	}
 	db.Save(&node)
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(node)
-	}
 	nodeAllWeb(rw, req)
 }
 

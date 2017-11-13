@@ -7,8 +7,6 @@ import (
 	"net/http"
 	"strconv"
 	//	"time"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
@@ -22,10 +20,6 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	// spew.Dump(msr)
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(t)
-		spew.Dump(msr)
-	}
 	t.send()
 }
 
@@ -63,9 +57,7 @@ func stationEditWeb(rw http.ResponseWriter, req *http.Request) {
 	} else {
 		db.Save(&station)
 	}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(station)
-	}
+
 	stationAllWeb(rw, req)
 }
 
@@ -85,9 +77,7 @@ func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		getLogger().LogError("Error while deleting a station.", err.Error())
 	}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(&station)
-	}
+
 	db.Delete(&station)
 	stationAllWeb(rw, req)
 }
