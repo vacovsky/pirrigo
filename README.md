@@ -74,6 +74,12 @@ cd pirrigo/src/pirri/static
 bower install
 ```
 
+```sql
+create database pirritesting;
+GRANT ALL PRIVILEGES ON *.* TO 'pirritesting'@'%' IDENTIFIED BY 'pirritesting';
+FLUSH PRIVILEGES;
+```
+
 ### Configuration file (<a href="https://github.com/vacoj/pirrigo/blob/master/init/appconfig.json">example</a>)
 
 ```javascript

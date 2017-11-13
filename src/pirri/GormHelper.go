@@ -23,7 +23,10 @@ func gormDbConnect() {
 			getLogger().LogError("Unable to connect to SQL on second attempt.  Fatal?  Probably.", err.Error())
 		}
 	}
-	fmt.Println(db.DB().Ping())
+	err = db.DB().Ping()
+	if err != nil {
+		getLogger().LogError("Ping against SQL database failed.", err.Error())
+	}
 }
 
 func gormSetup() {
