@@ -16,6 +16,7 @@ type Settings struct {
 		RainSkip        bool   `json:"rain_skip"`
 		WelcomeMessage  string `json:"welcome_message"`
 		UseRabbitMQ     bool   `json:"use_rabbit"`
+		DateFormat      string `json:"date_format"`
 	} `json:"pirri"`
 	RabbitMQ struct {
 		Server    string `json:"server"`

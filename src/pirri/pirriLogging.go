@@ -64,7 +64,7 @@ func (l *PirriLogger) LogEvent(message string) {
 		l.logger.Debug(
 			message,
 			zap.String("version", VERSION),
-			zap.String("time", time.Now().Format("2006-01-02 15:04:05 -700")),
+			zap.String("time", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		)
 	}
 }
@@ -76,6 +76,6 @@ func (l *PirriLogger) LogError(message, stackTrace string) {
 		message,
 		zap.String("version", VERSION),
 		zap.String("error", stackTrace),
-		zap.String("time", time.Now().Format("2006-01-02 15:04:05 -700")),
+		zap.String("time", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 	)
 }

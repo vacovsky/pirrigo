@@ -27,7 +27,7 @@ func (t *Task) log() {
 func (t *Task) send() {
 	if t.Station.GPIO > 0 {
 		if SETTINGS.Pirri.UseRabbitMQ {
-			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ: %d", t.Station.GPIO))
+			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ for station at GPIO: %d", t.Station.GPIO))
 			taskBlob, err := json.Marshal(&t)
 			if err != nil {
 				getLogger().LogError("Could not JSONify task for sending.", err.Error())
@@ -35,7 +35,7 @@ func (t *Task) send() {
 			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 		} else {
 			ORQMutex.Lock()
-			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in OfflineRunQueue: %d", t.Station.GPIO))
+			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in OfflineRunQueue for station at GPIO: %d", t.Station.GPIO))
 			OfflineRunQueue = append(OfflineRunQueue, t)
 			ORQMutex.Unlock()
 		}
@@ -43,13 +43,13 @@ func (t *Task) send() {
 }
 
 func (t *Task) execute() {
-	getLogger().LogEvent(fmt.Sprintf("Executing task for station: %d", t.Station.ID))
+	getLogger().LogEvent(fmt.Sprintf("Executing task for station ID: %d", t.Station.ID))
 
 	if t.Station.GPIO > 0 {
 		t.log()
 		gpioActivator(t)
 	}
-	getLogger().LogEvent(fmt.Sprintf("Task execution complete for station: %d", t.Station.ID))
+	getLogger().LogEvent(fmt.Sprintf("Task execution complete for station ID: %d", t.Station.ID))
 }
 
 func (t *Task) setStatus(active bool) {

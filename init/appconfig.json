@@ -4,7 +4,8 @@
         "utc_offset": -8,
         "monitor_interval": 60,
         "rain_skip": true,
-        "use_rabbit": false
+        "use_rabbit": false,
+        "date_format": "2006-01-02 15:04:05"
     },
     "rabbitmq": {
         "server": "192.168.111.50",
