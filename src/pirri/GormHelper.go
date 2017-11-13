@@ -12,7 +12,8 @@ import (
 var db *gorm.DB
 
 func gormDbConnect() {
-	db, err := gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+	var err error
+	db, err = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
 	db.LogMode(SETTINGS.Debug.GORM)
 	if err != nil {
 		getLogger().LogError("Unable to connect to SQL.  Trying again in 15 seconds.", err.Error())
