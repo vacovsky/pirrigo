@@ -114,12 +114,15 @@ func getCurrentWeather() WeatherUndergroundCurrentWeatherResponse {
 
 		r, err := http.Get(weatherEndpoint)
 		if err != nil {
-			fmt.Sprintln("Unable to obtain weather for %s, %s.", SETTINGS.Weather.StateAbbreviation, SETTINGS.Weather.City)
+			getLogger().LogError(fmt.Sprintf("Unable to obtain weather for %s, %s.", SETTINGS.Weather.StateAbbreviation, SETTINGS.Weather.City), err.Error())
 		}
 		defer r.Body.Close()
 		body, err := ioutil.ReadAll(r.Body)
 		weather.Status = "Success"
 		err = json.Unmarshal(body, &weather)
+		if err != nil {
+			getLogger().LogError("Unable to unmarshal weather JSON blob into weather object", err.Error())
+		}
 	} else {
 		weather.Status = "Unable to connect - ensure app.conf contains location info and API key for Weather Underground."
 	}

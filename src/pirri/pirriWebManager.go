@@ -61,10 +61,10 @@ func startPirriWebApp() {
 
 	if SETTINGS.NewRelic.Active {
 		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelic.Key)
-		NRAPPMON, ERR := newrelic.NewApplication(config)
+		NRAPPMON, err := newrelic.NewApplication(config)
 		fmt.Println("Using New Relic Monitoring Agent")
-		if NRAPPMON == nil || ERR != nil {
-			fmt.Println("Unable to load New Relic Agent using given configuration.")
+		if NRAPPMON == nil || err != nil {
+			getLogger().LogEvent("NewRelic being used.")
 		} else {
 			for k, v := range routes {
 				// wrap each route and function in auth handler and new relic

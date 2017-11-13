@@ -35,7 +35,7 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Limit(100).Find(&stations)
 	blob, err := json.Marshal(&stations)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling all stations from SQL.", err.Error())
 	}
 	io.WriteString(rw, "{ \"stations\": "+string(blob)+"}")
 }
@@ -47,15 +47,17 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Where("id = ?", stationID).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling single station from SQL.", err.Error())
 	}
 	io.WriteString(rw, string(blob))
 }
 
 func stationEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
-
+	err := json.NewDecoder(req.Body).Decode(&station)
+	if err != nil {
+		getLogger().LogError("Error while editing a station.", err.Error())
+	}
 	if db.NewRecord(&station) {
 		db.Create(&station)
 	} else {
@@ -69,14 +71,20 @@ func stationEditWeb(rw http.ResponseWriter, req *http.Request) {
 
 func stationAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
+	err := json.NewDecoder(req.Body).Decode(&station)
+	if err != nil {
+		getLogger().LogError("Error while adding a station.", err.Error())
+	}
 	db.Create(&station)
 	stationAllWeb(rw, req)
 }
 
 func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
+	err := json.NewDecoder(req.Body).Decode(&station)
+	if err != nil {
+		getLogger().LogError("Error while deleting a station.", err.Error())
+	}
 	if SETTINGS.Debug.Pirri {
 		spew.Dump(&station)
 	}

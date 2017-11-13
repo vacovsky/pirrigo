@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
@@ -10,7 +9,7 @@ import (
 func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling Run Status from SQL.", err.Error())
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -18,7 +17,7 @@ func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 func statusRunCancel(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling run status from SQL.", err.Error())
 	}
 	RUNSTATUS.Cancel = true
 	io.WriteString(rw, string(blob))

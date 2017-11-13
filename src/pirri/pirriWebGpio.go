@@ -15,7 +15,7 @@ func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling GPIO pins from SQL.", err.Error())
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
 }
@@ -27,7 +27,7 @@ func gpioPinsAvailableWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling GPIO pins from SQL.", err.Error())
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
 }
@@ -38,7 +38,7 @@ func gpioPinsCommonWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpio)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling GPIO pins from SQL.", err.Error())
 	}
 	io.WriteString(rw, "{ \"gpio\": "+string(blob)+"}")
 }
@@ -48,6 +48,7 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 	err := json.NewDecoder(req.Body).Decode(&gpio)
 	if err != nil {
 		fmt.Println(err)
+		getLogger().LogError("Unable to decode request body when setting common GPIO pin.", err.Error())
 	}
 	gpio.Common = true
 	if SETTINGS.Debug.Pirri {

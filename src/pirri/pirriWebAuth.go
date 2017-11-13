@@ -9,6 +9,8 @@ import (
 
 func loginCheck(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Congrats, you're logged in!", 200)
+	// getLogger().Debug("Successful login by ")
+
 }
 
 func webHome(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +33,9 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 
 			// try cookie auth!
 			c, err := r.Cookie("Authorization")
+			getLogger().LogError("Unable to parse authorization cookie.", err.Error())
 			q, err := url.ParseQuery(c.Value)
+			getLogger().LogError("Unable to parse query string.", err.Error())
 			for k := range q {
 				s = strings.SplitN(k, " ", 2)
 			}

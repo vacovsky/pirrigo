@@ -85,10 +85,9 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", err.Error())
 	}
 	io.WriteString(rw, string(blob))
-
 }
 
 func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
@@ -156,7 +155,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", err.Error())
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -185,7 +184,7 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", err.Error())
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -248,7 +247,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 	}
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", err.Error())
 	}
 
 	io.WriteString(rw, string(blob))
