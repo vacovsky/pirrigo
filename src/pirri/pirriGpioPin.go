@@ -35,7 +35,7 @@ func gpioActivator(t *Task) {
 
 func gpioSimulation(gpio int, state bool, seconds int) {
 	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation starting. Time: %s; GPIO: %d, State: %t, Duration: %d`,
-		zap.Time("startTime", time.Now()),
+		zap.String("startTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds)))
@@ -44,7 +44,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		seconds--
 	}
 	getLogger().LogEvent(`GPIO Simulation ending.`,
-		zap.Time("endTime", time.Now()),
+		zap.String("endTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))
@@ -61,7 +61,7 @@ func gpioClear() {
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
 		getLogger().LogEvent("Deactivating GPIO",
-			zap.Time("endTime", time.Now()),
+			// zap.Time("endTime", time.Now()),
 			zap.Int("gpio", gpios[i].GPIO),
 		)
 		pin.High()

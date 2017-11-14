@@ -18,7 +18,7 @@ var (
 	COMMONWIRE int
 
 	//VERSION is the version of the application
-	VERSION = "0.3.0"
+	VERSION = "0.3.7"
 
 	//ERR is a global bucket to hold errors.  Will be going away as the application matures.
 	ERR error
