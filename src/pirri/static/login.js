@@ -11,6 +11,7 @@
 
         $scope.username = undefined;
         $scope.password = undefined;
+        $scope.banner = undefined;
 
         this.encodeForAuth = function(username, password) {
             return $base64.encode(username + ":" + password);
@@ -22,7 +23,6 @@
 
             $http.post('/login/verify')
                 .then(function(response) {
-                    console.log(response);
                     if (response.status === 200) {
                         $cookies.put('Authorization', $http.defaults.headers.common['Authorization']);
                         $window.location.href = '/home';
@@ -31,5 +31,12 @@
                     }
                 });
         };
+
+        this.getBanner = function() {
+            $http.get('/metadata').then(function(response){
+                console.log(response.data.banner);
+                $scope.banner = console.log(response.data.banner);
+            })
+        }
     });
 })();

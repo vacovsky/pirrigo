@@ -11,8 +11,6 @@ import (
 
 func loginCheck(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "Congrats, you're logged in!", 200)
-	// getLogger().Debug("Successful login by ")
-
 }
 
 func webHome(w http.ResponseWriter, r *http.Request) {

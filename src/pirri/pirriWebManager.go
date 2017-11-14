@@ -8,55 +8,6 @@ import (
 )
 
 func startPirriWebApp() {
-	routes := map[string]func(http.ResponseWriter, *http.Request){
-		// GPIO Pins
-		"/gpio/all":        gpioPinsAllWeb,
-		"/gpio/available":  gpioPinsAvailableWeb,
-		"/gpio/common":     gpioPinsCommonWeb,
-		"/gpio/common/set": gpioPinsCommonSetWeb,
-
-		// charts and reporting
-		"/stats/1": statsActivityByStation,
-		"/stats/2": statsActivityByDayOfWeek,
-		"/stats/3": statsActivityPerStationByDOW,
-		"/stats/4": statsStationActivity,
-
-		// run status
-		"/status/run":    statusRunWeb,
-		"/status/cancel": statusRunCancel,
-
-		// nodes
-		"/nodes":        nodeAllWeb,
-		"/nodes/add":    nodeAddWeb,
-		"/nodes/edit":   nodeEditWeb,
-		"/nodes/usage":  nodeUsageStatsWeb,
-		"/nodes/delete": nodeDeleteWeb,
-
-		// weather
-		"/weather/current": weatherCurrentWeb,
-
-		// station
-		"/station/run":    stationRunWeb,
-		"/station/all":    stationAllWeb,
-		"/station/add":    stationAddWeb,
-		"/station/edit":   stationEditWeb,
-		"/station/delete": stationDeleteWeb,
-		"/station":        stationGetWeb,
-
-		// schedule
-		"/schedule/all":    stationScheduleAllWeb,
-		"/schedule/edit":   stationScheduleEditWeb,
-		"/schedule/delete": stationScheduleDeleteWeb,
-
-		// history
-		"/history": historyAllWeb,
-
-		// authentication
-		"/login/verify": loginCheck,
-
-		// root
-		"/home": webHome,
-	}
 
 	if SETTINGS.NewRelic.Active {
 		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelic.Key)
@@ -65,9 +16,15 @@ func startPirriWebApp() {
 		if NRAPPMON == nil || err != nil {
 			getLogger().LogEvent("NewRelic being used.")
 		} else {
-			for k, v := range routes {
+			for k, v := range protectedRoutes {
 				// wrap each route and function in auth handler and new relic
 				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, basicAuth(v)))
+
+			}
+
+			for k, v := range unprotectedRoutes {
+				// wrap each route and function with new relic
+				http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, k, v))
 
 			}
 			// static content does not require authentication
@@ -79,10 +36,14 @@ func startPirriWebApp() {
 			http.HandleFunc(newrelic.WrapHandleFunc(NRAPPMON, "/", loginAuth))
 		}
 	} else {
-		for k, v := range routes {
+		for k, v := range protectedRoutes {
 			getLogger().LogEvent("Not using New Relic for: " + k)
 			// wrap each route and function in auth handler
 			http.HandleFunc(k, basicAuth(v))
+		}
+		for k, v := range unprotectedRoutes {
+			getLogger().LogEvent("Not using New Relic for: " + k)
+			http.HandleFunc(k, v)
 		}
 		// static content does not require authentication
 		http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
