@@ -1,6 +1,5 @@
 <!doctype html>
 <html ng-app="pirrilogin">
-
 <head>
         <title>PirriGo - Login</title>
         <link rel="icon" href="/static/icon.png">
@@ -33,10 +32,10 @@
                                 <img height="100" width="150" src="static/icon_text.png">
                         </h1>
                         <br/>
-                        <div ng-show="banner != undefined">
-                                <h3>
-                                        {{ banner }}
-                                </h3>
+                        <div ng-show="metadata.banner != undefined && metadata.banner != ''">
+                                <h4 style="text-align: center">
+                                        {{ metadata.banner }}
+                                </h4>
                         </div>
                         <form>
                                 <input type="text" name="u" placeholder="Username" required="required" ng-model="username">

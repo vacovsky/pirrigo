@@ -11,7 +11,7 @@
 
         $scope.username = undefined;
         $scope.password = undefined;
-        $scope.banner = undefined;
+        $scope.metadata = undefined;
 
         this.encodeForAuth = function(username, password) {
             return $base64.encode(username + ":" + password);
@@ -32,11 +32,11 @@
                 });
         };
 
-        this.getBanner = function() {
-            $http.get('/metadata').then(function(response){
-                console.log(response.data.banner);
-                $scope.banner = console.log(response.data.banner);
+        this.getMetadata = function() {
+            $http.get('/meta').then(function(response){
+                console.log(response.data);
+                $scope.metadata = response.data;
             })
-        }
+        }()
     });
 })();

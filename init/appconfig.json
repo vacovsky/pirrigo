@@ -1,6 +1,6 @@
 {
     "pirri": {
-        "welcome_message":"Demo login & password are Demo / demo",
+        "welcome_message":"L/P is demo/demo",
         "utc_offset": -8,
         "monitor_interval": 60,
         "rain_skip": true,
