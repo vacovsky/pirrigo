@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+
+	"go.uber.org/zap"
 	//	"time"
 )
 
@@ -78,7 +80,8 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", err.Error())
+		getLogger().LogError("Error while marshalling usage stats.",
+			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -144,7 +147,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", err.Error())
+		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -170,7 +173,7 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", err.Error())
+		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -229,7 +232,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", err.Error())
+		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 
 	io.WriteString(rw, string(blob))

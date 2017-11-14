@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"go.uber.org/zap"
 	//	"github.com/davecgh/go-spew/spew"
 )
 
@@ -13,7 +15,8 @@ func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Order("id desc").Limit(100).Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {
-		getLogger().LogError("Error while marshalling history from SQL.", err.Error())
+		getLogger().LogError("Error while marshalling history from SQL.",
+			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"history\": "+string(blob)+"}")
 }

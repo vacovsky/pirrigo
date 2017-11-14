@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 //Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
@@ -30,7 +32,8 @@ func (t *Task) send() {
 			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ for station at GPIO: %d", t.Station.GPIO))
 			taskBlob, err := json.Marshal(&t)
 			if err != nil {
-				getLogger().LogError("Could not JSONify task for sending.", err.Error())
+				getLogger().LogError("Could not JSONify task for sending.",
+					zap.String("error", err.Error()))
 			}
 			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 		} else {

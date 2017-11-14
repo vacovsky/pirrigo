@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"go.uber.org/zap"
 )
 
 //Settings Describes general-purpose application settings for PirriGo as derived from the configuration file (used created/populated).
@@ -115,7 +117,8 @@ func loadNewRelicKey() {
 		file, err := os.Open(SETTINGS.NewRelic.NewRelicLicensePath)
 		defer file.Close()
 		if err != nil {
-			getLogger().LogError("Unable to load New Relic license key.", err.Error())
+			getLogger().LogError("Unable to load New Relic license key.",
+				zap.String("error", err.Error()))
 		}
 		key := ""
 		scanner := bufio.NewScanner(file)

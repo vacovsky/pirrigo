@@ -6,6 +6,8 @@ import (
 	"sync"
 	"time"
 
+	"go.uber.org/zap/zapcore"
+
 	"go.uber.org/zap"
 )
 
@@ -68,14 +70,19 @@ func (l *PirriLogger) LogEvent(message string) {
 		)
 	}
 }
-func (l *PirriLogger) LogError(message, stackTrace string) {
+func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 	defer l.logger.Sync()
 	defer l.lock.Unlock()
 	l.lock.Lock()
+	fields = append(
+		fields,
+		[]zapcore.Field{
+			zap.String("version", VERSION),
+			zap.String("time", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		}...,
+	)
 	l.logger.Error(
 		message,
-		zap.String("version", VERSION),
-		zap.String("error", stackTrace),
-		zap.String("time", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		fields...,
 	)
 }

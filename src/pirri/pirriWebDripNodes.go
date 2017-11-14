@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
@@ -11,7 +13,7 @@ func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Find(&nodes)
 	blob, err := json.Marshal(&nodes)
 	if err != nil {
-		getLogger().LogError("Error displaying all nodes.", err.Error())
+		getLogger().LogError("Error displaying all nodes.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"nodes\": "+string(blob)+"}")
 }
@@ -20,7 +22,7 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		getLogger().LogError("Could not add a node through the web interface.", err.Error())
+		getLogger().LogError("Could not add a node through the web interface.", zap.String("error", err.Error()))
 	}
 	db.Create(&node)
 	nodeAllWeb(rw, req)
@@ -30,7 +32,7 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		getLogger().LogError("Could not delete a node through the web interface.", err.Error())
+		getLogger().LogError("Could not delete a node through the web interface.", zap.String("error", err.Error()))
 	}
 
 	db.Delete(&node)
@@ -41,7 +43,7 @@ func nodeEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		getLogger().LogError("Could not edit a node through the web interface.", err.Error())
+		getLogger().LogError("Could not edit a node through the web interface.", zap.String("error", err.Error()))
 	}
 	db.Save(&node)
 	nodeAllWeb(rw, req)
@@ -75,7 +77,7 @@ SELECT DISTINCT drip_nodes.station_id,
 	}
 	blob, err := json.Marshal(&results)
 	if err != nil {
-		getLogger().LogError("Unable to parse node usage stats from SQL.", err.Error())
+		getLogger().LogError("Unable to parse node usage stats from SQL.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"waterUsage\": "+string(blob)+"}")
 }

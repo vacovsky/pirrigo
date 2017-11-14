@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"go.uber.org/zap"
 )
 
 func loginCheck(w http.ResponseWriter, r *http.Request) {
@@ -33,22 +35,22 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 
 			// try cookie auth!
 			c, _ := r.Cookie("Authorization")
-			// getLogger().LogError("Unable to parse authorization cookie.", err.Error())
+			// getLogger().LogError("Unable to parse authorization cookie.", zap.String("error", err.Error()))
 			q, err := url.ParseQuery(c.Value)
-			// getLogger().LogError("Unable to parse query string.", err.Error())
+			// getLogger().LogError("Unable to parse query string.", zap.String("error", err.Error()))
 			for k := range q {
 				s = strings.SplitN(k, " ", 2)
 			}
 			if len(s) != 2 || err != nil {
 				http.Error(w, err.Error(), 401)
-				getLogger().LogError("HTTP Authentication Error.", err.Error())
+				getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 				return
 			}
 		}
 		b, err := base64.StdEncoding.DecodeString(s[1])
 		if err != nil {
 			http.Error(w, err.Error(), 401)
-			getLogger().LogError("HTTP Authentication Error.", err.Error())
+			getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 			return
 		}
 
@@ -57,10 +59,10 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			http.Error(w, "Not authorized", 401)
 			return
 		}
-		
+
 		if strings.ToLower(pair[0]) != strings.ToLower(SETTINGS.Web.User) || pair[1] != SETTINGS.Web.Secret {
 			http.Error(w, "Not authorized", 401)
-			getLogger().LogError("HTTP Authentication Error.", err.Error())
+			getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 			return
 		}
 		h.ServeHTTP(w, r)
