@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"go.uber.org/zap"
+
 	"github.com/stianeikeland/go-rpio"
 )
 
@@ -32,7 +34,11 @@ func gpioActivator(t *Task) {
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
-	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation starting. Time: %s; GPIO: %d, State: %t, Duration: %d`, time.Now(), gpio, state, seconds))
+	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation starting. Time: %s; GPIO: %d, State: %t, Duration: %d`,
+		zap.Time("startTime", time.Now()),
+		zap.Int("gpio", gpio),
+		zap.Bool("state", state),
+		zap.Int("durationSeconds", seconds)))
 	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Second)
 		seconds--
@@ -50,7 +56,10 @@ func gpioClear() {
 
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		getLogger().LogEvent(fmt.Sprintf("Deactivating GPIO: %d", gpios[i].GPIO))
+		getLogger().LogEvent(fmt.Sprintf("Deactivating GPIO: %d", gpios[i].GPIO),
+			zap.Time("endTime", time.Now()),
+			zap.Int("gpio", gpios[i].GPIO),
+		)
 		pin.High()
 	}
 }
@@ -63,7 +72,9 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	pin.Output()
 	common.Output()
 
-	getLogger().LogEvent(fmt.Sprintf("Activating GPIOs: %d (Common Wire), %d", COMMONWIRE, gpio))
+	getLogger().LogEvent(fmt.Sprintf("Activating GPIOs: %d (Common Wire), %d", COMMONWIRE, gpio),
+		zap.Int("commonWire", COMMONWIRE), zap.Int("gpio", gpio),
+	)
 
 	common.Low()
 	pin.Low()

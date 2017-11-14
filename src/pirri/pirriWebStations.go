@@ -18,7 +18,10 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		getLogger().LogError("Unable to execute station ad hoc task submission.", zap.String("error", err.Error()))
 	}
-	getLogger().LogEvent(fmt.Sprintf("Run event received from web interface for station: %d for a duration of %d seconds", msr.StationID, msr.Duration))
+	getLogger().LogEvent(fmt.Sprintf("Run event received from web interface for station: %d for a duration of %d seconds", msr.StationID, msr.Duration),
+		zap.Int("stationID", msr.StationID),
+		zap.Int("durationSeconds", msr.Duration),
+	)
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
 	t.send()
