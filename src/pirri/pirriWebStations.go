@@ -44,7 +44,9 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&station)
 	if err != nil {
 		getLogger().LogError("Error while marshalling single station from SQL.",
-			zap.String("error", err.Error()))
+			zap.String("error", err.Error()),
+			zap.String("stationID", strconv.Itoa(stationID)),
+		)
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -79,7 +81,11 @@ func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	err := json.NewDecoder(req.Body).Decode(&station)
 	if err != nil {
-		getLogger().LogError("Error while deleting a station.", zap.String("error", err.Error()))
+		getLogger().LogError("Error while deleting a station.",
+			zap.String("error", err.Error()),
+			// zap.String()
+		)
+
 	}
 
 	db.Delete(&station)

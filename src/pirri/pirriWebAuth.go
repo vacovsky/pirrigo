@@ -28,22 +28,21 @@ func loginAuth(rw http.ResponseWriter, req *http.Request) {
 func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
-		// spew.Dump(r.Header.Get("Authorization"))
-
 		s := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 		if len(s) != 2 {
 
-			// try cookie auth!
+			// try cookie auth!?
 			c, _ := r.Cookie("Authorization")
-			// getLogger().LogError("Unable to parse authorization cookie.", zap.String("error", err.Error()))
 			q, err := url.ParseQuery(c.Value)
-			// getLogger().LogError("Unable to parse query string.", zap.String("error", err.Error()))
 			for k := range q {
 				s = strings.SplitN(k, " ", 2)
 			}
 			if len(s) != 2 || err != nil {
 				http.Error(w, err.Error(), 401)
-				getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
+				getLogger().LogError("HTTP Authentication Error.",
+					zap.String("authCookieKey", s[0]),
+					// zap.String("authCookieValue", s[1]),
+					zap.String("error", err.Error()))
 				return
 			}
 		}

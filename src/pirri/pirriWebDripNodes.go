@@ -22,7 +22,12 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		getLogger().LogError("Could not add a node through the web interface.", zap.String("error", err.Error()))
+		getLogger().LogError("Could not add a node through the web interface.",
+			// zap.String("count", strconv.Itoa(node.Count)),
+			// zap.String("gph", fmt.Sprintf("%f", node.GPH)),
+			// zap.String("nodeID", strconv.Itoa(node.ID)),
+			// zap.String("stationID", strconv.Itoa(node.StationID)),
+			zap.String("error", err.Error()))
 	}
 	db.Create(&node)
 	nodeAllWeb(rw, req)
@@ -34,7 +39,6 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		getLogger().LogError("Could not delete a node through the web interface.", zap.String("error", err.Error()))
 	}
-
 	db.Delete(&node)
 	nodeAllWeb(rw, req)
 }
