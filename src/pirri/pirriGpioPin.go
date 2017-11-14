@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"go.uber.org/zap"
@@ -34,11 +33,11 @@ func gpioActivator(t *Task) {
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
-	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation starting. Time: %s; GPIO: %d, State: %t, Duration: %d`,
+	getLogger().LogEvent(`GPIO Simulation starting.`,
 		zap.String("startTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
-		zap.Int("durationSeconds", seconds)))
+		zap.Int("durationSeconds", seconds))
 	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Second)
 		seconds--
