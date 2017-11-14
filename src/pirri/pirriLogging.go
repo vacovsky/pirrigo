@@ -57,16 +57,22 @@ func (l *PirriLogger) init() {
 	}
 }
 
-func (l *PirriLogger) LogEvent(message string) {
+func (l *PirriLogger) LogEvent(message string, fields ...zapcore.Field) {
 	if SETTINGS.Debug.Pirri {
 		fmt.Println("EVENT: ", message)
 		defer l.logger.Sync()
 		defer l.lock.Unlock()
 		l.lock.Lock()
+		fields = append(
+			fields,
+			[]zapcore.Field{
+				zap.String("version", VERSION),
+				zap.String("time", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+			}...,
+		)
 		l.logger.Debug(
 			message,
-			zap.String("version", VERSION),
-			zap.String("time", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+			fields...,
 		)
 	}
 }

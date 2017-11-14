@@ -16,7 +16,8 @@ func rabbitConnect() {
 		for conn == nil {
 			getLogger().LogError("Unable to connect to RabbitMQ.  Trying again in 15 seconds.",
 				zap.String("AMQPConnectionString", RMQCONNSTRING),
-				zap.String("error", err.Error()))
+				zap.String("error", err.Error()),
+			)
 			time.Sleep(time.Duration(15) * time.Second)
 			conn, err = amqp.Dial(RMQCONNSTRING)
 			if err != nil {
@@ -35,7 +36,9 @@ func rabbitSend(queueName string, body string) {
 
 	ch, err := conn.Channel()
 	if err != nil {
-		getLogger().LogError("Unable to open AMQP channel for sending message.", zap.String("error", err.Error()))
+		getLogger().LogError("Unable to open AMQP channel for sending message.",
+			zap.String("messageBody", body),
+			zap.String("error", err.Error()))
 		return
 	}
 
@@ -48,7 +51,10 @@ func rabbitSend(queueName string, body string) {
 		nil,       // arguments
 	)
 	if err != nil {
-		getLogger().LogError("Failed to declare a queue.", zap.String("error", err.Error()))
+		getLogger().LogError("Failed to declare a queue.",
+			zap.String("error", err.Error()),
+			zap.String("queueName", queueName),
+		)
 	}
 
 	err = ch.Publish(
@@ -61,7 +67,13 @@ func rabbitSend(queueName string, body string) {
 			Body:        []byte(body),
 		})
 	if err != nil {
-		getLogger().LogError("Failed publish message to the queue.", zap.String("error", err.Error()))
+		getLogger().LogError("Failed publish message to the queue.",
+			zap.String("error", err.Error()),
+			zap.String("queueName", q.Name),
+			zap.String("contentType", "text/plain"),
+			zap.String("queueName", q.Name),
+			zap.String("messageBody", body),
+		)
 	}
 
 }
@@ -73,7 +85,9 @@ func rabbitReceive(queueName string) {
 	for {
 		ch, err := conn.Channel()
 		if err != nil {
-			getLogger().LogError("Failed to open a channel for receiving on RabbitMQ", zap.String("error", err.Error()))
+			getLogger().LogError("Failed to open a channel for receiving on RabbitMQ",
+				zap.String("error", err.Error()),
+				zap.String("queueName", queueName))
 		}
 		defer ch.Close()
 
@@ -102,7 +116,10 @@ func rabbitReceive(queueName string) {
 
 func messageHandler(queueName string, message []byte) {
 	if queueName == SETTINGS.RabbitMQ.TaskQueue {
-		getLogger().LogEvent(fmt.Sprintf(`Sending message to RabbitMQ Server.  Queue: [%s], Message: [%s]`, queueName, message))
+		getLogger().LogEvent(
+			fmt.Sprintf(`Sending message to RabbitMQ Server.  Queue: [%s], Message: [%s]`, queueName, message),
+			zap.String("queueName", queueName),
+			zap.String("messageBody", string(message)))
 		reactToGpioMessage(message)
 	}
 }
