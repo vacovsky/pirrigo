@@ -43,7 +43,11 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		time.Sleep(time.Second)
 		seconds--
 	}
-	getLogger().LogEvent(fmt.Sprintf(`GPIO Simulation ending.. Time: %s; GPIO: %d, State: %t, Duration: %d`, time.Now(), gpio, state, seconds))
+	getLogger().LogEvent(`GPIO Simulation ending.`,
+		zap.Time("endTime", time.Now()),
+		zap.Int("gpio", gpio),
+		zap.Bool("state", state),
+		zap.Int("durationSeconds", seconds))
 }
 
 func gpioClear() {
@@ -56,7 +60,7 @@ func gpioClear() {
 
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		getLogger().LogEvent(fmt.Sprintf("Deactivating GPIO: %d", gpios[i].GPIO),
+		getLogger().LogEvent("Deactivating GPIO",
 			zap.Time("endTime", time.Now()),
 			zap.Int("gpio", gpios[i].GPIO),
 		)
@@ -72,8 +76,9 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	pin.Output()
 	common.Output()
 
-	getLogger().LogEvent(fmt.Sprintf("Activating GPIOs: %d (Common Wire), %d", COMMONWIRE, gpio),
-		zap.Int("commonWire", COMMONWIRE), zap.Int("gpio", gpio),
+	getLogger().LogEvent("Activating GPIOs",
+		zap.Int("commonWire", COMMONWIRE),
+		zap.Int("gpio", gpio),
 	)
 
 	common.Low()
@@ -84,7 +89,10 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
-	getLogger().LogEvent(fmt.Sprintf("Deactivating GPIOs: %d (Common Wire), %d", COMMONWIRE, gpio))
+	getLogger().LogEvent("Deactivating GPIOs",
+		zap.Int("commonWire", COMMONWIRE),
+		zap.Int("gpio", gpio),
+	)
 	common.High()
 	pin.High()
 }

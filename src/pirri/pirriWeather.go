@@ -116,7 +116,9 @@ func getCurrentWeather() WeatherUndergroundCurrentWeatherResponse {
 
 		r, err := http.Get(weatherEndpoint)
 		if err != nil {
-			getLogger().LogError(fmt.Sprintf("Unable to obtain weather for %s, %s.", SETTINGS.Weather.StateAbbreviation, SETTINGS.Weather.City),
+			getLogger().LogError("Unable to obtain weather",
+				zap.String("stateAbbreviation", SETTINGS.Weather.StateAbbreviation),
+				zap.String("city", SETTINGS.Weather.City),
 				zap.String("error", err.Error()))
 		}
 		defer r.Body.Close()

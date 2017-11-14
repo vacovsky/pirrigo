@@ -4,6 +4,8 @@ import (
 	//	"encoding/json"
 	"fmt"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 var lastTriggeredItem string
@@ -35,7 +37,8 @@ func checkForTasks() {
 }
 
 func startTaskMonitor() {
-	getLogger().LogEvent(fmt.Sprintf(`Starting monitoring at interval: %d seconds.`, SETTINGS.Pirri.MonitorInterval))
+	getLogger().LogEvent(`Starting monitoring at interval`,
+		zap.Int("interval", SETTINGS.Pirri.MonitorInterval))
 	for {
 		checkForTasks()
 		time.Sleep(time.Duration(SETTINGS.Pirri.MonitorInterval) * time.Second)

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
 	"go.uber.org/zap"
@@ -15,7 +14,10 @@ type Task struct {
 }
 
 func (t *Task) log() {
-	getLogger().LogEvent(fmt.Sprintf("Logging task for station ID: %d at %d", t.Station.ID, t.StationSchedule.StartTime))
+	getLogger().LogEvent("Logging task for station",
+		zap.Int("stationID", t.Station.ID),
+		zap.Int("startTime", t.StationSchedule.StartTime),
+	)
 	if t.Station.GPIO > 0 {
 		db.Create(&StationHistory{
 			StationID:  t.Station.ID,
@@ -29,7 +31,7 @@ func (t *Task) log() {
 func (t *Task) send() {
 	if t.Station.GPIO > 0 {
 		if SETTINGS.Pirri.UseRabbitMQ {
-			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in RabbitMQ for station at GPIO: %d", t.Station.GPIO))
+			getLogger().LogEvent("Queuing Task for GPIO activation in RabbitMQ for station", zap.Int("gpio", t.Station.GPIO))
 			taskBlob, err := json.Marshal(&t)
 			if err != nil {
 				getLogger().LogError("Could not JSONify task for sending.",
@@ -38,7 +40,7 @@ func (t *Task) send() {
 			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 		} else {
 			ORQMutex.Lock()
-			getLogger().LogEvent(fmt.Sprintf("Queuing Task for GPIO activation in OfflineRunQueue for station at GPIO: %d", t.Station.GPIO))
+			getLogger().LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
 			OfflineRunQueue = append(OfflineRunQueue, t)
 			ORQMutex.Unlock()
 		}
@@ -46,13 +48,13 @@ func (t *Task) send() {
 }
 
 func (t *Task) execute() {
-	getLogger().LogEvent(fmt.Sprintf("Executing task for station ID: %d", t.Station.ID))
+	getLogger().LogEvent("Executing task for station", zap.Int("stationID", t.Station.ID))
 
 	if t.Station.GPIO > 0 {
 		t.log()
 		gpioActivator(t)
 	}
-	getLogger().LogEvent(fmt.Sprintf("Task execution complete for station ID: %d", t.Station.ID))
+	getLogger().LogEvent("Task execution complete for station", zap.Int("stationID", t.Station.ID))
 }
 
 func (t *Task) setStatus(active bool) {

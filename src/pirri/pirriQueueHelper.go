@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/streadway/amqp"
@@ -32,7 +31,9 @@ func rabbitConnect() {
 func rabbitSend(queueName string, body string) {
 	rabbitConnect()
 	defer conn.Close()
-	getLogger().LogEvent(fmt.Sprintf(`Sending message [%s] to queue [%s]`, body, queueName))
+	getLogger().LogEvent(`Sending message to queue`,
+		zap.String("messageBody", body),
+		zap.String("queueName", queueName))
 
 	ch, err := conn.Channel()
 	if err != nil {
@@ -117,7 +118,7 @@ func rabbitReceive(queueName string) {
 func messageHandler(queueName string, message []byte) {
 	if queueName == SETTINGS.RabbitMQ.TaskQueue {
 		getLogger().LogEvent(
-			fmt.Sprintf(`Sending message to RabbitMQ Server.  Queue: [%s], Message: [%s]`, queueName, message),
+			`Sending message to RabbitMQ Server`,
 			zap.String("queueName", queueName),
 			zap.String("messageBody", string(message)))
 		reactToGpioMessage(message)
@@ -133,7 +134,6 @@ func listenForTasks() {
 
 		var task *Task
 		if len(q) > 0 {
-			// getLogger().LogEvent(fmt.Sprintf(`Task detected on queue.`))
 			ORQMutex.Lock()
 			task, OfflineRunQueue = OfflineRunQueue[len(OfflineRunQueue)-1],
 				OfflineRunQueue[:len(OfflineRunQueue)-1]
