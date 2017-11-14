@@ -34,7 +34,7 @@ func gpioActivator(t *Task) {
 
 func gpioSimulation(gpio int, state bool, seconds int) {
 	getLogger().LogEvent(`GPIO Simulation starting.`,
-		zap.String("startTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		zap.String("startTimeStamp", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))
@@ -43,7 +43,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		seconds--
 	}
 	getLogger().LogEvent(`GPIO Simulation ending.`,
-		zap.String("endTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		zap.String("endTimeStamp", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))
