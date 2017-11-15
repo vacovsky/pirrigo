@@ -6,9 +6,9 @@ import (
 	"io"
 	"net/http"
 	"strconv"
-	//	"time"
 
-	"github.com/davecgh/go-spew/spew"
+	"go.uber.org/zap"
+	//	"time"
 )
 
 // TODO parameterize the inputs for date ranges and add selectors on stats page
@@ -78,17 +78,12 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(rawResult1)
-		spew.Dump(seriesTracker)
-	}
-
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.",
+			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
-
 }
 
 func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
@@ -150,13 +145,9 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		result.Data[2][v.Day-1] = v.Secs / 60
 	}
 
-	if SETTINGS.Debug.Pirri {
-		//		spew.Dump(rawResults1)
-	}
-
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -179,13 +170,10 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 		Labels:     []string{},
 		Series:     []string{},
 	}
-	if SETTINGS.Debug.Pirri {
-		//		spew.Dump(rawResults1)
-	}
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -239,16 +227,12 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				0, 0, 0, 0, 0, 0})
 			result.Series = append(result.Series, i.ID)
 		}
-		fmt.Println(seriesTracker, i.ID, i.Hour, i.RunSecs/60)
 		result.Data[seriesTracker[i.ID]][i.Hour] += i.RunSecs / 60
 	}
 
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(&seriesTracker)
-	}
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 
 	io.WriteString(rw, string(blob))

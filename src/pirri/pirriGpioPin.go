@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
+	"go.uber.org/zap"
+
 	"github.com/stianeikeland/go-rpio"
 )
 
@@ -33,17 +33,20 @@ func gpioActivator(t *Task) {
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
-	fmt.Println("GPIO Simulation starting:",
-		"\nTime:", time.Now(),
-		"\nGPIO:", gpio,
-		"\nDesired State:", state,
-		"\nDuration (seconds):", seconds)
-	fmt.Println("Active!", time.Now())
+	getLogger().LogEvent(`GPIO Simulation starting.`,
+		zap.String("startTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		zap.Int("gpio", gpio),
+		zap.Bool("state", state),
+		zap.Int("durationSeconds", seconds))
 	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Second)
 		seconds--
 	}
-	fmt.Println("Deactivated!", time.Now())
+	getLogger().LogEvent(`GPIO Simulation ending.`,
+		zap.String("endTime", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		zap.Int("gpio", gpio),
+		zap.Bool("state", state),
+		zap.Int("durationSeconds", seconds))
 }
 
 func gpioClear() {
@@ -53,12 +56,13 @@ func gpioClear() {
 	gpios := []GpioPin{}
 	sql := "SELECT gpio_pins.* FROM gpio_pins WHERE EXISTS(SELECT 1 FROM stations WHERE stations.gpio=gpio_pins.gpio) OR gpio_pins.common = true"
 	db.Raw(sql).Find(&gpios)
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(gpios)
-	}
+
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		fmt.Println("Deactivating GPIO:", gpios[i].GPIO)
+		getLogger().LogEvent("Deactivating GPIO",
+			// zap.Time("endTime", time.Now()),
+			zap.Int("gpio", gpios[i].GPIO),
+		)
 		pin.High()
 	}
 }
@@ -71,7 +75,11 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	pin.Output()
 	common.Output()
 
-	fmt.Println("Activating GPIOs: ", COMMONWIRE, gpio)
+	getLogger().LogEvent("Activating GPIOs",
+		zap.Int("commonWire", COMMONWIRE),
+		zap.Int("gpio", gpio),
+	)
+
 	common.Low()
 	pin.Low()
 
@@ -80,7 +88,10 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
-	fmt.Println("Deactivating GPIOs: ", COMMONWIRE, gpio)
+	getLogger().LogEvent("Deactivating GPIOs",
+		zap.Int("commonWire", COMMONWIRE),
+		zap.Int("gpio", gpio),
+	)
 	common.High()
 	pin.High()
 }

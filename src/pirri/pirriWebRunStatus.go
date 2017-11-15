@@ -2,15 +2,17 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling Run Status from SQL.",
+			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -18,7 +20,8 @@ func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 func statusRunCancel(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling run status from SQL.",
+			zap.String("error", err.Error()))
 	}
 	RUNSTATUS.Cancel = true
 	io.WriteString(rw, string(blob))

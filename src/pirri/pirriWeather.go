@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 // http://api.wunderground.com/api/{API Key}/conditions/q/{State Abbreviation}/{City}.json
@@ -114,12 +116,18 @@ func getCurrentWeather() WeatherUndergroundCurrentWeatherResponse {
 
 		r, err := http.Get(weatherEndpoint)
 		if err != nil {
-			fmt.Sprintln("Unable to obtain weather for %s, %s.", SETTINGS.Weather.StateAbbreviation, SETTINGS.Weather.City)
+			getLogger().LogError("Unable to obtain weather",
+				zap.String("stateAbbreviation", SETTINGS.Weather.StateAbbreviation),
+				zap.String("city", SETTINGS.Weather.City),
+				zap.String("error", err.Error()))
 		}
 		defer r.Body.Close()
 		body, err := ioutil.ReadAll(r.Body)
 		weather.Status = "Success"
 		err = json.Unmarshal(body, &weather)
+		if err != nil {
+			getLogger().LogError("Unable to unmarshal weather JSON blob into weather object", zap.String("error", err.Error()))
+		}
 	} else {
 		weather.Status = "Unable to connect - ensure app.conf contains location info and API key for Weather Underground."
 	}

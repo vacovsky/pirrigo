@@ -1,3 +1,4 @@
 bower_components
 src/pirri/pirri
 src/pirri/debug
+/src/pirri/pirrigo.log

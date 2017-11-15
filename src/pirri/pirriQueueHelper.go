@@ -1,21 +1,29 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/streadway/amqp"
+	"go.uber.org/zap"
 )
 
 var conn *amqp.Connection
 
 func rabbitConnect() {
-	conn, ERR = amqp.Dial(RMQCONNSTRING)
-	if ERR != nil {
+	conn, err := amqp.Dial(RMQCONNSTRING)
+	if err != nil {
 		for conn == nil {
-			fmt.Println(ERR, "Waiting 15 seconds and attempting to connect to RabbitMQ again.")
+			getLogger().LogError("Unable to connect to RabbitMQ.  Trying again in 15 seconds.",
+				zap.String("AMQPConnectionString", RMQCONNSTRING),
+				zap.String("error", err.Error()),
+			)
 			time.Sleep(time.Duration(15) * time.Second)
-			conn, ERR = amqp.Dial(RMQCONNSTRING)
+			conn, err = amqp.Dial(RMQCONNSTRING)
+			if err != nil {
+				getLogger().LogError("Unable to connect to RabbitMQ.  Fatal?  Probably..",
+					zap.String("AMQPConnectionString", RMQCONNSTRING),
+					zap.String("error", err.Error()))
+			}
 		}
 	}
 }
@@ -23,15 +31,19 @@ func rabbitConnect() {
 func rabbitSend(queueName string, body string) {
 	rabbitConnect()
 	defer conn.Close()
+	getLogger().LogEvent(`Sending message to queue`,
+		zap.String("messageBody", body),
+		zap.String("queueName", queueName))
 
-	fmt.Println("Sending", body, "to", queueName)
-	ch, ERR := conn.Channel()
-	if ERR != nil {
-		fmt.Println(ERR, "Unable to open channel.")
+	ch, err := conn.Channel()
+	if err != nil {
+		getLogger().LogError("Unable to open AMQP channel for sending message.",
+			zap.String("messageBody", body),
+			zap.String("error", err.Error()))
 		return
 	}
 
-	q, ERR := ch.QueueDeclare(
+	q, err := ch.QueueDeclare(
 		queueName, // name
 		true,      // durable
 		false,     // delete when unused
@@ -39,12 +51,14 @@ func rabbitSend(queueName string, body string) {
 		false,     // no-wait
 		nil,       // arguments
 	)
-	if ERR != nil {
-		fmt.Println(ERR, "Failed to declare a queue")
-		return
+	if err != nil {
+		getLogger().LogError("Failed to declare a queue.",
+			zap.String("error", err.Error()),
+			zap.String("queueName", queueName),
+		)
 	}
 
-	ERR = ch.Publish(
+	err = ch.Publish(
 		"",     // exchange
 		q.Name, // routing key
 		false,  // mandatory
@@ -53,8 +67,14 @@ func rabbitSend(queueName string, body string) {
 			ContentType: "text/plain",
 			Body:        []byte(body),
 		})
-	if ERR != nil {
-		fmt.Println(ERR, "Failed to publish message")
+	if err != nil {
+		getLogger().LogError("Failed publish message to the queue.",
+			zap.String("error", err.Error()),
+			zap.String("queueName", q.Name),
+			zap.String("contentType", "text/plain"),
+			zap.String("queueName", q.Name),
+			zap.String("messageBody", body),
+		)
 	}
 
 }
@@ -64,15 +84,15 @@ func rabbitReceive(queueName string) {
 	defer conn.Close()
 
 	for {
-		fmt.Println(ERR, "Failed to connect to RabbitMQ")
-
-		ch, ERR := conn.Channel()
-		if ERR != nil {
-			fmt.Println(ERR, "Failed to open a channel")
+		ch, err := conn.Channel()
+		if err != nil {
+			getLogger().LogError("Failed to open a channel for receiving on RabbitMQ",
+				zap.String("error", err.Error()),
+				zap.String("queueName", queueName))
 		}
 		defer ch.Close()
 
-		q, ERR := ch.QueueDeclare(
+		q, err := ch.QueueDeclare(
 			queueName, // name
 			true,      // durable
 			false,     // delete when unused
@@ -82,15 +102,14 @@ func rabbitReceive(queueName string) {
 		)
 		autoAck := true
 
-		msgs, ERR := ch.Consume(q.Name, "", autoAck, false, false, false, nil)
-		if ERR != nil {
-			fmt.Println(ERR)
+		msgs, err := ch.Consume(q.Name, "", autoAck, false, false, false, nil)
+		if err != nil {
+			getLogger().LogError("Failed to declare a queue.", zap.String("error", err.Error()))
 		}
 
 		time.Sleep(500 * time.Millisecond)
 
-		for d := range msgs { // the d stands for Delivery
-			fmt.Println(string(d.Body[:]))
+		for d := range msgs {
 			messageHandler(queueName, d.Body)
 		}
 	}
@@ -98,7 +117,10 @@ func rabbitReceive(queueName string) {
 
 func messageHandler(queueName string, message []byte) {
 	if queueName == SETTINGS.RabbitMQ.TaskQueue {
-		fmt.Println(queueName, message)
+		getLogger().LogEvent(
+			`Sending message to RabbitMQ Server`,
+			zap.String("queueName", queueName),
+			zap.String("messageBody", string(message)))
 		reactToGpioMessage(message)
 	}
 }
@@ -112,7 +134,6 @@ func listenForTasks() {
 
 		var task *Task
 		if len(q) > 0 {
-			fmt.Println("Task found.")
 			ORQMutex.Lock()
 			task, OfflineRunQueue = OfflineRunQueue[len(OfflineRunQueue)-1],
 				OfflineRunQueue[:len(OfflineRunQueue)-1]

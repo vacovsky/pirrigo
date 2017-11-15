@@ -2,8 +2,9 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -12,17 +13,28 @@ import (
 var db *gorm.DB
 
 func gormDbConnect() {
-	db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+	var err error
+	db, err = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
 	db.LogMode(SETTINGS.Debug.GORM)
-	if ERR != nil {
-		fmt.Println(ERR)
+	if err != nil {
+		getLogger().LogError("Unable to connect to SQL.  Trying again in 15 seconds.",
+			zap.String("dbType", SETTINGS.SQL.DBType),
+			zap.String("connectionString", SQLConnString),
+			zap.String("error", err.Error()))
 		for db == nil {
-			fmt.Println("Waiting 15 seconds and attempting to connect to SQL again.")
 			time.Sleep(time.Duration(15) * time.Second)
-			db, ERR = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+			db, err = gorm.Open(SETTINGS.SQL.DBType, SQLConnString)
+			getLogger().LogError("Unable to connect to SQL on second attempt.  Fatal?  Probably.",
+				zap.String("dbType", SETTINGS.SQL.DBType),
+				zap.String("connectionString", SQLConnString),
+				zap.String("error", err.Error()))
 		}
 	}
-	fmt.Println(db.DB().Ping())
+	err = db.DB().Ping()
+	if err != nil {
+		getLogger().LogError("Ping against SQL database failed.",
+			zap.String("error", err.Error()))
+	}
 }
 
 func gormSetup() {
@@ -44,9 +56,12 @@ func gormSetup() {
 
 func jsonifySQLResults(input *gorm.DB) []string {
 	var result = []string{}
-	r, _ := json.Marshal(input.Value)
+	r, err := json.Marshal(input.Value)
+	if err != nil {
+		getLogger().LogError("Problem parsing SQL results.",
+			zap.String("error", err.Error()))
+	}
 	result = append(result, string(r))
-	fmt.Println(string(r))
 	return result
 }
 
@@ -60,8 +75,4 @@ func firstRunDBSetup() {
 			Common: false,
 		})
 	}
-	// db.Create(&Station{
-	// 	GPIO:  0,
-	// 	Notes: "Delete or edit me.",
-	// })
 }

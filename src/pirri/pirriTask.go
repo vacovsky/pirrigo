@@ -2,22 +2,22 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
+	"go.uber.org/zap"
 )
 
 //Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
 type Task struct {
-	Station         Station         `json:"station`         //`gorm:"ForeignKey:Station"`
-	StationSchedule StationSchedule `json:"stationSchedule` //`gorm:"ForeignKey:StationSchedule"`
+	Station         Station         `json:"station"`         //`gorm:"ForeignKey:Station"`
+	StationSchedule StationSchedule `json:"stationSchedule"` //`gorm:"ForeignKey:StationSchedule"`
 }
 
 func (t *Task) log() {
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Logging task", t.Station.ID, t.StationSchedule.StartTime)
-	}
+	getLogger().LogEvent("Logging task for station",
+		zap.Int("stationID", t.Station.ID),
+		zap.Int("startTime", t.StationSchedule.StartTime),
+	)
 	if t.Station.GPIO > 0 {
 		db.Create(&StationHistory{
 			StationID:  t.Station.ID,
@@ -29,42 +29,32 @@ func (t *Task) log() {
 }
 
 func (t *Task) send() {
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Queuing Task for GPIO activation in RabbitMQ:", t.Station.GPIO)
-		spew.Dump(OfflineRunQueue)
-	}
 	if t.Station.GPIO > 0 {
 		if SETTINGS.Pirri.UseRabbitMQ {
-			taskBlob, ERR := json.Marshal(&t)
-			if ERR != nil {
-				fmt.Println(ERR, "Could not JSONify task.")
+			getLogger().LogEvent("Queuing Task for GPIO activation in RabbitMQ for station", zap.Int("gpio", t.Station.GPIO))
+			taskBlob, err := json.Marshal(&t)
+			if err != nil {
+				getLogger().LogError("Could not JSONify task for sending.",
+					zap.String("error", err.Error()))
 			}
-			fmt.Println("Queuing Task for GPIO activation in RabbitMQ:", t.Station.GPIO)
 			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
 		} else {
 			ORQMutex.Lock()
-			fmt.Println("Queuing Task for GPIO activation in OfflineRunQueue:", t.Station.GPIO)
+			getLogger().LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
 			OfflineRunQueue = append(OfflineRunQueue, t)
-			spew.Dump(t)
 			ORQMutex.Unlock()
 		}
 	}
 }
 
 func (t *Task) execute() {
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Executing task:", t.Station.ID, t.StationSchedule.StartTime)
-		spew.Dump(t)
-		spew.Dump(RUNSTATUS)
-	}
+	getLogger().LogEvent("Executing task for station", zap.Int("stationID", t.Station.ID))
+
 	if t.Station.GPIO > 0 {
 		t.log()
 		gpioActivator(t)
 	}
-	if SETTINGS.Debug.Pirri {
-		fmt.Println("Execution of task complete.")
-		spew.Dump(RUNSTATUS)
-	}
+	getLogger().LogEvent("Task execution complete for station", zap.Int("stationID", t.Station.ID))
 }
 
 func (t *Task) setStatus(active bool) {

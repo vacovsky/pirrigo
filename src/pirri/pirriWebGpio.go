@@ -2,11 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 
-	"github.com/davecgh/go-spew/spew"
+	"go.uber.org/zap"
 )
 
 func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
@@ -15,7 +14,8 @@ func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling GPIO pins from SQL.",
+			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
 }
@@ -27,7 +27,9 @@ func gpioPinsAvailableWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling GPIO pins from SQL.",
+			zap.String("error", err.Error()),
+			zap.String("SQLQuery", sql))
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
 }
@@ -38,7 +40,12 @@ func gpioPinsCommonWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpio)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling GPIO pins from SQL.",
+			zap.String("error", err.Error()),
+			// zap.String("gpio.GPIO", strconv.Itoa(gpio.GPIO)),
+			// zap.String("gpio.ID", strconv.Itoa(gpio.ID)),
+			// zap.String("gpio.Notes", gpio.Notes),
+		)
 	}
 	io.WriteString(rw, "{ \"gpio\": "+string(blob)+"}")
 }
@@ -47,12 +54,13 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 	gpio := GpioPin{}
 	err := json.NewDecoder(req.Body).Decode(&gpio)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Unable to decode request body when setting common GPIO pin.",
+			// zap.String("gpio.GPIO", strconv.Itoa(gpio.GPIO)),
+			// zap.String("gpio.ID", strconv.Itoa(gpio.ID)),
+			// zap.String("gpio.Notes", gpio.Notes),
+			zap.String("error", err.Error()))
 	}
 	gpio.Common = true
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(gpio)
-	}
 	db.Exec("UPDATE `gpio_pins` SET `common` = false")
 	db.Exec("UPDATE `gpio_pins` SET `common` = true WHERE (gpio = ?)", gpio.GPIO)
 	gpioPinsCommonWeb(rw, req)

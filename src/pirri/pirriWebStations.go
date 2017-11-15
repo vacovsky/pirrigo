@@ -2,13 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strconv"
-	//	"time"
 
-	"github.com/davecgh/go-spew/spew"
+	"go.uber.org/zap"
+	//	"time"
 )
 
 func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
@@ -16,16 +15,14 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	var msr ManualStationRun
 	err := json.NewDecoder(req.Body).Decode(&msr)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Unable to execute station ad hoc task submission.", zap.String("error", err.Error()))
 	}
-	fmt.Println("START MSR OBJECT")
-	spew.Dump(msr)
+	getLogger().LogEvent("Run event received from web interface for station",
+		zap.Int("stationID", msr.StationID),
+		zap.Int("durationSeconds", msr.Duration),
+	)
 	db.Where("id = ?", msr.StationID).Find(&t.Station)
 	t.StationSchedule = StationSchedule{Duration: msr.Duration}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(t)
-		spew.Dump(msr)
-	}
 	t.send()
 }
 
@@ -35,7 +32,8 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Limit(100).Find(&stations)
 	blob, err := json.Marshal(&stations)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling all stations from SQL.",
+			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"stations\": "+string(blob)+"}")
 }
@@ -47,39 +45,51 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Where("id = ?", stationID).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {
-		fmt.Println(err)
+		getLogger().LogError("Error while marshalling single station from SQL.",
+			zap.String("error", err.Error()),
+			zap.String("stationID", strconv.Itoa(stationID)),
+		)
 	}
 	io.WriteString(rw, string(blob))
 }
 
 func stationEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
-
+	err := json.NewDecoder(req.Body).Decode(&station)
+	if err != nil {
+		getLogger().LogError("Error while editing a station.",
+			zap.String("error", err.Error()))
+	}
 	if db.NewRecord(&station) {
 		db.Create(&station)
 	} else {
 		db.Save(&station)
 	}
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(station)
-	}
+
 	stationAllWeb(rw, req)
 }
 
 func stationAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
+	err := json.NewDecoder(req.Body).Decode(&station)
+	if err != nil {
+		getLogger().LogError("Error while adding a station.", zap.String("error", err.Error()))
+	}
 	db.Create(&station)
 	stationAllWeb(rw, req)
 }
 
 func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
-	ERR = json.NewDecoder(req.Body).Decode(&station)
-	if SETTINGS.Debug.Pirri {
-		spew.Dump(&station)
+	err := json.NewDecoder(req.Body).Decode(&station)
+	if err != nil {
+		getLogger().LogError("Error while deleting a station.",
+			zap.String("error", err.Error()),
+			// zap.String()
+		)
+
 	}
+
 	db.Delete(&station)
 	stationAllWeb(rw, req)
 }

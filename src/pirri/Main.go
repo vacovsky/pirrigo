@@ -1,24 +1,39 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 )
 
-func showVersion() {
-	name := "PirriGo v" + VERSION
-	fmt.Println(name)
-}
-
 func main() {
+
+	fmt.Printf("\nLaunching PirriGo v%s\n\n", VERSION)
+
+	// load settings from the configuration file
 	SETTINGS.parseSettingsFile()
-	// parseSettingsFile()
+
+	// prep ORM for usage
 	gormSetup()
+
+	// Log Startup
+	// logToFile("Starting PirriGO v"+VERSION, "")
+	getLogger().LogEvent("PirriGo v" + VERSION + " starting up")
+
+	// migrate DB schema and populate with seed data
+	// TODO: make this nicer.  Check before running anything.
 	firstRunDBSetup()
+
+	// check if we are in local debug mode, or actually doing work.
+	// If not debug, reset the GPIO state
 	if !SETTINGS.Debug.SimulateGPIO {
 		gpioClear()
 	}
+
+	// set the common wire for powering solenoids
 	setCommonWire()
 
+	// init waitgroups for concurrent processing
 	WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
@@ -34,8 +49,21 @@ func main() {
 		go listenForTasks()
 	}
 
-	// Cleanly exit after all goroutines are finished
-	WG.Wait()
+	go listenForExit()
 
-	fmt.Println("Waitgroup finished - exiting!")
+	WG.Wait()
+	fmt.Println("Exit key received - exiting!")
+}
+
+func showVersion() {
+	name := "PirriGo v" + VERSION
+	fmt.Println(name)
+}
+
+func listenForExit() {
+	fmt.Println("=================== PRESS <ENTER> KEY TO EXIT ===================\n")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
+	getLogger().LogEvent("PirriGo v" + VERSION + " exiting due to the exit key being pressed.  You did this...")
+	WG.Done()
+	os.Exit(0)
 }

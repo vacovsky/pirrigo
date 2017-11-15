@@ -65,6 +65,7 @@ go get "github.com/jinzhu/gorm/dialects/mysql"
 go get "github.com/newrelic/go-agent"
 go get "github.com/stianeikeland/go-rpio"
 go get "github.com/streadway/amqp"
+go get "go.uber.org/zap"
 ```
 
 ### Install javascript libraries for web
@@ -72,6 +73,17 @@ go get "github.com/streadway/amqp"
 ```bash
 cd pirrigo/src/pirri/static
 bower install
+```
+
+### Setting up SQL for testing
+
+```bash
+docker run --name sqldumpster -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:8
+```
+```sql
+create database pirritesting;
+GRANT ALL PRIVILEGES ON *.* TO 'pirritesting'@'%' IDENTIFIED BY 'pirritesting';
+FLUSH PRIVILEGES;
 ```
 
 ### Configuration file (<a href="https://github.com/vacoj/pirrigo/blob/master/init/appconfig.json">example</a>)

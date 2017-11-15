@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"go.uber.org/zap"
 )
 
 //Settings Describes general-purpose application settings for PirriGo as derived from the configuration file (used created/populated).
@@ -16,6 +18,7 @@ type Settings struct {
 		RainSkip        bool   `json:"rain_skip"`
 		WelcomeMessage  string `json:"welcome_message"`
 		UseRabbitMQ     bool   `json:"use_rabbit"`
+		DateFormat      string `json:"date_format"`
 	} `json:"pirri"`
 	RabbitMQ struct {
 		Server    string `json:"server"`
@@ -54,10 +57,11 @@ type Settings struct {
 		City              string `json:"city"`
 	} `json:"weather"`
 	Debug struct {
-		Pirri        bool `json:"pirri"`
-		GORM         bool `json:"gorm"`
-		Settings     bool `json:"settings"`
-		SimulateGPIO bool `json:"simulate_gpio"`
+		Pirri        bool   `json:"pirri"`
+		GORM         bool   `json:"gorm"`
+		Settings     bool   `json:"settings"`
+		SimulateGPIO bool   `json:"simulate_gpio"`
+		LogPath      string `json:"log_path"`
 	} `json:"debug"`
 }
 
@@ -100,14 +104,12 @@ func setRabbitMQConnectionString() {
 	} else {
 		RMQCONNSTRING = "amqp://localhost:" + SETTINGS.RabbitMQ.Port + "/"
 	}
-	c := RMQCONNSTRING
-	fmt.Println("RabbitMQ Connection String:", c)
+	getLogger().LogEvent("Connecting to RabbitMQ with: " + RMQCONNSTRING)
 }
 
 func setSQLConnectionString() {
 	SQLConnString = SETTINGS.SQL.User + ":" + SETTINGS.SQL.Secret + "@tcp(" + SETTINGS.SQL.Server + ":" + SETTINGS.SQL.Port + ")/" + SETTINGS.SQL.DB + "?parseTime=true"
-	c := SQLConnString
-	fmt.Println("SQL Connection String:", c)
+	getLogger().LogEvent("Connecting to SQL with: " + SQLConnString)
 }
 
 func loadNewRelicKey() {
@@ -115,7 +117,8 @@ func loadNewRelicKey() {
 		file, err := os.Open(SETTINGS.NewRelic.NewRelicLicensePath)
 		defer file.Close()
 		if err != nil {
-			log.Fatal(err)
+			getLogger().LogError("Unable to load New Relic license key.",
+				zap.String("error", err.Error()))
 		}
 		key := ""
 		scanner := bufio.NewScanner(file)

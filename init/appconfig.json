@@ -1,10 +1,11 @@
 {
     "pirri": {
-        "login_banner":"Demo login & password are Demo / demo",
+        "welcome_message":"L/P is demo/demo",
         "utc_offset": -8,
         "monitor_interval": 60,
         "rain_skip": true,
-        "use_rabbit": false
+        "use_rabbit": false,
+        "date_format": "2006-01-02 15:04:05"
     },
     "rabbitmq": {
         "server": "192.168.111.50",
@@ -16,9 +17,9 @@
     "sql": {
         "dbtype": "mysql",
         "server": "localhost",
-        "user": "root",
-        "secret": "",
-        "db": "pirri",
+        "user": "pirritesting",
+        "secret": "pirritesting",
+        "db": "pirritesting",
         "port": "3306"
     },
     "newrelic": {
@@ -45,6 +46,7 @@
         "pirri": true,
         "gorm": false,
         "settings": false,
-        "simulate_gpio": true
+        "simulate_gpio": true,
+        "log_path": "pirrigo.log"
     }
 }
