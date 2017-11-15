@@ -26,3 +26,249 @@
 {"level":"debug","message":"GPIO Simulation starting.","application":"PirriGo","startTimeStamp":"2017-11-14 12:51:04","gpio":3,"state":true,"durationSeconds":900,"version":"0.3.7","time":"2017-11-14 12:51:04"}
 {"level":"debug","message":"GPIO Simulation ending.","application":"PirriGo","endTimeStamp":"2017-11-14 12:51:06","gpio":3,"state":true,"durationSeconds":898,"version":"0.3.7","time":"2017-11-14 12:51:06"}
 {"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":5,"version":"0.3.7","time":"2017-11-14 12:51:06"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 09:52:11"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:41:28"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:55"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:55"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:48:56"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:38"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:54:58"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:55:37"}
+{"level":"debug","message":"Connecting to RabbitMQ with: amqp://rabbit:bunnyrabbit!!@192.168.111.50:5672/","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Connecting to SQL with: pirritesting:pirritesting@tcp(localhost:3306)/pirritesting?parseTime=true","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"PirriGo v0.3.7 starting up","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":60,"version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /stats/1","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /home","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /nodes","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /nodes/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /station/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /logs/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /station/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /station","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /schedule/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /stats/2","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /stats/3","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /nodes/add","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /nodes/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /stats/4","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /station/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /station/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /history","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /status/run","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /status/cancel","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /nodes/usage","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /schedule/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /gpio/available","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /schedule/edit","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /login/verify","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /gpio/all","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /gpio/common/set","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /weather/current","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /station/delete","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Not using New Relic for: /meta","application":"PirriGo","version":"0.3.7","time":"2017-11-15 10:56:08"}
+{"level":"debug","message":"Run event received from web interface for station","application":"PirriGo","stationID":1,"durationSeconds":60,"version":"0.3.7","time":"2017-11-15 11:07:27"}
+{"level":"debug","message":"Queuing Task for GPIO activation in OfflineRunQueue for station","application":"PirriGo","gpio":1,"version":"0.3.7","time":"2017-11-15 11:07:27"}
+{"level":"debug","message":"Executing task for station","application":"PirriGo","stationID":1,"version":"0.3.7","time":"2017-11-15 11:07:28"}
+{"level":"debug","message":"Logging task for station","application":"PirriGo","stationID":1,"startTime":0,"version":"0.3.7","time":"2017-11-15 11:07:28"}
+{"level":"debug","message":"GPIO Simulation starting.","application":"PirriGo","startTimeStamp":"2017-11-15 11:07:28","gpio":1,"state":true,"durationSeconds":60,"version":"0.3.7","time":"2017-11-15 11:07:28"}
+{"level":"debug","message":"GPIO Simulation ending.","application":"PirriGo","endTimeStamp":"2017-11-15 11:08:28","gpio":1,"state":true,"durationSeconds":0,"version":"0.3.7","time":"2017-11-15 11:08:28"}
+{"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":1,"version":"0.3.7","time":"2017-11-15 11:08:28"}
+{"level":"error","message":"Could not add a node through the web interface.","application":"PirriGo","error":"json: cannot unmarshal number 5.467385467835688e+57 into Go struct field DripNode.GPH of type float32","version":"0.3.7","time":"2017-11-15 11:13:26","stacktrace":"main.(*PirriLogger).LogError\n\t/Users/jvacovsk/Projects/pirrigo/src/pirri/pirriLogging.go:95\nmain.nodeAddWeb\n\t/Users/jvacovsk/Projects/pirrigo/src/pirri/pirriWebDripNodes.go:25\nnet/http.HandlerFunc.ServeHTTP\n\t/usr/local/Cellar/go/1.9.2/libexec/src/net/http/server.go:1918\nmain.basicAuth.func1\n\t/Users/jvacovsk/Projects/pirrigo/src/pirri/pirriWebAuth.go:65\nnet/http.HandlerFunc.ServeHTTP\n\t/usr/local/Cellar/go/1.9.2/libexec/src/net/http/server.go:1918\nnet/http.(*ServeMux).ServeHTTP\n\t/usr/local/Cellar/go/1.9.2/libexec/src/net/http/server.go:2254\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/Cellar/go/1.9.2/libexec/src/net/http/server.go:2619\nnet/http.(*conn).serve\n\t/usr/local/Cellar/go/1.9.2/libexec/src/net/http/server.go:1801"}

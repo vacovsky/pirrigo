@@ -16,7 +16,15 @@
     });
     app.Root = '/';
 
+    app.filter('reverse', function () {
+        return function (items) {
+            return items.slice().reverse();
+        };
+    });
+
     app.controller('PirriControl', function ($scope, $rootScope, $http, $timeout, $filter, $cookies, $scope, $compile) {
+
+
         $rootScope.updateInterval = 6000;
         $scope.events = [{
             title: 'All Day Event',
@@ -164,7 +172,7 @@
             showWeeks: true
         };
 
-
+        $scope.logs = [];
 
         // END datepicker crap
         $scope.openCalPicker = function (scheduleid) {
@@ -395,6 +403,13 @@
             this.refresh();
         };
 
+        this.loadLogs = function () {
+            $http.get('/logs/all')
+                .then(function (response) {
+                    $scope.logs = response.data.logs;
+                });
+        };
+
         this.submitAddSchedule = function () {
             this.convertScheduleBoolToInt();
             $http.post('/schedule/add', $scope.scheduleModel)
@@ -440,7 +455,7 @@
         this.submitSingleRun = function () {
             $http.post('/station/run', $scope.singleRunModel)
                 .then(function (response) {
-                    console.log($scope.singleRunModel);
+                    // console.log($scope.singleRunModel);
                 });
             $scope.singleRunModel = undefined;
             $scope.singleRunModel = {};
@@ -692,7 +707,7 @@
         $scope.setGpioCommon = function (gpio) {
             $http.post("/gpio/common/set", { GPIO: gpio })
                 .then(function (response) {
-                    console.log({ GPIO: gpio })
+                    // console.log({ GPIO: gpio })
                     $scope.commonGpio = response.data.gpio.GPIO
                     $scope.commonGpioModel = undefined;
                 });
@@ -702,7 +717,7 @@
         $scope.getGpioCommon = function () {
             $http.get("/gpio/common")
                 .then(function (response) {
-                    console.log(response.data)
+                    // console.log(response.data)
                     $scope.commonGpio = response.data.gpio.GPIO
                 });
             $scope.getGpios();
