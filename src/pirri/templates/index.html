@@ -35,23 +35,25 @@
                         <div id="navicons">
                             <div>
                                 <a href><span class="glyphicon glyphicon-refresh" ng-click="pc.refresh()"></span></a>
-                                <span> - - - </span>
+                                <span> &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-home" ng-click="currentPage = 'home'; navTitle = 'Stations'; pc.refresh(); setTabCookie()"></span></a>
-                                <span > - </span>
+                                <span > &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-calendar" ng-click="currentPage = 'mycal'; navTitle = 'Calendar'; pc.getCalEvents(); setTabCookie(); pc.getSchedule();"></span></a>
-                                <span > - </span>
+                                <span > &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-list" ng-click="currentPage = 'calendar'; navTitle = 'Schedule'; pc.getSchedule(); setTabCookie()"></span></a>
-                                <span > - </span>
+                                <span > &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-time" ng-click="currentPage = 'history'; navTitle = 'History'; pc.loadHistory(); setTabCookie()"></span></a>
-                                <span > - </span>
+                                <span > &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-stats" ng-click="currentPage = 'stats'; navTitle = 'Run Statistics'; pc.loadStatsData(); setTabCookie()"></span></a>
-                                <span > - </span>
+                                <span > &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-tint" ng-click="currentPage = 'waterusage'; navTitle = 'Water Usage'; getWaterUsageStats(); setTabCookie()"></span></a>
-                                <span > - </span>
+                                <span > &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-cloud" ng-click="currentPage = 'weatherEdit'; navTitle = 'Weather Adjustments'; pc.loadWeather(); setTabCookie()"></span></a>
-                                <span> - </span>
+                                <span> &nbsp; </span>
                                 <a href><span class="glyphicon glyphicon-cog" ng-click="currentPage = 'settings'; navTitle = 'Settings'; pc.loadSettings(); setTabCookie()"></span></a>
-                                <span id="navTitle"> - - - {{navTitle}}</span>
+                                <span> &nbsp; </span>
+                                <a href><span class="glyphicon glyphicon-search" ng-click="currentPage = 'logview'; navTitle = 'Log Viewer'; pc.loadLogs(); setTabCookie()"></span></a>
+                                <span id="navTitle"> &nbsp; | &nbsp; {{navTitle}}</span>
                             </div>
                         </div>
                         <br/>
@@ -312,7 +314,34 @@
                             </table>
                         </div>
                     </div>
-                    <!-- START HISTORY -->
+                    <!-- STOP HISTORY -->
+
+                    <!-- START LOG VIEWER -->
+                    <div ng-show="currentPage == 'logview'">
+                        <div class="tbl-header">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                    <th class="col-md-2">Time Stamp</th>
+                                    <th class="col-md-2">Message</th>
+                                    <th class="col-md-8">Error (if exists)</th>
+                                    
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tbl-content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    <tr ng-repeat="log in logs | reverse | filter: searchText">
+                                        <td class="col-md-2">{{log.time}}</td>
+                                        <td class="col-md-2">{{log.message}}</td>
+                                        <td class="col-md-8">{{log.error}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- STOP LOG VIEWER -->
+
                     <!-- START STATION EDIT FORM -->
                     <div id="navpane addform" ng-show="currentPage == 'editStation'">
                         <form class="form-horizontal">
