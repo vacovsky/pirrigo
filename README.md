@@ -91,43 +91,45 @@ FLUSH PRIVILEGES;
 ```javascript
 {
     "pirri": {
+        "welcome_message":"L/P is demo/demo",
         "utc_offset": -8,
         "monitor_interval": 60,
         "rain_skip": true,
-        "use_rabbit": false
+        "use_rabbit": false,
+        "date_format": "2006-01-02 15:04:05"
     },
     "rabbitmq": {
-        "server": "123.213.21.111",
+        "server": "192.168.111.50",
         "port": "5672",
-        "user": "",
-        "secret": "",
-        "task_queue": "pirri_go_work"
+        "user": "rabbit",
+        "secret": "bunnyrabbit!!",
+        "task_queue": "pirri_go_work_dev"
     },
     "sql": {
         "dbtype": "mysql",
-        "server": "192.168.111.50",
-        "user": "pirri",
-        "secret": "pirri",
-        "db": "pirri_go",
+        "server": "localhost",
+        "user": "pirritesting",
+        "secret": "pirritesting",
+        "db": "pirritesting",
         "port": "3306"
     },
     "newrelic": {
-        "active": true,
+        "active": false,
         "license_path": "../../../nr_key"
     },
     "redis": {
-        "host": "192.168.111.50",
+        "host": "localhost",
         "port": "6379"
     },
     "web": {
         "port": "8001",
-        "user": "admin",
-        "secret": "password"
+        "user": "demo",
+        "secret": "demo"
     },
     "weather": {
         "wunderground_key": "",
         "state_abbreviation": "CA",
-        "city": "Gardenville",
+        "city": "Atascadero",
         "units": "imperial",
         "station": "KCAATASC69"
     },
@@ -135,7 +137,8 @@ FLUSH PRIVILEGES;
         "pirri": true,
         "gorm": false,
         "settings": false,
-        "simulate_gpio": true
+        "simulate_gpio": true,
+        "log_path": "pirrigo.log"
     }
 }
 ```
