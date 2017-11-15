@@ -78,6 +78,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	getLogger().LogEvent("Activating GPIOs",
 		zap.Int("commonWire", COMMONWIRE),
 		zap.Int("gpio", gpio),
+		zap.Int("durationSeconds", seconds),
 	)
 
 	common.Low()
@@ -91,6 +92,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	getLogger().LogEvent("Deactivating GPIOs",
 		zap.Int("commonWire", COMMONWIRE),
 		zap.Int("gpio", gpio),
+		zap.Int("durationSeconds", seconds),
 	)
 	common.High()
 	pin.High()
