@@ -47,6 +47,9 @@ func (l *PirriLogger) init() {
 	}
 	// cfg.EncoderConfig.TimeKey = "time"
 	cfg.EncoderConfig.StacktraceKey = "stacktrace"
+	if SETTINGS.Debug.LogPath == "" {
+		SETTINGS.Debug.LogPath = "pirrigo.log"
+	}
 	cfg.ErrorOutputPaths = []string{SETTINGS.Debug.LogPath}
 	cfg.OutputPaths = []string{SETTINGS.Debug.LogPath}
 
