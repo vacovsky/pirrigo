@@ -60,7 +60,6 @@ func gpioClear() {
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
 		getLogger().LogEvent("Deactivating GPIO",
-			// zap.Time("endTime", time.Now()),
 			zap.Int("gpio", gpios[i].GPIO),
 		)
 		pin.High()

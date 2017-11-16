@@ -11,7 +11,7 @@ func main() {
 	fmt.Printf("\nLaunching PirriGo v%s\n\n", VERSION)
 
 	// load settings from the configuration file
-	SETTINGS.parseSettingsFile()
+	SETTINGS.Load()
 
 	// prep ORM for usage
 	gormSetup()

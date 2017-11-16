@@ -5,11 +5,13 @@ import (
 	"io"
 	"net/http"
 
+	"./weather"
+
 	"go.uber.org/zap"
 )
 
 func weatherCurrentWeb(rw http.ResponseWriter, req *http.Request) {
-	w := getCurrentWeather()
+	w := weather.Service().Current()
 	blob, err := json.Marshal(w)
 	if err != nil {
 		getLogger().LogError("Unable to get current weather.",
