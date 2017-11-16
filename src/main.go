@@ -4,29 +4,29 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
+	"./data"
+	"./logging"
+	"./settings"
 )
 
 func main() {
 
-	fmt.Printf("\nLaunching PirriGo v%s\n\n", VERSION)
+	// initialize dependencies
+	set := settings.Service()
+	data.Service()
+	log := logging.Service()
 
-	// load settings from the configuration file
-	SETTINGS.Load()
-
-	// prep ORM for usage
-	gormSetup()
-
-	// Log Startup
-	// logToFile("Starting PirriGO v"+VERSION, "")
-	getLogger().LogEvent("PirriGo v" + VERSION + " starting up")
+	fmt.Printf("\nLaunching PirriGo v%s\n\n", set.Pirri.Version)
+	log.LogEvent("PirriGo v" + set.Pirri.Version + " starting up")
 
 	// migrate DB schema and populate with seed data
 	// TODO: make this nicer.  Check before running anything.
-	firstRunDBSetup()
+	//	firstRunDBSetup()
 
 	// check if we are in local debug mode, or actually doing work.
 	// If not debug, reset the GPIO state
-	if !SETTINGS.Debug.SimulateGPIO {
+	if !set.Debug.SimulateGPIO {
 		gpioClear()
 	}
 

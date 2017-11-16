@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
+	"../../logging"
 	"go.uber.org/zap"
 )
 
@@ -14,7 +15,7 @@ type Task struct {
 }
 
 func (t *Task) log() {
-	getLogger().LogEvent("Logging task for station",
+	logging.Service().LogEvent("Logging task for station",
 		zap.Int("stationID", t.Station.ID),
 		zap.Int("startTime", t.StationSchedule.StartTime),
 	)
