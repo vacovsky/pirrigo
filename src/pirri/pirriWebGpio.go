@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -14,7 +14,7 @@ func gpioPinsAllWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		getLogger().LogError("Error while marshalling GPIO pins from SQL.",
+		log.LogError("Error while marshalling GPIO pins from SQL.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"gpios\": "+string(blob)+"}")
@@ -27,7 +27,7 @@ func gpioPinsAvailableWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpios)
 	if err != nil {
-		getLogger().LogError("Error while marshalling GPIO pins from SQL.",
+		log.LogError("Error while marshalling GPIO pins from SQL.",
 			zap.String("error", err.Error()),
 			zap.String("SQLQuery", sql))
 	}
@@ -40,7 +40,7 @@ func gpioPinsCommonWeb(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&gpio)
 	if err != nil {
-		getLogger().LogError("Error while marshalling GPIO pins from SQL.",
+		log.LogError("Error while marshalling GPIO pins from SQL.",
 			zap.String("error", err.Error()),
 			// zap.String("gpio.GPIO", strconv.Itoa(gpio.GPIO)),
 			// zap.String("gpio.ID", strconv.Itoa(gpio.ID)),
@@ -54,7 +54,7 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 	gpio := GpioPin{}
 	err := json.NewDecoder(req.Body).Decode(&gpio)
 	if err != nil {
-		getLogger().LogError("Unable to decode request body when setting common GPIO pin.",
+		log.LogError("Unable to decode request body when setting common GPIO pin.",
 			// zap.String("gpio.GPIO", strconv.Itoa(gpio.GPIO)),
 			// zap.String("gpio.ID", strconv.Itoa(gpio.ID)),
 			// zap.String("gpio.Notes", gpio.Notes),

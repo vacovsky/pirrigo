@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ import (
 func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		getLogger().LogError("Error while marshalling Run Status from SQL.",
+		log.LogError("Error while marshalling Run Status from SQL.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
@@ -20,7 +20,7 @@ func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 func statusRunCancel(rw http.ResponseWriter, req *http.Request) {
 	blob, err := json.Marshal(&RUNSTATUS)
 	if err != nil {
-		getLogger().LogError("Error while marshalling run status from SQL.",
+		log.LogError("Error while marshalling run status from SQL.",
 			zap.String("error", err.Error()))
 	}
 	RUNSTATUS.Cancel = true

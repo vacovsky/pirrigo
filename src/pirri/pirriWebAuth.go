@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/base64"
@@ -37,7 +37,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			}
 			if len(s) != 2 || err != nil {
 				http.Error(w, err.Error(), 401)
-				getLogger().LogError("HTTP Authentication Error.",
+				log.LogError("HTTP Authentication Error.",
 					zap.String("authCookieKey", s[0]),
 					// zap.String("authCookieValue", s[1]),
 					zap.String("error", err.Error()))
@@ -47,7 +47,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		b, err := base64.StdEncoding.DecodeString(s[1])
 		if err != nil {
 			http.Error(w, err.Error(), 401)
-			getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
+			log.LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 			return
 		}
 
@@ -59,7 +59,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 
 		if strings.ToLower(pair[0]) != strings.ToLower(SETTINGS.Web.User) || pair[1] != SETTINGS.Web.Secret {
 			http.Error(w, "Not authorized", 401)
-			getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
+			log.LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 			return
 		}
 		h.ServeHTTP(w, r)

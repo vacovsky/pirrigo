@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"time"
@@ -13,14 +13,14 @@ func rabbitConnect() {
 	conn, err := amqp.Dial(RMQCONNSTRING)
 	if err != nil {
 		for conn == nil {
-			getLogger().LogError("Unable to connect to RabbitMQ.  Trying again in 15 seconds.",
+			log.LogError("Unable to connect to RabbitMQ.  Trying again in 15 seconds.",
 				zap.String("AMQPConnectionString", RMQCONNSTRING),
 				zap.String("error", err.Error()),
 			)
 			time.Sleep(time.Duration(15) * time.Second)
 			conn, err = amqp.Dial(RMQCONNSTRING)
 			if err != nil {
-				getLogger().LogError("Unable to connect to RabbitMQ.  Fatal?  Probably..",
+				log.LogError("Unable to connect to RabbitMQ.  Fatal?  Probably..",
 					zap.String("AMQPConnectionString", RMQCONNSTRING),
 					zap.String("error", err.Error()))
 			}
@@ -31,13 +31,13 @@ func rabbitConnect() {
 func rabbitSend(queueName string, body string) {
 	rabbitConnect()
 	defer conn.Close()
-	getLogger().LogEvent(`Sending message to queue`,
+	log.LogEvent(`Sending message to queue`,
 		zap.String("messageBody", body),
 		zap.String("queueName", queueName))
 
 	ch, err := conn.Channel()
 	if err != nil {
-		getLogger().LogError("Unable to open AMQP channel for sending message.",
+		log.LogError("Unable to open AMQP channel for sending message.",
 			zap.String("messageBody", body),
 			zap.String("error", err.Error()))
 		return
@@ -52,7 +52,7 @@ func rabbitSend(queueName string, body string) {
 		nil,       // arguments
 	)
 	if err != nil {
-		getLogger().LogError("Failed to declare a queue.",
+		log.LogError("Failed to declare a queue.",
 			zap.String("error", err.Error()),
 			zap.String("queueName", queueName),
 		)
@@ -68,7 +68,7 @@ func rabbitSend(queueName string, body string) {
 			Body:        []byte(body),
 		})
 	if err != nil {
-		getLogger().LogError("Failed publish message to the queue.",
+		log.LogError("Failed publish message to the queue.",
 			zap.String("error", err.Error()),
 			zap.String("queueName", q.Name),
 			zap.String("contentType", "text/plain"),
@@ -86,7 +86,7 @@ func rabbitReceive(queueName string) {
 	for {
 		ch, err := conn.Channel()
 		if err != nil {
-			getLogger().LogError("Failed to open a channel for receiving on RabbitMQ",
+			log.LogError("Failed to open a channel for receiving on RabbitMQ",
 				zap.String("error", err.Error()),
 				zap.String("queueName", queueName))
 		}
@@ -104,7 +104,7 @@ func rabbitReceive(queueName string) {
 
 		msgs, err := ch.Consume(q.Name, "", autoAck, false, false, false, nil)
 		if err != nil {
-			getLogger().LogError("Failed to declare a queue.", zap.String("error", err.Error()))
+			log.LogError("Failed to declare a queue.", zap.String("error", err.Error()))
 		}
 
 		time.Sleep(500 * time.Millisecond)
@@ -117,7 +117,7 @@ func rabbitReceive(queueName string) {
 
 func messageHandler(queueName string, message []byte) {
 	if queueName == SETTINGS.RabbitMQ.TaskQueue {
-		getLogger().LogEvent(
+		log.LogEvent(
 			`Sending message to RabbitMQ Server`,
 			zap.String("queueName", queueName),
 			zap.String("messageBody", string(message)))

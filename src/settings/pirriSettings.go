@@ -37,21 +37,21 @@ type Settings struct {
 		Version         string
 	} `json:"pirri"`
 	RabbitMQ struct {
-		Server          string `json:"server"`
-		User            string `json:"user"`
-		Secret          string `json:"secret"`
-		TaskQueue       string `json:"task_queue"`
-		Port            string `json:"port"`
-		ConnectionSring string
+		Server           string `json:"server"`
+		User             string `json:"user"`
+		Secret           string `json:"secret"`
+		TaskQueue        string `json:"task_queue"`
+		Port             string `json:"port"`
+		ConnectionString string
 	} `json:"rabbitmq"`
 	SQL struct {
-		DBType          string `json:"dbtype"`
-		Server          string `json:"server"`
-		User            string `json:"user"`
-		Secret          string `json:"secret"`
-		Port            string `json:"port"`
-		ConnectionSring string
-		DB              string `json:"db"`
+		DBType           string `json:"dbtype"`
+		Server           string `json:"server"`
+		User             string `json:"user"`
+		Secret           string `json:"secret"`
+		Port             string `json:"port"`
+		ConnectionString string
+		DB               string `json:"db"`
 	} `json:"sql"`
 	NewRelic struct {
 		Active              bool   `json:"active"`
@@ -118,16 +118,16 @@ func (s *Settings) init() {
 
 func (s *Settings) setRabbitMQConnectionString() {
 	if (s.RabbitMQ.User != "" || s.RabbitMQ.Secret != "") || s.RabbitMQ.Server == "" {
-		s.RabbitMQ.ConnectionSring = "amqp://" + s.RabbitMQ.User + ":" + s.RabbitMQ.Secret + "@" + s.RabbitMQ.Server + ":" + s.RabbitMQ.Port + "/"
+		s.RabbitMQ.ConnectionString = "amqp://" + s.RabbitMQ.User + ":" + s.RabbitMQ.Secret + "@" + s.RabbitMQ.Server + ":" + s.RabbitMQ.Port + "/"
 	} else {
-		s.RabbitMQ.ConnectionSring = "amqp://localhost:" + s.RabbitMQ.Port + "/"
+		s.RabbitMQ.ConnectionString = "amqp://localhost:" + s.RabbitMQ.Port + "/"
 	}
-	// getLogger().LogEvent("Connecting to RabbitMQ with: " + s.RabbitMQ.ConnectionSring)
+	// log.LogEvent("Connecting to RabbitMQ with: " + s.RabbitMQ.ConnectionString)
 }
 
 func (s *Settings) setSQLConnectionString() {
-	s.SQL.ConnectionSring = s.SQL.User + ":" + s.SQL.Secret + "@tcp(" + s.SQL.Server + ":" + s.SQL.Port + ")/" + s.SQL.DB + "?parseTime=true"
-	// getLogger().LogEvent("Connecting to SQL with: " + s.SQL.ConnectionSring)
+	s.SQL.ConnectionString = s.SQL.User + ":" + s.SQL.Secret + "@tcp(" + s.SQL.Server + ":" + s.SQL.Port + ")/" + s.SQL.DB + "?parseTime=true"
+	// log.LogEvent("Connecting to SQL with: " + s.SQL.ConnectionString)
 }
 
 func (s *Settings) loadNewRelicKey() {
@@ -135,7 +135,7 @@ func (s *Settings) loadNewRelicKey() {
 		file, err := os.Open(s.NewRelic.NewRelicLicensePath)
 		defer file.Close()
 		if err != nil {
-			// getLogger().LogError("Unable to load New Relic license key.",
+			// log.LogError("Unable to load New Relic license key.",
 			// 	zap.String("error", err.Error()))
 		}
 		key := ""

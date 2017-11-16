@@ -7,6 +7,7 @@ import (
 
 	"./data"
 	"./logging"
+	"./pirri"
 	"./settings"
 )
 
@@ -31,22 +32,22 @@ func main() {
 	}
 
 	// set the common wire for powering solenoids
-	setCommonWire()
+	pirri.setCommonWire()
 
 	// init waitgroups for concurrent processing
 	WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
-	go startPirriWebApp()
+	go pirri.startPirriWebApp()
 
 	// Monitor database for pre-scheduled tasks
-	go startTaskMonitor()
+	go pirri.startTaskMonitor()
 
 	// Listen for tasks to execute
-	if SETTINGS.Pirri.UseRabbitMQ {
-		go rabbitReceive(SETTINGS.RabbitMQ.TaskQueue)
+	if set.Pirri.UseRabbitMQ {
+		go pirri.rabbitReceive(set.RabbitMQ.TaskQueue)
 	} else {
-		go listenForTasks()
+		go pirri.listenForTasks()
 	}
 
 	go listenForExit()
@@ -55,15 +56,10 @@ func main() {
 	fmt.Println("Exit key received - exiting!")
 }
 
-func showVersion() {
-	name := "PirriGo v" + VERSION
-	fmt.Println(name)
-}
-
 func listenForExit() {
 	fmt.Println("=================== PRESS <ENTER> KEY TO EXIT ===================\n")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
-	getLogger().LogEvent("PirriGo v" + VERSION + " exiting due to the exit key being pressed.  You did this...")
+	logging.Service().LogEvent("PirriGo v" + settings.Service().Pirri.Version + " exiting due to the exit key being pressed.  You did this...")
 	WG.Done()
 	os.Exit(0)
 }

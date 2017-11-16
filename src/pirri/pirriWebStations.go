@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -15,9 +15,9 @@ func stationRunWeb(rw http.ResponseWriter, req *http.Request) {
 	var msr ManualStationRun
 	err := json.NewDecoder(req.Body).Decode(&msr)
 	if err != nil {
-		getLogger().LogError("Unable to execute station ad hoc task submission.", zap.String("error", err.Error()))
+		log.LogError("Unable to execute station ad hoc task submission.", zap.String("error", err.Error()))
 	}
-	getLogger().LogEvent("Run event received from web interface for station",
+	log.LogEvent("Run event received from web interface for station",
 		zap.Int("stationID", msr.StationID),
 		zap.Int("durationSeconds", msr.Duration),
 	)
@@ -32,7 +32,7 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Limit(100).Find(&stations)
 	blob, err := json.Marshal(&stations)
 	if err != nil {
-		getLogger().LogError("Error while marshalling all stations from SQL.",
+		log.LogError("Error while marshalling all stations from SQL.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"stations\": "+string(blob)+"}")
@@ -45,7 +45,7 @@ func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Where("id = ?", stationID).Find(&station)
 	blob, err := json.Marshal(&station)
 	if err != nil {
-		getLogger().LogError("Error while marshalling single station from SQL.",
+		log.LogError("Error while marshalling single station from SQL.",
 			zap.String("error", err.Error()),
 			zap.String("stationID", strconv.Itoa(stationID)),
 		)
@@ -57,7 +57,7 @@ func stationEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	err := json.NewDecoder(req.Body).Decode(&station)
 	if err != nil {
-		getLogger().LogError("Error while editing a station.",
+		log.LogError("Error while editing a station.",
 			zap.String("error", err.Error()))
 	}
 	if db.NewRecord(&station) {
@@ -73,7 +73,7 @@ func stationAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	err := json.NewDecoder(req.Body).Decode(&station)
 	if err != nil {
-		getLogger().LogError("Error while adding a station.", zap.String("error", err.Error()))
+		log.LogError("Error while adding a station.", zap.String("error", err.Error()))
 	}
 	db.Create(&station)
 	stationAllWeb(rw, req)
@@ -83,7 +83,7 @@ func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	err := json.NewDecoder(req.Body).Decode(&station)
 	if err != nil {
-		getLogger().LogError("Error while deleting a station.",
+		log.LogError("Error while deleting a station.",
 			zap.String("error", err.Error()),
 			// zap.String()
 		)

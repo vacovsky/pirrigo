@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
 	blob, err := json.Marshal(&stationSchedules)
 	if err != nil {
-		getLogger().LogError("Unable to retrieve station schedules via web interface.", zap.String("error", err.Error()))
+		log.LogError("Unable to retrieve station schedules via web interface.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"stationSchedules\": "+string(blob)+"}")
 }
@@ -36,7 +36,7 @@ func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
 	err := json.NewDecoder(req.Body).Decode(&scheduleItem)
 	if err != nil {
-		getLogger().LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
+		log.LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
 	}
 	db.Delete(&scheduleItem)
 	stationScheduleAllWeb(rw, req)

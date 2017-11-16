@@ -1,4 +1,4 @@
-package main
+package pirri
 
 //Station describes a "Zone" or "Station" as used in garden irrigation.
 type Station struct {

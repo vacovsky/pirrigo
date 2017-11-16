@@ -1,11 +1,13 @@
-package main
+package pirri
 
 import (
 	"time"
 
-	"go.uber.org/zap"
-
+	"../data"
+	"../logging"
+	"../settings"
 	"github.com/stianeikeland/go-rpio"
+	"go.uber.org/zap"
 )
 
 //GpioPin - describes a Raspberry Pi GPIO pin
@@ -17,14 +19,16 @@ type GpioPin struct {
 }
 
 func setCommonWire() {
+	db := data.Service()
 	var gpio GpioPin
 	db.Where("common = true").Limit(1).Find(&gpio)
 	COMMONWIRE = gpio.GPIO
 }
 
 func gpioActivator(t *Task) {
+	set := settings.Service()
 	t.setStatus(true)
-	if SETTINGS.Debug.SimulateGPIO {
+	if set.Debug.SimulateGPIO {
 		gpioSimulation(t.Station.GPIO, true, t.StationSchedule.Duration)
 	} else {
 		gpioActivate(t.Station.GPIO, true, t.StationSchedule.Duration)
@@ -33,7 +37,9 @@ func gpioActivator(t *Task) {
 }
 
 func gpioSimulation(gpio int, state bool, seconds int) {
-	getLogger().LogEvent(`GPIO Simulation starting.`,
+	log := logging.Service()
+
+	log.LogEvent(`GPIO Simulation starting.`,
 		zap.String("startTimeStamp", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
@@ -42,7 +48,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		time.Sleep(time.Second)
 		seconds--
 	}
-	getLogger().LogEvent(`GPIO Simulation ending.`,
+	log.LogEvent(`GPIO Simulation ending.`,
 		zap.String("endTimeStamp", time.Now().Format(SETTINGS.Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
@@ -50,6 +56,10 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 }
 
 func gpioClear() {
+	log := logging.Service()
+
+	db := data.Service()
+
 	rpio.Open()
 	defer rpio.Close()
 
@@ -59,7 +69,7 @@ func gpioClear() {
 
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
-		getLogger().LogEvent("Deactivating GPIO",
+		log.LogEvent("Deactivating GPIO",
 			zap.Int("gpio", gpios[i].GPIO),
 		)
 		pin.High()
@@ -74,7 +84,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 	pin.Output()
 	common.Output()
 
-	getLogger().LogEvent("Activating GPIOs",
+	log.LogEvent("Activating GPIOs",
 		zap.Int("commonWire", COMMONWIRE),
 		zap.Int("gpio", gpio),
 		zap.Int("durationSeconds", seconds),
@@ -88,7 +98,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
-	getLogger().LogEvent("Deactivating GPIOs",
+	log.LogEvent("Deactivating GPIOs",
 		zap.Int("commonWire", COMMONWIRE),
 		zap.Int("gpio", gpio),
 		zap.Int("durationSeconds", seconds),

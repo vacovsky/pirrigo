@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -80,7 +80,7 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.",
+		log.LogError("Error while marshalling usage stats.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
@@ -147,7 +147,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
+		log.LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -173,7 +173,7 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
+		log.LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -232,7 +232,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
+		log.LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 
 	io.WriteString(rw, string(blob))

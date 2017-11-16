@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -15,7 +15,7 @@ func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	db.Order("id desc").Limit(100).Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {
-		getLogger().LogError("Error while marshalling history from SQL.",
+		log.LogError("Error while marshalling history from SQL.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"history\": "+string(blob)+"}")

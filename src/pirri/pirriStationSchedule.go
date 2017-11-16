@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	//	"encoding/json"
@@ -37,7 +37,7 @@ func checkForTasks() {
 }
 
 func startTaskMonitor() {
-	getLogger().LogEvent(`Starting monitoring at interval`,
+	log.LogEvent(`Starting monitoring at interval`,
 		zap.Int("interval", SETTINGS.Pirri.MonitorInterval))
 	for {
 		checkForTasks()
