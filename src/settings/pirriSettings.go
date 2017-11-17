@@ -87,7 +87,7 @@ type Settings struct {
 }
 
 func (s *Settings) init() {
-	confFile := "../../init/appconfig.json"
+	confFile := "../init/appconfig.json"
 	if len(os.Args) > 1 {
 		confFile = os.Args[1]
 	}
@@ -130,7 +130,6 @@ func (s *Settings) setRabbitMQConnectionString() {
 
 func (s *Settings) setSQLConnectionString() {
 	s.SQL.ConnectionString = s.SQL.User + ":" + s.SQL.Secret + "@tcp(" + s.SQL.Server + ":" + s.SQL.Port + ")/" + s.SQL.DB + "?parseTime=true"
-	// log.LogEvent("Connecting to SQL with: " + s.SQL.ConnectionString)
 }
 
 func (s *Settings) loadNewRelicKey() {

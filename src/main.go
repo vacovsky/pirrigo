@@ -28,31 +28,31 @@ func main() {
 	// check if we are in local debug mode, or actually doing work.
 	// If not debug, reset the GPIO state
 	if !set.Debug.SimulateGPIO {
-		gpioClear()
+		pirri.GPIOClear()
 	}
 
 	// set the common wire for powering solenoids
-	pirri.setCommonWire()
+	pirri.SetCommonWire()
 
 	// init waitgroups for concurrent processing
-	WG.Add(3)
+	pirri.WG.Add(3)
 
 	// Start the Web application for management of schedule etc.
-	go pirri.startPirriWebApp()
+	go pirri.StartPirriWebApp()
 
 	// Monitor database for pre-scheduled tasks
-	go pirri.startTaskMonitor()
+	go pirri.StartTaskMonitor()
 
 	// Listen for tasks to execute
 	if set.Pirri.UseRabbitMQ {
-		go pirri.rabbitReceive(set.RabbitMQ.TaskQueue)
+		go pirri.RabbitReceive(set.RabbitMQ.TaskQueue)
 	} else {
-		go pirri.listenForTasks()
+		go pirri.ListenForTasks()
 	}
 
 	go listenForExit()
 
-	WG.Wait()
+	pirri.WG.Wait()
 	fmt.Println("Exit key received - exiting!")
 }
 
@@ -60,6 +60,6 @@ func listenForExit() {
 	fmt.Println("=================== PRESS <ENTER> KEY TO EXIT ===================\n")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	logging.Service().LogEvent("PirriGo v" + settings.Service().Pirri.Version + " exiting due to the exit key being pressed.  You did this...")
-	WG.Done()
+	pirri.WG.Done()
 	os.Exit(0)
 }

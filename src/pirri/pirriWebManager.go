@@ -1,7 +1,6 @@
 package pirri
 
 import (
-	"fmt"
 	"net/http"
 	"runtime"
 
@@ -10,7 +9,7 @@ import (
 	"github.com/newrelic/go-agent"
 )
 
-func startPirriWebApp() {
+func StartPirriWebApp() {
 	log := logging.Service()
 	set := settings.Service()
 	if set.NewRelic.Active {
@@ -59,7 +58,7 @@ func startPirriWebApp() {
 	}
 
 	// Host server
-	panic(http.ListenAndServe(fmt.Sprintf(":%i", set.Web.Port), nil))
+	panic(http.ListenAndServe(":"+set.Web.Port, nil))
 }
 
 func logTraffic() string {

@@ -43,7 +43,7 @@ func checkForTasks() {
 	sendFoundScheduleItems(scheds)
 }
 
-func startTaskMonitor() {
+func StartTaskMonitor() {
 	set := settings.Service()
 	logging.Service().LogEvent(`Starting monitoring at interval`,
 		zap.Int("interval", set.Pirri.MonitorInterval))

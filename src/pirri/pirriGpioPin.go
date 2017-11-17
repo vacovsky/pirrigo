@@ -18,7 +18,7 @@ type GpioPin struct {
 	Common bool `sql:"DEFAULT:false" gorm:"not null"`
 }
 
-func setCommonWire() {
+func SetCommonWire() {
 	d := data.Service()
 	var gpio GpioPin
 	d.DB.Where("common = true").Limit(1).Find(&gpio)
@@ -55,7 +55,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		zap.Int("durationSeconds", seconds))
 }
 
-func gpioClear() {
+func GPIOClear() {
 	log := logging.Service()
 
 	db := data.Service()
