@@ -19,10 +19,10 @@ type GpioPin struct {
 }
 
 func setCommonWire() {
-	db := data.Service()
+	d := data.Service()
 	var gpio GpioPin
-	db.Where("common = true").Limit(1).Find(&gpio)
-	COMMONWIRE = gpio.GPIO
+	d.DB.Where("common = true").Limit(1).Find(&gpio)
+	settings.Service().GPIO.CommonWire = gpio.GPIO
 }
 
 func gpioActivator(t *Task) {
@@ -40,7 +40,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 	log := logging.Service()
 
 	log.LogEvent(`GPIO Simulation starting.`,
-		zap.String("startTimeStamp", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		zap.String("startTimeStamp", time.Now().Format(settings.Service().Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))
@@ -49,7 +49,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		seconds--
 	}
 	log.LogEvent(`GPIO Simulation ending.`,
-		zap.String("endTimeStamp", time.Now().Format(SETTINGS.Pirri.DateFormat)),
+		zap.String("endTimeStamp", time.Now().Format(settings.Service().Pirri.DateFormat)),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))
@@ -65,7 +65,7 @@ func gpioClear() {
 
 	gpios := []GpioPin{}
 	sql := "SELECT gpio_pins.* FROM gpio_pins WHERE EXISTS(SELECT 1 FROM stations WHERE stations.gpio=gpio_pins.gpio) OR gpio_pins.common = true"
-	db.Raw(sql).Find(&gpios)
+	db.DB.Raw(sql).Find(&gpios)
 
 	for i := range gpios {
 		pin := rpio.Pin(gpios[i].GPIO)
@@ -77,15 +77,17 @@ func gpioClear() {
 }
 
 func gpioActivate(gpio int, state bool, seconds int) {
+	log := logging.Service()
+	set := settings.Service()
 	defer rpio.Close()
 	rpio.Open()
 	pin := rpio.Pin(gpio)
-	common := rpio.Pin(COMMONWIRE)
+	common := rpio.Pin(set.GPIO.CommonWire)
 	pin.Output()
 	common.Output()
 
 	log.LogEvent("Activating GPIOs",
-		zap.Int("commonWire", COMMONWIRE),
+		zap.Int("commonWire", set.GPIO.CommonWire),
 		zap.Int("gpio", gpio),
 		zap.Int("durationSeconds", seconds),
 	)
@@ -99,7 +101,7 @@ func gpioActivate(gpio int, state bool, seconds int) {
 		seconds--
 	}
 	log.LogEvent("Deactivating GPIOs",
-		zap.Int("commonWire", COMMONWIRE),
+		zap.Int("commonWire", set.GPIO.CommonWire),
 		zap.Int("gpio", gpio),
 		zap.Int("durationSeconds", seconds),
 	)

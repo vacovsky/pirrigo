@@ -4,18 +4,21 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"../settings"
 )
 
 func metadataWeb(rw http.ResponseWriter, req *http.Request) {
+	set := settings.Service()
 	result := `{`
 
-	result += fmt.Sprintf(`"banner": "%s",`, SETTINGS.Pirri.WelcomeMessage)
-	result += fmt.Sprintf(`"version": "%s",`, VERSION)
-	result += fmt.Sprintf(`"rabbitServer": "%s",`, SETTINGS.RabbitMQ.Server)
-	result += fmt.Sprintf(`"sqlServer": "%s",`, SETTINGS.SQL.Server)
-	result += fmt.Sprintf(`"newRelicEnabled": %t,`, SETTINGS.NewRelic.Active)
-	result += fmt.Sprintf(`"weatherUnits": "%s",`, SETTINGS.Weather.Units)
-	result += fmt.Sprintf(`"debug": %t`, SETTINGS.Debug.Pirri)
+	result += fmt.Sprintf(`"banner": "%s",`, set.Pirri.WelcomeMessage)
+	result += fmt.Sprintf(`"version": "%s",`, set.Pirri.Version)
+	result += fmt.Sprintf(`"rabbitServer": "%s",`, set.RabbitMQ.Server)
+	result += fmt.Sprintf(`"sqlServer": "%s",`, set.SQL.Server)
+	result += fmt.Sprintf(`"newRelicEnabled": %t,`, set.NewRelic.Active)
+	result += fmt.Sprintf(`"weatherUnits": "%s",`, set.Weather.Units)
+	result += fmt.Sprintf(`"debug": %t`, set.Debug.Pirri)
 
 	result += `}`
 

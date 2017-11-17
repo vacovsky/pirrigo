@@ -1,16 +1,20 @@
 package pirri
 
 import (
+	"fmt"
 	"net/http"
 	"runtime"
 
+	"../logging"
+	"../settings"
 	"github.com/newrelic/go-agent"
 )
 
 func startPirriWebApp() {
-
-	if SETTINGS.NewRelic.Active {
-		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelic.Key)
+	log := logging.Service()
+	set := settings.Service()
+	if set.NewRelic.Active {
+		config := newrelic.NewConfig("PirriGo v"+set.Pirri.Version, set.NewRelic.Key)
 		NRAPPMON, err := newrelic.NewApplication(config)
 
 		if NRAPPMON == nil || err != nil {
@@ -55,7 +59,7 @@ func startPirriWebApp() {
 	}
 
 	// Host server
-	panic(http.ListenAndServe(":"+SETTINGS.Web.Port, nil))
+	panic(http.ListenAndServe(fmt.Sprintf(":%i", set.Web.Port), nil))
 }
 
 func logTraffic() string {

@@ -81,6 +81,9 @@ type Settings struct {
 		SimulateGPIO bool   `json:"simulate_gpio"`
 		LogPath      string `json:"log_path"`
 	} `json:"debug"`
+	GPIO struct {
+		CommonWire int
+	}
 }
 
 func (s *Settings) init() {

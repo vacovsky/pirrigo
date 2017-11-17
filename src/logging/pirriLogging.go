@@ -110,7 +110,7 @@ func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 	)
 }
 
-func (l *PirriLogger) tailLogs(lines int) ([]string, error) {
+func (l *PirriLogger) TailLogs(lines int) ([]string, error) {
 	settingsService := settings.Service()
 
 	defer l.lock.Unlock()

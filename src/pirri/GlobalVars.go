@@ -6,18 +6,6 @@ import (
 )
 
 var (
-	// //SETTINGS stores global variables (connection string data, ports, etc) which are poplated at start/reload
-	// SETTINGS Settings
-
-	//SQLConnString stores the fully-constructed SQL connection string
-	SQLConnString string
-
-	//RMQCONNSTRING stores the fully-constructed RabbitMQ connection string
-	RMQCONNSTRING string
-
-	//COMMONWIRE is the GPIO pin which is connected to the relay port for the common wire needed to activate the solenoid
-	COMMONWIRE int
-
 	//WG is the WaitGroup tracker for the applications GoRoutines
 	WG sync.WaitGroup
 

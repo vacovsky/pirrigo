@@ -3,6 +3,8 @@ package pirri
 import (
 	"time"
 
+	"../logging"
+	"../settings"
 	"github.com/streadway/amqp"
 	"go.uber.org/zap"
 )
@@ -10,18 +12,20 @@ import (
 var conn *amqp.Connection
 
 func rabbitConnect() {
-	conn, err := amqp.Dial(RMQCONNSTRING)
+	set := settings.Service()
+	log := logging.Service()
+	conn, err := amqp.Dial(set.RabbitMQ.ConnectionString)
 	if err != nil {
 		for conn == nil {
 			log.LogError("Unable to connect to RabbitMQ.  Trying again in 15 seconds.",
-				zap.String("AMQPConnectionString", RMQCONNSTRING),
+				zap.String("AMQPConnectionString", set.RabbitMQ.ConnectionString),
 				zap.String("error", err.Error()),
 			)
 			time.Sleep(time.Duration(15) * time.Second)
-			conn, err = amqp.Dial(RMQCONNSTRING)
+			conn, err = amqp.Dial(set.RabbitMQ.ConnectionString)
 			if err != nil {
 				log.LogError("Unable to connect to RabbitMQ.  Fatal?  Probably..",
-					zap.String("AMQPConnectionString", RMQCONNSTRING),
+					zap.String("AMQPConnectionString", set.RabbitMQ.ConnectionString),
 					zap.String("error", err.Error()))
 			}
 		}
@@ -29,6 +33,8 @@ func rabbitConnect() {
 }
 
 func rabbitSend(queueName string, body string) {
+
+	log := logging.Service()
 	rabbitConnect()
 	defer conn.Close()
 	log.LogEvent(`Sending message to queue`,
@@ -79,8 +85,9 @@ func rabbitSend(queueName string, body string) {
 
 }
 
-func rabbitReceive(queueName string) {
+func RabbitReceive(queueName string) {
 	rabbitConnect()
+	log := logging.Service()
 	defer conn.Close()
 
 	for {
@@ -116,7 +123,9 @@ func rabbitReceive(queueName string) {
 }
 
 func messageHandler(queueName string, message []byte) {
-	if queueName == SETTINGS.RabbitMQ.TaskQueue {
+	log := logging.Service()
+	set := settings.Service()
+	if queueName == set.RabbitMQ.TaskQueue {
 		log.LogEvent(
 			`Sending message to RabbitMQ Server`,
 			zap.String("queueName", queueName),
@@ -125,7 +134,7 @@ func messageHandler(queueName string, message []byte) {
 	}
 }
 
-func listenForTasks() {
+func ListenForTasks() {
 	defer WG.Done()
 	for {
 		ORQMutex.Lock()

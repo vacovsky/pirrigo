@@ -4,3 +4,4 @@ src/pirri/debug
 /src/pirri/pirrigo.log
 .ctags
 tags
+.utags

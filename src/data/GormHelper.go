@@ -12,7 +12,7 @@ import (
 )
 
 type ORM struct {
-	db   *gorm.DB
+	DB   *gorm.DB
 	lock sync.Mutex
 }
 
@@ -34,23 +34,23 @@ func (d *ORM) connect() {
 	log := logging.Service()
 	set := settings.Service()
 	var err error
-	d.db, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
-	d.db.LogMode(set.Debug.GORM)
+	d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
+	d.DB.LogMode(set.Debug.GORM)
 	if err != nil {
 		log.LogError("Unable to connect to SQL.  Trying again in 15 seconds.",
-			zap.String("dbType", set.SQL.DBType),
+			zap.String("DB.ype", set.SQL.DBType),
 			zap.String("connectionString", set.SQL.ConnectionString),
 			zap.String("error", err.Error()))
-		for d.db == nil {
+		for d.DB == nil {
 			time.Sleep(time.Duration(15) * time.Second)
-			d.db, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
+			d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
 			log.LogError("Unable to connect to SQL on second attempt.  Fatal?  Probably.",
-				zap.String("dbType", set.SQL.DBType),
+				zap.String("DB.ype", set.SQL.DBType),
 				zap.String("connectionString", set.SQL.ConnectionString),
 				zap.String("error", err.Error()))
 		}
 	}
-	err = d.db.DB().Ping()
+	err = d.DB.DB().Ping()
 	if err != nil {
 		log.LogError("Ping against SQL database failed.",
 			zap.String("error", err.Error()))
@@ -60,7 +60,7 @@ func (d *ORM) connect() {
 func (d *ORM) init() {
 	d.connect()
 
-	d.db.DB().SetMaxIdleConns(10)
-	d.db.DB().SetMaxOpenConns(100)
-	d.db.DB().SetConnMaxLifetime(time.Second * 300)
+	d.DB.DB().SetMaxIdleConns(10)
+	d.DB.DB().SetMaxOpenConns(100)
+	d.DB.DB().SetConnMaxLifetime(time.Second * 300)
 }

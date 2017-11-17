@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
+	"../data"
 	"../logging"
+	"../settings"
 	"go.uber.org/zap"
 )
 
@@ -20,7 +22,7 @@ func (t *Task) log() {
 		zap.Int("startTime", t.StationSchedule.StartTime),
 	)
 	if t.Station.GPIO > 0 {
-		db.Create(&StationHistory{
+		data.Service().DB.Create(&StationHistory{
 			StationID:  t.Station.ID,
 			ScheduleID: t.StationSchedule.ID,
 			Duration:   t.StationSchedule.Duration,
@@ -31,17 +33,17 @@ func (t *Task) log() {
 
 func (t *Task) send() {
 	if t.Station.GPIO > 0 {
-		if SETTINGS.Pirri.UseRabbitMQ {
-			log.LogEvent("Queuing Task for GPIO activation in RabbitMQ for station", zap.Int("gpio", t.Station.GPIO))
+		if settings.Service().Pirri.UseRabbitMQ {
+			logging.Service().LogEvent("Queuing Task for GPIO activation in RabbitMQ for station", zap.Int("gpio", t.Station.GPIO))
 			taskBlob, err := json.Marshal(&t)
 			if err != nil {
-				log.LogError("Could not JSONify task for sending.",
+				logging.Service().LogError("Could not JSONify task for sending.",
 					zap.String("error", err.Error()))
 			}
-			rabbitSend(SETTINGS.RabbitMQ.TaskQueue, string(taskBlob))
+			rabbitSend(settings.Service().RabbitMQ.TaskQueue, string(taskBlob))
 		} else {
 			ORQMutex.Lock()
-			log.LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
+			logging.Service().LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
 			OfflineRunQueue = append(OfflineRunQueue, t)
 			ORQMutex.Unlock()
 		}
@@ -49,13 +51,13 @@ func (t *Task) send() {
 }
 
 func (t *Task) execute() {
-	log.LogEvent("Executing task for station", zap.Int("stationID", t.Station.ID))
+	logging.Service().LogEvent("Executing task for station", zap.Int("stationID", t.Station.ID))
 
 	if t.Station.GPIO > 0 {
 		t.log()
 		gpioActivator(t)
 	}
-	log.LogEvent("Task execution complete for station", zap.Int("stationID", t.Station.ID))
+	logging.Service().LogEvent("Task execution complete for station", zap.Int("stationID", t.Station.ID))
 }
 
 func (t *Task) setStatus(active bool) {

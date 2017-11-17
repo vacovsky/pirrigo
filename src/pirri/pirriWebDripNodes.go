@@ -5,15 +5,17 @@ import (
 	"io"
 	"net/http"
 
+	"../data"
+	"../logging"
 	"go.uber.org/zap"
 )
 
 func nodeAllWeb(rw http.ResponseWriter, req *http.Request) {
 	nodes := []DripNode{}
-	db.Find(&nodes)
+	data.Service().DB.Find(&nodes)
 	blob, err := json.Marshal(&nodes)
 	if err != nil {
-		log.LogError("Error displaying all nodes.", zap.String("error", err.Error()))
+		logging.Service().LogError("Error displaying all nodes.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"nodes\": "+string(blob)+"}")
 }
@@ -22,14 +24,14 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		log.LogError("Could not add a node through the web interface.",
+		logging.Service().LogError("Could not add a node through the web interface.",
 			// zap.String("count", strconv.Itoa(node.Count)),
 			// zap.String("gph", fmt.Sprintf("%f", node.GPH)),
 			// zap.String("nodeID", strconv.Itoa(node.ID)),
 			// zap.String("stationID", strconv.Itoa(node.StationID)),
 			zap.String("error", err.Error()))
 	}
-	db.Create(&node)
+	data.Service().DB.Create(&node)
 	nodeAllWeb(rw, req)
 }
 
@@ -37,9 +39,9 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		log.LogError("Could not delete a node through the web interface.", zap.String("error", err.Error()))
+		logging.Service().LogError("Could not delete a node through the web interface.", zap.String("error", err.Error()))
 	}
-	db.Delete(&node)
+	data.Service().DB.Delete(&node)
 	nodeAllWeb(rw, req)
 }
 
@@ -47,9 +49,9 @@ func nodeEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var node DripNode
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
-		log.LogError("Could not edit a node through the web interface.", zap.String("error", err.Error()))
+		logging.Service().LogError("Could not edit a node through the web interface.", zap.String("error", err.Error()))
 	}
-	db.Save(&node)
+	data.Service().DB.Save(&node)
 	nodeAllWeb(rw, req)
 }
 
@@ -75,13 +77,13 @@ SELECT DISTINCT drip_nodes.station_id,
            GROUP BY drip_nodes.station_id
            ORDER BY drip_nodes.station_id ASC;
            `
-	db.Raw(sqlStr).Find(&results)
+	data.Service().DB.Raw(sqlStr).Find(&results)
 	for i, r := range results {
 		results[i].Total30Days = float32((r.RunMins / 60) * r.TotalGPH)
 	}
 	blob, err := json.Marshal(&results)
 	if err != nil {
-		log.LogError("Unable to parse node usage stats from SQL.", zap.String("error", err.Error()))
+		logging.Service().LogError("Unable to parse node usage stats from SQL.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"waterUsage\": "+string(blob)+"}")
 }

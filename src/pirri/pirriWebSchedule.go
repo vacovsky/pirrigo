@@ -7,27 +7,33 @@ import (
 	//	"strconv"
 	"time"
 
+	"../data"
+	"../logging"
 	"go.uber.org/zap"
 )
 
 func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stationSchedules := []StationSchedule{}
-	db.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
+	data.Service().DB.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
 	blob, err := json.Marshal(&stationSchedules)
 	if err != nil {
-		log.LogError("Unable to retrieve station schedules via web interface.", zap.String("error", err.Error()))
+		logging.Service().LogError("Unable to retrieve station schedules via web interface.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"stationSchedules\": "+string(blob)+"}")
 }
 
 func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
-	ERR = json.NewDecoder(req.Body).Decode(&scheduleItem)
+	err := json.NewDecoder(req.Body).Decode(&scheduleItem)
 
-	if db.NewRecord(&scheduleItem) {
-		db.Create(&scheduleItem)
+	if err != nil {
+		logging.Service().LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
+	}
+
+	if data.Service().DB.NewRecord(&scheduleItem) {
+		data.Service().DB.Create(&scheduleItem)
 	} else {
-		db.Save(&scheduleItem)
+		data.Service().DB.Save(&scheduleItem)
 	}
 	stationScheduleAllWeb(rw, req)
 }
@@ -36,8 +42,8 @@ func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	var scheduleItem StationSchedule
 	err := json.NewDecoder(req.Body).Decode(&scheduleItem)
 	if err != nil {
-		log.LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
+		logging.Service().LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
 	}
-	db.Delete(&scheduleItem)
+	data.Service().DB.Delete(&scheduleItem)
 	stationScheduleAllWeb(rw, req)
 }
