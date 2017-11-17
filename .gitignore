@@ -1,7 +1,7 @@
 bower_components
-src/pirri/pirri
-src/pirri/debug
-/src/pirri/pirrigo.log
+src/src
+src/debug
+src/pirrigo.log
 .ctags
 tags
 .utags
