@@ -5,3 +5,5 @@ src/pirrigo.log
 .ctags
 tags
 .utags
+.vscode
+pirrigo.log
