@@ -1,4 +1,4 @@
-package main
+package pirri
 
 /*DripNode Describes a drip emitter */
 type DripNode struct {

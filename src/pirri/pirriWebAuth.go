@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/base64"
@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"strings"
 
+	"../logging"
+	"../settings"
 	"go.uber.org/zap"
 )
 
@@ -24,6 +26,7 @@ func loginAuth(rw http.ResponseWriter, req *http.Request) {
 // Leverages nemo's answer in http://stackoverflow.com/a/21937924/556573, modified to also check cookie for auth stuff
 // TODO: Clean this sucker up
 func basicAuth(h http.HandlerFunc) http.HandlerFunc {
+	log := logging.Service()
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
 		s := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
@@ -37,7 +40,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			}
 			if len(s) != 2 || err != nil {
 				http.Error(w, err.Error(), 401)
-				getLogger().LogError("HTTP Authentication Error.",
+				log.LogError("HTTP Authentication Error.",
 					zap.String("authCookieKey", s[0]),
 					// zap.String("authCookieValue", s[1]),
 					zap.String("error", err.Error()))
@@ -47,7 +50,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		b, err := base64.StdEncoding.DecodeString(s[1])
 		if err != nil {
 			http.Error(w, err.Error(), 401)
-			getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
+			log.LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 			return
 		}
 
@@ -57,9 +60,9 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		if strings.ToLower(pair[0]) != strings.ToLower(SETTINGS.Web.User) || pair[1] != SETTINGS.Web.Secret {
+		if strings.ToLower(pair[0]) != strings.ToLower(settings.Service().Web.User) || pair[1] != settings.Service().Web.Secret {
 			http.Error(w, "Not authorized", 401)
-			getLogger().LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
+			log.LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
 			return
 		}
 		h.ServeHTTP(w, r)

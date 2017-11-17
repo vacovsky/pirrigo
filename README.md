@@ -86,7 +86,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'pirritesting'@'%' IDENTIFIED BY 'pirritesting';
 FLUSH PRIVILEGES;
 ```
 
-### Configuration file (<a href="https://github.com/vacoj/pirrigo/blob/master/init/appconfig.json">example</a>)
+### Configuration file ([example](https://github.com/vacoj/pirrigo/blob/master/init/appconfig.json">example</a>))
 
 ```javascript
 {

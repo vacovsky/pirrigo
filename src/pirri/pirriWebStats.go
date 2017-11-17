@@ -1,4 +1,4 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"strconv"
 
+	"../data"
+	"../logging"
+	"../settings"
 	"go.uber.org/zap"
 	//	"time"
 )
@@ -50,8 +53,8 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 	            GROUP BY station_id
 	            ORDER BY station_id ASC`
 
-	db.Raw(sqlQuery0, 7).Scan(&rawResult0)
-	db.Raw(sqlQuery1, 7).Scan(&rawResult1)
+	data.Service().DB.Raw(sqlQuery0, 7).Scan(&rawResult0)
+	data.Service().DB.Raw(sqlQuery1, 7).Scan(&rawResult1)
 	result.Data = [][]int{[]int{}, []int{}}
 
 	for _, i := range rawResult0 {
@@ -80,7 +83,7 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.",
+		logging.Service().LogError("Error while marshalling usage stats.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
@@ -125,9 +128,9 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
             GROUP BY day
             ORDER BY day ASC`)
 
-	db.Raw(sqlQuery0, SETTINGS.Pirri.UtcOffset, 7).Scan(&rawResults0)
-	db.Raw(sqlQuery1, SETTINGS.Pirri.UtcOffset, 7).Scan(&rawResults1)
-	db.Raw(sqlQuery2, SETTINGS.Pirri.UtcOffset, 7).Scan(&rawResults2)
+	data.Service().DB.Raw(sqlQuery0, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults0)
+	data.Service().DB.Raw(sqlQuery1, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults1)
+	data.Service().DB.Raw(sqlQuery2, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults2)
 
 	result.Data = [][]int{
 		[]int{0, 0, 0, 0, 0, 0, 0},
@@ -147,7 +150,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
+		logging.Service().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -173,7 +176,7 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
+		logging.Service().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, string(blob))
 }
@@ -211,11 +214,11 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				JOIN stations ON stations.id = station_histories.station_id
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
 					AND stations.id > 0
-				ORDER BY station_id ASC`, strconv.Itoa(SETTINGS.Pirri.UtcOffset))
+				ORDER BY station_id ASC`, strconv.Itoa(settings.Service().Pirri.UtcOffset))
 
 	seriesTracker := map[int]int{}
 
-	db.Raw(sqlStr).Scan(&chartData)
+	data.Service().DB.Raw(sqlStr).Scan(&chartData)
 
 	for n, i := range chartData {
 		if n == 0 || i.ID != result.Series[len(result.Series)-1] {
@@ -232,7 +235,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	blob, err := json.Marshal(&result)
 	if err != nil {
-		getLogger().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
+		logging.Service().LogError("Error while marshalling usage stats.", zap.String("error", err.Error()))
 	}
 
 	io.WriteString(rw, string(blob))

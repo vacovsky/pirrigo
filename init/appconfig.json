@@ -24,7 +24,7 @@
     },
     "newrelic": {
         "active": false,
-        "license_path": "../../../nr_key"
+        "license_path": "/../../nr_key"
     },
     "redis": {
         "host": "localhost",

@@ -1,20 +1,23 @@
-package main
+package pirri
 
 import (
 	"net/http"
 	"runtime"
 
+	"../logging"
+	"../settings"
 	"github.com/newrelic/go-agent"
 )
 
-func startPirriWebApp() {
-
-	if SETTINGS.NewRelic.Active {
-		config := newrelic.NewConfig("PirriGo v"+VERSION, SETTINGS.NewRelic.Key)
+func StartPirriWebApp() {
+	log := logging.Service()
+	set := settings.Service()
+	if set.NewRelic.Active {
+		config := newrelic.NewConfig("PirriGo v"+set.Pirri.Version, set.NewRelic.Key)
 		NRAPPMON, err := newrelic.NewApplication(config)
 
 		if NRAPPMON == nil || err != nil {
-			getLogger().LogEvent("NewRelic being used.")
+			log.LogEvent("NewRelic being used.")
 		} else {
 			for k, v := range protectedRoutes {
 				// wrap each route and function in auth handler and new relic
@@ -37,12 +40,12 @@ func startPirriWebApp() {
 		}
 	} else {
 		for k, v := range protectedRoutes {
-			getLogger().LogEvent("Not using New Relic for: " + k)
+			log.LogEvent("Not using New Relic for: " + k)
 			// wrap each route and function in auth handler
 			http.HandleFunc(k, basicAuth(v))
 		}
 		for k, v := range unprotectedRoutes {
-			getLogger().LogEvent("Not using New Relic for: " + k)
+			log.LogEvent("Not using New Relic for: " + k)
 			http.HandleFunc(k, v)
 		}
 		// static content does not require authentication
@@ -55,7 +58,7 @@ func startPirriWebApp() {
 	}
 
 	// Host server
-	panic(http.ListenAndServe(":"+SETTINGS.Web.Port, nil))
+	panic(http.ListenAndServe(":"+set.Web.Port, nil))
 }
 
 func logTraffic() string {

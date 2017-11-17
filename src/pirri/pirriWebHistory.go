@@ -1,10 +1,12 @@
-package main
+package pirri
 
 import (
 	"encoding/json"
 	"io"
 	"net/http"
 
+	"../data"
+	"../logging"
 	"go.uber.org/zap"
 	//	"github.com/davecgh/go-spew/spew"
 )
@@ -12,10 +14,10 @@ import (
 func historyAllWeb(rw http.ResponseWriter, req *http.Request) {
 	history := []StationHistory{}
 
-	db.Order("id desc").Limit(100).Find(&history)
+	data.Service().DB.Order("id desc").Limit(100).Find(&history)
 	blob, err := json.Marshal(&history)
 	if err != nil {
-		getLogger().LogError("Error while marshalling history from SQL.",
+		logging.Service().LogError("Error while marshalling history from SQL.",
 			zap.String("error", err.Error()))
 	}
 	io.WriteString(rw, "{ \"history\": "+string(blob)+"}")
