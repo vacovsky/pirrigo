@@ -34,6 +34,12 @@ Irrigation and garden management application, in Go and Angular.  Based on <a hr
 
 <a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/usage.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/usage.png" alt="Stations" height="150"></a>
 
+### Hardware
+
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/hardware.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/hardware.png" alt="Stations" height="150"></a>
+
+
+
 ## Features
 - Activate irrigation zones on a schedule, or manually
 - Track total seconds spent watering by zone, day of the week, and other metrics
