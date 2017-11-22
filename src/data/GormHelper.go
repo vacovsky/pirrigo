@@ -7,10 +7,13 @@ import (
 	"../logging"
 	"../settings"
 	"github.com/jinzhu/gorm"
+
+	// this was from the GORM documentation
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"go.uber.org/zap"
 )
 
+// ORM is the object that allows access to the DB.  It accessed as a singleton.
 type ORM struct {
 	DB   *gorm.DB
 	lock sync.Mutex

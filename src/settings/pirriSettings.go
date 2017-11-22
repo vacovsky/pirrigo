@@ -116,7 +116,6 @@ func (s *Settings) init() {
 
 	// load new relic key from file
 	s.loadNewRelicKey()
-
 }
 
 func (s *Settings) setRabbitMQConnectionString() {

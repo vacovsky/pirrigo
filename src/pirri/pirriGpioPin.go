@@ -18,6 +18,7 @@ type GpioPin struct {
 	Common bool `sql:"DEFAULT:false" gorm:"not null"`
 }
 
+// SetCommonWire sets the AC common wire to a GPIO pin.  This is pin is activated with every station-linked pin to create the link between the power source and the solenoid.
 func SetCommonWire() {
 	d := data.Service()
 	var gpio GpioPin
@@ -55,6 +56,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		zap.Int("durationSeconds", seconds))
 }
 
+// GPIOClear resets the GPIO state for all pins to "off"
 func GPIOClear() {
 	log := logging.Service()
 

@@ -36,23 +36,23 @@
                             <div>
                                 <a href><span class="glyphicon glyphicon-refresh" ng-click="pc.refresh()"></span></a>
                                 <span> &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-home" ng-click="currentPage = 'home'; navTitle = 'Stations'; pc.refresh(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-home" ng-click="currentPage = 'home'; navTitle = 'Stations'; setTabCookie(); pc.refresh(); "></span></a>
                                 <span > &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-calendar" ng-click="currentPage = 'mycal'; navTitle = 'Calendar'; pc.getCalEvents(); setTabCookie(); pc.getSchedule();"></span></a>
+                                <a href><span class="glyphicon glyphicon-calendar" ng-click="currentPage = 'mycal'; navTitle = 'Calendar'; setTabCookie(); pc.getCalEvents();  pc.getSchedule();"></span></a>
                                 <span > &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-list" ng-click="currentPage = 'calendar'; navTitle = 'Schedule'; pc.getSchedule(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-list" ng-click="currentPage = 'calendar'; navTitle = 'Schedule'; setTabCookie(); pc.getSchedule(); "></span></a>
                                 <span > &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-time" ng-click="currentPage = 'history'; navTitle = 'History'; pc.loadHistory(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-time" ng-click="currentPage = 'history'; navTitle = 'History'; setTabCookie(); pc.loadHistory();"></span></a>
                                 <span > &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-stats" ng-click="currentPage = 'stats'; navTitle = 'Run Statistics'; pc.loadStatsData(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-stats" ng-click="currentPage = 'stats'; navTitle = 'Run Statistics'; setTabCookie(); pc.loadStatsData(); setTabCookie()"></span></a>
                                 <span > &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-tint" ng-click="currentPage = 'waterusage'; navTitle = 'Water Usage'; getWaterUsageStats(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-tint" ng-click="currentPage = 'waterusage'; navTitle = 'Water Usage'; setTabCookie(); getWaterUsageStats();"></span></a>
                                 <span > &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-cloud" ng-click="currentPage = 'weatherEdit'; navTitle = 'Weather Adjustments'; pc.loadWeather(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-cloud" ng-click="currentPage = 'weatherEdit'; navTitle = 'Weather Adjustments'; setTabCookie();pc.loadWeather(); setTabCookie()"></span></a>
                                 <span> &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-cog" ng-click="currentPage = 'settings'; navTitle = 'Settings'; pc.loadSettings(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-cog" ng-click="currentPage = 'settings'; navTitle = 'Settings'; setTabCookie();pc.loadSettings(); setTabCookie()"></span></a>
                                 <span> &nbsp; </span>
-                                <a href><span class="glyphicon glyphicon-search" ng-click="currentPage = 'logview'; navTitle = 'Log Viewer'; pc.loadLogs(); setTabCookie()"></span></a>
+                                <a href><span class="glyphicon glyphicon-search" ng-click="currentPage = 'logview'; navTitle = 'Log Viewer'; setTabCookie(); pc.loadLogs();"></span></a>
                                 <span id="navTitle"> &nbsp; | &nbsp; {{navTitle}}</span>
                             </div>
                         </div>
