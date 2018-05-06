@@ -71,3 +71,5 @@
 {"level":"debug","message":"GPIO Simulation starting.","application":"PirriGo","startTimeStamp":"2017-11-16 19:06:20","gpio":1,"state":true,"durationSeconds":60,"version":"4.0.0","time":"2017-11-16 19:06:20"}
 {"level":"debug","message":"GPIO Simulation ending.","application":"PirriGo","endTimeStamp":"2017-11-16 19:07:21","gpio":1,"state":true,"durationSeconds":0,"version":"4.0.0","time":"2017-11-16 19:07:21"}
 {"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":1,"version":"4.0.0","time":"2017-11-16 19:07:21"}
+{"level":"debug","message":"PirriGo v4.0.0 starting up","application":"PirriGo","version":"4.0.0","time":"2018-05-06 07:40:49"}
+{"level":"debug","message":"Deactivating GPIO","application":"PirriGo","gpio":2,"version":"4.0.0","time":"2018-05-06 07:40:49"}
