@@ -1,4 +1,4 @@
-package pirri
+package pirrigpio
 
 import (
 	"time"

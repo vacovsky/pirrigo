@@ -1,0 +1,1 @@
+docker run --name pirritest -e MYSQL_ROOT_PASSWORD=pirritest -d mariadb:latest

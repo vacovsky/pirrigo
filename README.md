@@ -1,9 +1,6 @@
 # PirriGo
 Irrigation and garden management application, in Go and Angular.  Based on <a href="https://github.com/vacoj/pirri">Pirri</a>.
 
-## Live Demo: http://pirri.vacovsky.us
-#### login/password are demo / demo
-
 ## Screenshots
 
 ### Login page

@@ -1,4 +1,4 @@
-package pirri
+package task
 
 import (
 	"encoding/json"

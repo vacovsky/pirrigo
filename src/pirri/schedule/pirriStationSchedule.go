@@ -13,24 +13,6 @@ import (
 
 var lastTriggeredItem string
 
-//StationSchedule describes a scheduled activation for a Station
-type StationSchedule struct {
-	ID        int       `sql:"AUTO_INCREMENT" gorm:"primary_key"`
-	StartDate time.Time `sql:"DEFAULT:current_timestamp" gorm:"not null"`
-	EndDate   time.Time `sql:"DEFAULT:'2025-01-01 00:00:00'" gorm:"not null"`
-	Sunday    bool      `sql:"DEFAULT:false" gorm:"not null"`
-	Monday    bool      `sql:"DEFAULT:false" gorm:"not null"`
-	Tuesday   bool      `sql:"DEFAULT:false" gorm:"not null"`
-	Wednesday bool      `sql:"DEFAULT:false" gorm:"not null"`
-	Thursday  bool      `sql:"DEFAULT:false" gorm:"not null"`
-	Friday    bool      `sql:"DEFAULT:false" gorm:"not null"`
-	Saturday  bool      `sql:"DEFAULT:false" gorm:"not null"`
-	StationID int       `gorm:"not null"`
-	StartTime int       `gorm:"not null"`
-	Duration  int       `sql:"DEFAULT:0" gorm:"not null"`
-	Repeating bool      `sql:"DEFAULT:false" gorm:"not null"`
-}
-
 func checkForTasks() {
 	scheds := []StationSchedule{}
 	nowTime := time.Now()
