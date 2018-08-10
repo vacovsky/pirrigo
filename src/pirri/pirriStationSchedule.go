@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"../data"
-	"../logging"
-	"../settings"
+	"github.com/vacovsky/pirrigo/src/data"
+	"github.com/vacovsky/pirrigo/src/logging"
+	"github.com/vacovsky/pirrigo/src/settings"
 	"go.uber.org/zap"
 )
 

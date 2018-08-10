@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"runtime"
 
-	"../logging"
-	"../settings"
 	"github.com/newrelic/go-agent"
+	"github.com/vacovsky/pirrigo/src/logging"
+	"github.com/vacovsky/pirrigo/src/settings"
 )
 
 func StartPirriWebApp() {

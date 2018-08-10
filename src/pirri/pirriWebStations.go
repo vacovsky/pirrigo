@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"../data"
-	"../logging"
+	"github.com/vacovsky/pirrigo/src/data"
+	"github.com/vacovsky/pirrigo/src/logging"
 	"go.uber.org/zap"
 	//	"time"
 )

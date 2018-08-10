@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"../settings"
+	"github.com/vacovsky/pirrigo/src/settings"
 	"go.uber.org/zap/zapcore"
 
 	"go.uber.org/zap"

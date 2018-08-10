@@ -7,8 +7,8 @@ import (
 	//	"strconv"
 	"time"
 
-	"../data"
-	"../logging"
+	"github.com/vacovsky/pirrigo/src/data"
+	"github.com/vacovsky/pirrigo/src/logging"
 	"go.uber.org/zap"
 )
 
