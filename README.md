@@ -1,42 +1,39 @@
 # PirriGo
-Irrigation and garden management application, in Go and Angular.  Based on <a href="https://github.com/vacoj/pirri">Pirri</a>.
-
-## Live Demo: http://pirri.vacovsky.us
-#### login/password are demo / demo
+Irrigation and garden management application, in Go and Angular5.  Based on the original Python version <a href="https://github.com/vacovsky/pirri">Pirri</a>.
 
 ## Screenshots
 
 ### Login page
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/login.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/login.png" alt="Login page" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/login.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/login.png" alt="Login page" height="150"></a>
 
 ### Main / Stations
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/main.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/main.png" alt="Stations" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/main.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/main.png" alt="Stations" height="150"></a>
 
 ### Calendar
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/calendar.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/calendar.png" alt="Calendar"  height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/calendar.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/calendar.png" alt="Calendar"  height="150"></a>
 
 ### Station Scheduler
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/scheduler.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/scheduler.png" alt="Scheduler"  height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/scheduler.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/scheduler.png" alt="Scheduler"  height="150"></a>
 
 ### History of Activity
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/history.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/history.png" alt="History" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/history.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/history.png" alt="History" height="150"></a>
 
 ### Charted Run Stats
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/charts.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/charts.png" alt="Run Stats" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/charts.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/charts.png" alt="Run Stats" height="150"></a>
 
 ### Usage
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/usage.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/usage.png" alt="Usage" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/usage.png"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/usage.png" alt="Usage" height="150"></a>
 
 ### Hardware
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/hardware.jpg"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/hardware.jpg" alt="Hardware" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/hardware.jpg"><img src="https://raw.githubusercontent.com/vacovsky/pirrigo/master/screenshots/hardware.jpg" alt="Hardware" height="150"></a>
 
 ## Features
 - Activate irrigation zones on a schedule, or manually
