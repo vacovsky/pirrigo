@@ -1,0 +1,50 @@
+
+<div class="nav-container" [class.example-is-mobile]="mobileQuery.matches" >
+    <mat-toolbar color="primary"  class="toolbar vertical-center">
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+         &nbsp;&nbsp;<img class="auto-size" src="assets/images/logo.png" style="height:1.5em;width:1.65em" >&nbsp;
+        <h1 class="cont-app-name">
+            <!-- {{(_globals.currentDevice ? _globals.currentDevice.FriendlyName : '') }} -->
+        </h1>
+        <span class="fill-space"></span>
+        <span>
+            <!-- <app-device-dialog></app-device-dialog> -->
+        </span>
+    </mat-toolbar>
+    <mat-sidenav-container class="example-sidenav-container"
+        [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+            [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <mat-nav-list>
+                <!-- <a mat-list-item routerLink="nav.name" *ngFor="let nav of navItems" (click)="_sidenav.setNav(nav)" > -->
+                    <!-- <mat-icon>{{nav.icon ? nav.icon : ''}}</mat-icon>&nbsp; &nbsp;  {{nav.name}} -->
+                <!-- </a> -->
+
+                <mat-divider></mat-divider>
+                <a mat-list-item routerLink="admin" (click)="_globals.currentTab='Admin'" >
+                    <mat-icon>tag_faces</mat-icon>&nbsp; &nbsp;  Admin
+                </a>
+
+                <mat-divider ></mat-divider>
+                <a mat-list-item routerLink="logout" (click)="_login.logout()" >
+                    <mat-icon>cancel</mat-icon>&nbsp; &nbsp;  Log Out
+                </a>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <div class="main-content card-container ">
+                <!-- <app-dashboard *ngIf="_globals.currentTab=='Dashboard'"></app-dashboard> -->
+                <!-- <app-device *ngIf="_globals.currentTab=='Device'"></app-device> -->
+                <!-- <app-pump *ngIf="_globals.currentTab=='Pumps'"></app-pump> -->
+                <!-- <app-tank *ngIf="_globals.currentTab=='Tank'"></app-tank> -->
+                <!-- <app-alerts *ngIf="_globals.currentTab=='Alerts'"></app-alerts> -->
+                <!-- <app-account *ngIf="_globals.currentTab=='Account'"></app-account> -->
+                <!-- <app-settings *ngIf="_globals.currentTab=='Settings'"></app-settings> -->
+                <!-- <app-support *ngIf="_globals.currentTab=='Support'"></app-support> -->
+                <!-- <app-admin *ngIf="_globals.currentTab=='Admin'"></app-admin> -->
+                test
+            </div>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
