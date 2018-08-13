@@ -29,6 +29,16 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 	log := logging.Service()
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
+
+		if r.Method == "OPTIONS" {
+			(w).Header().Set("Access-Control-Allow-Origin", "*")
+			(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+			(w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+			return
+		} else {
+			(w).Header().Set("Access-Control-Allow-Origin", "*")
+		}
+
 		s := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 		if len(s) != 2 {
 
@@ -42,7 +52,6 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 				http.Error(w, err.Error(), 401)
 				log.LogError("HTTP Authentication Error.",
 					zap.String("authCookieKey", s[0]),
-					// zap.String("authCookieValue", s[1]),
 					zap.String("error", err.Error()))
 				return
 			}
