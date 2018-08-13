@@ -3,9 +3,9 @@ package pirri
 import (
 	"time"
 
+	"github.com/streadway/amqp"
 	"github.com/vacovsky/pirrigo/src/logging"
 	"github.com/vacovsky/pirrigo/src/settings"
-	"github.com/streadway/amqp"
 	"go.uber.org/zap"
 )
 
@@ -85,6 +85,7 @@ func rabbitSend(queueName string, body string) {
 
 }
 
+// RabbitReceive listens on AMQP channels for inbound messages
 func RabbitReceive(queueName string) {
 	rabbitConnect()
 	log := logging.Service()

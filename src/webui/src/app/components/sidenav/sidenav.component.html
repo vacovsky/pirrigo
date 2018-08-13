@@ -16,14 +16,9 @@
         <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
             [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
             <mat-nav-list>
-                <!-- <a mat-list-item routerLink="nav.name" *ngFor="let nav of navItems" (click)="_sidenav.setNav(nav)" > -->
-                    <!-- <mat-icon>{{nav.icon ? nav.icon : ''}}</mat-icon>&nbsp; &nbsp;  {{nav.name}} -->
-                <!-- </a> -->
-
-                <mat-divider></mat-divider>
-                <a mat-list-item routerLink="admin" (click)="_globals.currentTab='Admin'" >
-                    <mat-icon>tag_faces</mat-icon>&nbsp; &nbsp;  Admin
-                </a>
+				<a mat-list-item routerLink="nav.name" *ngFor="let nav of navItems" (click)="_sidenav.setNav(nav)" >
+					<mat-icon>{{nav.icon ? nav.icon : ''}}</mat-icon>&nbsp; &nbsp;  {{nav.name}}
+				</a>
 
                 <mat-divider ></mat-divider>
                 <a mat-list-item routerLink="logout" (click)="_login.logout()" >
@@ -34,16 +29,7 @@
 
         <mat-sidenav-content>
             <div class="main-content card-container ">
-                <!-- <app-dashboard *ngIf="_globals.currentTab=='Dashboard'"></app-dashboard> -->
-                <!-- <app-device *ngIf="_globals.currentTab=='Device'"></app-device> -->
-                <!-- <app-pump *ngIf="_globals.currentTab=='Pumps'"></app-pump> -->
-                <!-- <app-tank *ngIf="_globals.currentTab=='Tank'"></app-tank> -->
-                <!-- <app-alerts *ngIf="_globals.currentTab=='Alerts'"></app-alerts> -->
-                <!-- <app-account *ngIf="_globals.currentTab=='Account'"></app-account> -->
-                <!-- <app-settings *ngIf="_globals.currentTab=='Settings'"></app-settings> -->
-                <!-- <app-support *ngIf="_globals.currentTab=='Support'"></app-support> -->
-                <!-- <app-admin *ngIf="_globals.currentTab=='Admin'"></app-admin> -->
-                test
+				<app-schedule *ngIf="_globals.currentTab=='schedule'"></app-schedule>
             </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
