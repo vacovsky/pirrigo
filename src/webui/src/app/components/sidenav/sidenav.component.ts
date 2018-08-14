@@ -20,11 +20,11 @@ export class SidenavComponent implements AfterViewInit {
     mobileQuery: MediaQueryList;
 
     navItems: object = [
-        { name: "Zones", icon: "equalizer" },
-        { name: "Schedule", icon: "warning" },
+        { name: "Zones", icon: "group_work" },
+        { name: "Schedule", icon: "schedule" },
         { name: "Calendar", icon: "event" },
         { name: "Water Usage", icon: "opacity" },
-        { name: "Weather", icon: "developer_board" },
+        { name: "Weather", icon: "cloud_queue" },
         { name: "Settings", icon: "settings" }
     ];
 
