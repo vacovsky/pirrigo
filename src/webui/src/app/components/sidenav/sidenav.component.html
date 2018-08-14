@@ -4,7 +4,7 @@
         <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
          &nbsp;&nbsp;<img class="auto-size" src="assets/images/logo.png" style="height:1.5em;width:1.65em" >&nbsp;
         <h1 class="cont-app-name">
-            <!-- {{(_globals.currentDevice ? _globals.currentDevice.FriendlyName : '') }} -->
+            PirriGo Home Irrigation Controller
         </h1>
         <span class="fill-space"></span>
         <span>
@@ -29,7 +29,8 @@
 
         <mat-sidenav-content>
             <div class="main-content card-container ">
-				<app-schedule *ngIf="_globals.currentTab=='schedule'"></app-schedule>
+				<app-zones *ngIf="_globals.currentTab=='Zones'"></app-zones>
+				<app-schedule *ngIf="_globals.currentTab=='Schedule'"></app-schedule>
             </div>
         </mat-sidenav-content>
     </mat-sidenav-container>

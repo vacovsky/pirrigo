@@ -26,6 +26,7 @@
     "@angular/router": "6.1.2",
     "chart.js": "^2.7.2",
     "core-js": "^2.4.1",
+    "ngx-cookie-service": "^1.0.10",
     "rxjs": "^6.2.2",
     "zone.js": "^0.8.26"
   },

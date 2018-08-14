@@ -5,6 +5,7 @@ import { AppComponent } from "./app.component";
 import { ScheduleComponent } from "./components/schedule/schedule.component";
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { Globals } from "./services/globals.service";
+import { StationService } from "./services/station.service";
 
 import { HttpClient, HttpClientModule } from "@angular/common/http";
 import { MediaMatcher } from "@angular/cdk/layout";
@@ -31,9 +32,12 @@ import {
     MatDialogRef
 } from "@angular/material";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ZonesComponent } from './components/zones/zones.component';
+import { SidenavService } from "./services/sidenav.service";
+import { CookieService } from "ngx-cookie-service";
 
 @NgModule({
-    declarations: [AppComponent, SidenavComponent, ScheduleComponent],
+    declarations: [AppComponent, SidenavComponent, ScheduleComponent, ZonesComponent],
     imports: [
         MatProgressSpinnerModule,
         BrowserModule,
@@ -55,7 +59,7 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
         MatInputModule,
         MatDialogModule
     ],
-    providers: [Globals, HttpClient, MediaMatcher],
+    providers: [Globals, HttpClient, MediaMatcher, StationService, SidenavService, CookieService],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

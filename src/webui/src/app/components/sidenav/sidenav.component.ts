@@ -9,6 +9,7 @@ import { MediaMatcher } from "@angular/cdk/layout";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Globals } from "../../services/globals.service";
+import { SidenavService } from "../../services/sidenav.service";
 
 @Component({
     selector: "app-sidenav",
@@ -34,7 +35,8 @@ export class SidenavComponent implements AfterViewInit {
         media: MediaMatcher,
         private matIconRegistry: MatIconRegistry,
         private domSanitizer: DomSanitizer,
-        private _globals: Globals
+        private _globals: Globals,
+        private _sidenav: SidenavService
     ) {
         this.mobileQuery = media.matchMedia("(max-width: 600px)");
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();

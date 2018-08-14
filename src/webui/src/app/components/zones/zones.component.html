@@ -1,0 +1,15 @@
+<p>
+  zones works!
+</p>
+
+<!-- <mat-card class="content-card" *ngIf="_globals.alerts">
+  <h2 class="mat-h2"><mat-icon>warning</mat-icon>&nbsp; Recent Alerts ({{ _globals.alerts.length }}) </h2>
+</mat-card> -->
+
+<mat-card class="content-card" *ngIf="_globals.zones" >
+  <mat-selection-list #alerts *ngIf="_globals.zones.length > 0">
+      <mat-list-option *ngFor="let zone of _globals.zones" >
+          <span>{{zone}}</span>
+      </mat-list-option>
+  </mat-selection-list>
+</mat-card>
