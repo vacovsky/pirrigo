@@ -5,11 +5,27 @@
 <!-- <mat-card class="content-card" *ngIf="_globals.alerts">
   <h2 class="mat-h2"><mat-icon>warning</mat-icon>&nbsp; Recent Alerts ({{ _globals.alerts.length }}) </h2>
 </mat-card> -->
-
+<!-- 
 <mat-card class="content-card" *ngIf="_globals.zones" >
   <mat-selection-list #alerts *ngIf="_globals.zones.length > 0">
       <mat-list-option *ngFor="let zone of _globals.zones" >
-          <span>{{zone}}</span>
+          <span>ID: {{ zone.ID }}, GPIO: {{ zone.GPIO }}, Notes: {{ zone.Notes }}</span>
       </mat-list-option>
   </mat-selection-list>
-</mat-card>
+</mat-card> -->
+
+<div *ngFor="let zone of _globals.zones">
+<mat-expansion-panel (opened)="zoneCardOpen = true" (closed)="zoneCardOpen = false">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <mat-icon>settings_input_antenna</mat-icon>&nbsp; &nbsp; {{ zone.ID }}
+    </mat-panel-title>
+    <mat-panel-description>
+      {{ _globals.reportData ? (_globals.reportData.LoadReport.Data[0].slice(-1)[0] | number:'1.1-1') : '0' }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <canvas id="cpu-chart">
+    {{_globals.cpuChart}}
+  </canvas>
+</mat-expansion-panel>
+</div>

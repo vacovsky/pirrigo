@@ -22,7 +22,7 @@ export class SidenavComponent implements AfterViewInit {
     navItems: object = [
         { name: "Zones", icon: "equalizer" },
         { name: "Schedule", icon: "warning" },
-        { name: "Calendar", icon: "transform" },
+        { name: "Calendar", icon: "event" },
         { name: "Water Usage", icon: "opacity" },
         { name: "Weather", icon: "developer_board" },
         { name: "Settings", icon: "settings" }

@@ -16,10 +16,10 @@ export class StationService {
         headers: this._globals.headers,
         // params: params
       })
-      .pipe(map(_ => result))
+      .pipe(map(result => result))
       .subscribe(data => {
         this._globals.zones = data["stations"];
+        console.log(this._globals.zones);
       });
-    return result;
   }
 }
