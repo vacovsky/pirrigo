@@ -5,12 +5,15 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+
+	// _ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/vacovsky/pirrigo/src/logging"
 	"github.com/vacovsky/pirrigo/src/settings"
 	"go.uber.org/zap"
 )
 
+// ORM struct holds the lock and DB object
 type ORM struct {
 	DB   *gorm.DB
 	lock sync.Mutex
@@ -34,7 +37,11 @@ func (d *ORM) connect() {
 	log := logging.Service()
 	set := settings.Service()
 	var err error
-	d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
+
+	// d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
+
+	d.DB, err = gorm.Open("sqlite3", set.SQL.SQLiteDBPath)
+
 	d.DB.LogMode(set.Debug.GORM)
 	if err != nil {
 		log.LogError("Unable to connect to SQL.  Trying again in 15 seconds.",

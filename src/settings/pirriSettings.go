@@ -52,6 +52,7 @@ type Settings struct {
 		Port             string `json:"port"`
 		ConnectionString string
 		DB               string `json:"db"`
+		SQLiteDBPath     string `json:"sqlite_db_path"`
 	} `json:"sql"`
 	NewRelic struct {
 		Active              bool   `json:"active"`

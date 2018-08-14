@@ -20,7 +20,8 @@
         "user": "pirritesting",
         "secret": "pirritesting",
         "db": "pirritesting",
-        "port": "3306"
+        "port": "3306",
+        "sqlite_db_path": "pirrigo.db"
     },
     "newrelic": {
         "active": false,
@@ -44,7 +45,7 @@
     },
     "debug": {
         "pirri": true,
-        "gorm": false,
+        "gorm": true,
         "settings": false,
         "simulate_gpio": true,
         "log_path": "pirrigo.log"

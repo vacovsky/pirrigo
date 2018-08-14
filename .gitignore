@@ -7,3 +7,6 @@ tags
 .utags
 .vscode
 pirrigo.log
+pirrigo.db
+.sonarlint
+.vscode

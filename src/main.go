@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 
 	"github.com/vacovsky/pirrigo/src/data"
 	"github.com/vacovsky/pirrigo/src/logging"
@@ -23,7 +21,7 @@ func main() {
 
 	// migrate DB schema and populate with seed data
 	// TODO: make this nicer.  Check before running anything.
-	//	firstRunDBSetup()
+	firstRunDBSetup()
 
 	// check if we are in local debug mode, or actually doing work.
 	// If not debug, reset the GPIO state
@@ -50,16 +48,8 @@ func main() {
 		go pirri.ListenForTasks()
 	}
 
-	go listenForExit()
+	// go listenForExit()
 
 	pirri.WG.Wait()
 	fmt.Println("Exit key received - exiting!")
-}
-
-func listenForExit() {
-	fmt.Println("=================== PRESS <ENTER> KEY TO EXIT ===================\n")
-	bufio.NewReader(os.Stdin).ReadBytes('\n')
-	logging.Service().LogEvent("PirriGo v" + settings.Service().Pirri.Version + " exiting due to the exit key being pressed.  You did this...")
-	pirri.WG.Done()
-	os.Exit(0)
 }
