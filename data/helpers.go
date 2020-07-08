@@ -3,8 +3,8 @@ package data
 import (
 	"encoding/json"
 
-	"../logging"
 	"github.com/jinzhu/gorm"
+	"github.com/vacovsky/pirrigo/logging"
 	"go.uber.org/zap"
 )
 

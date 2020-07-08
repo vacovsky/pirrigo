@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
 	//	"strconv"
 	"time"
 
-	"../data"
-	"../logging"
+	"github.com/vacovsky/pirrigo/data"
+	"github.com/vacovsky/pirrigo/logging"
 	"go.uber.org/zap"
 )
 

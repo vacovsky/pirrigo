@@ -6,8 +6,8 @@ import (
 	"net/url"
 	"strings"
 
-	"../logging"
-	"../settings"
+	"github.com/vacovsky/pirrigo/logging"
+	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 

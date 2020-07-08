@@ -5,8 +5,8 @@ import (
 	"io"
 	"net/http"
 
-	"../data"
-	"../logging"
+	"github.com/vacovsky/pirrigo/data"
+	"github.com/vacovsky/pirrigo/logging"
 	"go.uber.org/zap"
 )
 
