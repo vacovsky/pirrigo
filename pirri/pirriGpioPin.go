@@ -3,10 +3,10 @@ package pirri
 import (
 	"time"
 
-	"../data"
-	"../logging"
-	"../settings"
-	"github.com/stianeikeland/go-rpio"
+	"github.com/stianeikeland/pirrigo/go-rpio"
+	"github.com/vacovsky/pirrigo/data"
+	"github.com/vacovsky/pirrigo/logging"
+	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 

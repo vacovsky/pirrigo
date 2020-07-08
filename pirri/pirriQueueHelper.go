@@ -3,9 +3,9 @@ package pirri
 import (
 	"time"
 
-	"../logging"
-	"../settings"
 	"github.com/streadway/amqp"
+	"github.com/vacovsky/pirrigo/logging"
+	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 

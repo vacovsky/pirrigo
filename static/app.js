@@ -506,7 +506,6 @@
 
         this.prettyTime = function (uglyTime) {
             if (uglyTime !== undefined && uglyTime !== null) {
-                // console.log(uglyTime)
                 var pt = moment(uglyTime).calendar();
                 return pt;
             } else {
@@ -547,10 +546,6 @@
                 }).then(function () {
                     $scope.calcMonthlyCost();
                 });
-            // cleanup
-
-
-
             $scope.waterNodeModel = undefined;
             $scope.waterNodeModel = {};
         };

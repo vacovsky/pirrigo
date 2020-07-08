@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"sync"
 
-	"../logging"
-	"../settings"
+	"github.com/vacovsky/pirrigo/logging"
+	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 
