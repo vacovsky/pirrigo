@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/vacovsky/pirrigo/data"
@@ -112,6 +113,7 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	var rawResults1 []RawResult
 	var rawResults2 []RawResult
 
+	// TODO: sql agnosticize this.  wont work in sqlite
 	sqlQuery0 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
@@ -207,7 +209,9 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 	}
 	result.Data = [][]int{}
 
-	sqlStr := fmt.Sprintf(`SELECT stations.id, 
+	var sqlStr string
+	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
+		sqlStr = fmt.Sprintf(`SELECT stations.id, 
 					  HOUR(start_time + INTERVAL %s HOUR) as hour, 
 					  (duration) as run_secs
 				FROM station_histories
@@ -215,7 +219,16 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
 					AND stations.id > 0
 				ORDER BY station_id ASC`, strconv.Itoa(settings.Service().Pirri.UtcOffset))
-
+	} else {
+		sqlStr = fmt.Sprintf(`SELECT stations.id, 
+			strftime('%%H', time('start_time', '+ %s HOURS')) as hour, 
+			(duration) as run_secs
+			FROM station_histories
+			JOIN stations ON stations.id = station_histories.station_id
+			WHERE start_time >= date('now', '-7 DAYS') 
+				AND stations.id > 0
+			ORDER BY station_id ASC`, strconv.Itoa(settings.Service().Pirri.UtcOffset))
+	}
 	seriesTracker := map[int]int{}
 
 	data.Service().DB.Raw(sqlStr).Scan(&chartData)

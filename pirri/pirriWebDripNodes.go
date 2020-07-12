@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
@@ -72,11 +73,21 @@ SELECT DISTINCT drip_nodes.station_id,
            stations.notes
        FROM station_histories
        INNER JOIN drip_nodes ON drip_nodes.station_id=station_histories.station_id
-       INNER JOIN stations ON stations.id=station_histories.station_id
+	   INNER JOIN stations ON stations.id=station_histories.station_id`
+
+	if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
+		sqlStr += `
            WHERE start_time >= (CURRENT_DATE - INTERVAL 30 DAY)
            GROUP BY drip_nodes.station_id
            ORDER BY drip_nodes.station_id ASC;
-           `
+		   `
+	} else {
+		sqlStr += `
+           WHERE start_time >= date('now', '-30 DAYS')
+           GROUP BY drip_nodes.station_id
+		   ORDER BY drip_nodes.station_id ASC;
+		   `
+	}
 	data.Service().DB.Raw(sqlStr).Find(&results)
 	for i, r := range results {
 		results[i].Total30Days = float32((r.RunMins / 60) * r.TotalGPH)
