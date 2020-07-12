@@ -23,7 +23,7 @@ func main() {
 
 	// migrate DB schema and populate with seed data
 	// TODO: make this nicer.  Check before running anything.
-	//	firstRunDBSetup()
+	// firstRunDBSetup()
 
 	// check if we are in local debug mode, or actually doing work.
 	// If not debug, reset the GPIO state

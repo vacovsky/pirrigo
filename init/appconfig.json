@@ -7,28 +7,13 @@
         "use_rabbit": false,
         "date_format": "2006-01-02 15:04:05"
     },
-    "rabbitmq": {
-        "server": "192.168.111.50",
-        "port": "5672",
-        "user": "rabbit",
-        "secret": "bunnyrabbit!!",
-        "task_queue": "pirri_go_work_dev"
-    },
     "sql": {
-        "dbtype": "mysql",
+        "dbtype": "sqlite3",
         "server": "localhost",
         "user": "pirritesting",
         "secret": "pirritesting",
         "db": "pirritesting",
         "port": "3306"
-    },
-    "newrelic": {
-        "active": false,
-        "license_path": "/../../nr_key"
-    },
-    "redis": {
-        "host": "localhost",
-        "port": "6379"
     },
     "web": {
         "port": "8001",

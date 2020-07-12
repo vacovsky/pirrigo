@@ -1,11 +1,16 @@
 package data
 
 import (
+	"log"
+	"os"
 	"sync"
 	"time"
 
 	"github.com/jinzhu/gorm"
+	// This is how the documentation indicated to do it.
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+
 	"github.com/vacovsky/pirrigo/logging"
 	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
@@ -57,10 +62,27 @@ func (d *ORM) connect() {
 	}
 }
 
-func (d *ORM) init() {
-	d.connect()
+func (d *ORM) sqliteConnect() {
+	log.Println("Pirrigo initializing")
+	var err error
+	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH")+".sqlite3")
 
-	d.DB.DB().SetMaxIdleConns(10)
-	d.DB.DB().SetMaxOpenConns(100)
-	d.DB.DB().SetConnMaxLifetime(time.Second * 300)
+	if err != nil {
+		log.Println(err)
+	}
+	if os.Getenv("PIRRIGO_DB_LOGMODE") == "" {
+		os.Setenv(`PIRRIGO_DB_LOGMODE`, "ON")
+	}
+	d.DB.LogMode(os.Getenv("PIRRIGO_DB_LOGMODE") == "ON")
+}
+
+func (d *ORM) init() {
+	if os.Getenv("PIRRIGO_DB_PATH") != "" {
+		d.sqliteConnect()
+	} else {
+		d.connect()
+		d.DB.DB().SetMaxIdleConns(10)
+		d.DB.DB().SetMaxOpenConns(100)
+		d.DB.DB().SetConnMaxLifetime(time.Second * 300)
+	}
 }

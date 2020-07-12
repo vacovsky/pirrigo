@@ -87,7 +87,7 @@ type Settings struct {
 }
 
 func (s *Settings) init() {
-	confFile := "../init/appconfig.json"
+	confFile := "init/appconfig.json"
 	if len(os.Args) > 1 {
 		confFile = os.Args[1]
 	}
