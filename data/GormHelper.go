@@ -1,7 +1,6 @@
 package data
 
 import (
-	"log"
 	"os"
 	"sync"
 	"time"
@@ -63,12 +62,13 @@ func (d *ORM) connect() {
 }
 
 func (d *ORM) sqliteConnect() {
-	log.Println("Pirrigo initializing")
+	log := logging.Service()
+	log.LogEvent("Pirrigo initializing with sqlite3 database at " + os.Getenv("PIRRIGO_DB_PATH"))
 	var err error
-	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH")+".sqlite3")
+	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH")+".db")
 
 	if err != nil {
-		log.Println(err)
+		log.LogError(err.Error())
 	}
 	if os.Getenv("PIRRIGO_DB_LOGMODE") == "" {
 		os.Setenv(`PIRRIGO_DB_LOGMODE`, "ON")

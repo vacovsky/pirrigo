@@ -18,7 +18,7 @@ func Service() *Settings {
 		instance = &Settings{
 			lock: sync.Mutex{},
 		}
-		instance.Pirri.Version = "4.0.0"
+		instance.Pirri.Version = "0.0.5"
 		instance.init()
 	})
 	return instance

@@ -12,7 +12,8 @@
             "program": "${workspaceRoot}",
             "env": {
                 "GOPATH": "/home/joe/.go",
-                "PIRRIGO_DB_PATH": "pirrigo"
+                "PIRRIGO_DB_PATH": "pirrigo",
+                "PIRRIGO_DB_LOGMODE": "ON"
             },
             "args": [],
             "showLog": true
