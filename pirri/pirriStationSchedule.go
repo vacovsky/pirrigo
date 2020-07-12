@@ -3,6 +3,7 @@ package pirri
 import (
 	//	"encoding/json"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/vacovsky/pirrigo/data"
@@ -34,7 +35,17 @@ type StationSchedule struct {
 func checkForTasks() {
 	scheds := []StationSchedule{}
 	nowTime := time.Now()
-	sqlFilter := fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s",
+
+	var nowString string
+	if os.Getenv("PIRRIGO_DB_TYPE") != "sqlite" {
+		nowString = "NOW()"
+	} else {
+		nowString = "date('now')"
+	}
+	// sqlFilter = fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s",
+	sqlFilter := fmt.Sprintf("(start_date <= %s AND end_date > %s) AND %s=true AND start_time=%s",
+		nowString,
+		nowString,
 		nowTime.Weekday(),
 		fmt.Sprintf("%02d%02d",
 			nowTime.Hour(),

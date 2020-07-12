@@ -65,7 +65,11 @@ func (d *ORM) sqliteConnect() {
 	log := logging.Service()
 	log.LogEvent("Pirrigo initializing with sqlite3 database at " + os.Getenv("PIRRIGO_DB_PATH"))
 	var err error
-	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH")+".db")
+
+	if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" && os.Getenv("PIRRIGO_DB_PATH") == "" {
+		os.Setenv("PIRRIGO_DB_PATH", "pirri.db")
+	}
+	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH"))
 
 	if err != nil {
 		log.LogError(err.Error())
@@ -77,7 +81,7 @@ func (d *ORM) sqliteConnect() {
 }
 
 func (d *ORM) init() {
-	if os.Getenv("PIRRIGO_DB_PATH") != "" {
+	if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
 		d.sqliteConnect()
 	} else {
 		d.connect()

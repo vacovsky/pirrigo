@@ -13,7 +13,8 @@
             "env": {
                 "GOPATH": "/home/joe/.go",
                 "PIRRIGO_DB_PATH": "pirrigo",
-                "PIRRIGO_DB_LOGMODE": "ON"
+                "PIRRIGO_DB_LOGMODE": "ON",
+                "PIRRIGO_DB_TYPE": "sqlite"
             },
             "args": [],
             "showLog": true
