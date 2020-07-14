@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
 	"github.com/vacovsky/pirrigo/pirri"
@@ -45,14 +47,30 @@ func firstRunDBSetup() {
 	log.LogEvent("Inserting days of the week to to station_schedules table.")
 	d.DB.Raw(addDays)
 
-	log.LogEvent("First run setup complete.")
+	d.DB.Save(pirri.Station{
+		GPIO:  100,
+		ID:    100,
+		Notes: "example node",
+	})
 
-	// gpios := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28}
-	// for pin := range gpios {
-	// 	d.DB.Create(&pirri.GpioPin{
-	// 		GPIO:   pin,
-	// 		Notes:  "",
-	// 		Common: false,
-	// 	})
-	// }
+	location, _ := time.LoadLocation("UTC")
+
+	d.DB.Save(&pirri.StationSchedule{
+		Duration:  10,
+		EndDate:   time.Date(2150, 1, 1, 1, 1, 1, 1, location),
+		StartDate: time.Date(2020, 1, 1, 1, 1, 1, 1, location),
+		ID:        100,
+		StationID: 100,
+	})
+
+	gpios := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28}
+	for pin := range gpios {
+		d.DB.Create(&pirri.GpioPin{
+			GPIO:   pin,
+			Notes:  "",
+			Common: false,
+		})
+	}
+
+	log.LogEvent("First run setup complete.")
 }
