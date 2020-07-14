@@ -75,7 +75,7 @@ SELECT DISTINCT drip_nodes.station_id,
        INNER JOIN drip_nodes ON drip_nodes.station_id=station_histories.station_id
 	   INNER JOIN stations ON stations.id=station_histories.station_id`
 
-	if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
+	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
 		sqlStr += `
            WHERE start_time >= (CURRENT_DATE - INTERVAL 30 DAY)
            GROUP BY drip_nodes.station_id

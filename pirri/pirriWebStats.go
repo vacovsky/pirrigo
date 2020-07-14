@@ -36,23 +36,43 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 
 	var rawResult0 []RawResult
 	var rawResult1 []RawResult
+	var sqlQuery0 string
+	var sqlQuery1 string
 
 	seriesTracker := map[int]int{}
 	tracker0 := 0
 	tracker1 := 0
 
-	// unscheduled
-	sqlQuery0 := `SELECT DISTINCT station_id, SUM(duration) as secs
+	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
+
+		// unscheduled
+		sqlQuery0 = `SELECT DISTINCT station_id, SUM(duration) as secs
 	            FROM station_histories
 	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id=0 AND station_id > 0
 	            GROUP BY station_id
 	            ORDER BY station_id ASC`
-	// scheduled
-	sqlQuery1 := `SELECT DISTINCT station_id, SUM(duration) as secs
+		// scheduled
+		sqlQuery1 = `SELECT DISTINCT station_id, SUM(duration) as secs
 	            FROM station_histories
 	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id>=1 AND station_id > 0
 	            GROUP BY station_id
 	            ORDER BY station_id ASC`
+	} else {
+
+		// unscheduled
+		sqlQuery0 = `SELECT DISTINCT station_id, SUM(duration) as secs
+				FROM station_histories
+				WHERE start_time >= date('now', '-? DAYS') AND schedule_id=0 AND station_id > 0
+				GROUP BY station_id
+				ORDER BY station_id ASC`
+
+		// scheduled
+		sqlQuery1 = `SELECT DISTINCT station_id, SUM(duration) as secs
+				FROM station_histories
+				WHERE start_time >= date('now', '-? DAYS') AND schedule_id>=1 AND station_id > 0
+				GROUP BY station_id
+				ORDER BY station_id ASC`
+	}
 
 	data.Service().DB.Raw(sqlQuery0, 7).Scan(&rawResult0)
 	data.Service().DB.Raw(sqlQuery1, 7).Scan(&rawResult1)
@@ -113,23 +133,49 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	var rawResults1 []RawResult
 	var rawResults2 []RawResult
 
-	// TODO: sql agnosticize this.  wont work in sqlite
-	sqlQuery0 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
+	var sqlQuery0 string
+	var sqlQuery1 string
+	var sqlQuery2 string
+
+	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
+		sqlQuery0 = fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
             GROUP BY day
             ORDER BY day ASC`)
-	sqlQuery1 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
+		sqlQuery1 = fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id > 0
             GROUP BY day
             ORDER BY day ASC`)
-	sqlQuery2 := fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
+		sqlQuery2 = fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
             FROM station_histories
             WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id = 0
             GROUP BY day
             ORDER BY day ASC`)
+	} else {
+		sqlQuery0 = fmt.Sprintf(`SELECT DISTINCT strftime( '%%w', (datetime(start_time, '? HOURS'))) as day, SUM(duration) as secs
+            FROM station_histories
+            WHERE start_time >= date('now', '-? DAYS')
+            GROUP BY day
+            ORDER BY day ASC`)
+		sqlQuery1 = fmt.Sprintf(`SELECT DISTINCT strftime( '%%w', (datetime(start_time, '? HOURS'))) as day, SUM(duration) as secs
+            FROM station_histories
+            WHERE start_time >= date('now', '-? DAYS') AND schedule_id > 0
+            GROUP BY day
+            ORDER BY day ASC`)
+		sqlQuery2 = fmt.Sprintf(`SELECT DISTINCT strftime( '%%w', (datetime(start_time, '? HOURS'))) as day, SUM(duration) as secs
+            FROM station_histories
+            WHERE start_time >= date('now', '-? DAYS') AND schedule_id = 0
+            GROUP BY day
+			ORDER BY day ASC`)
 
+		// SELECT DISTINCT strftime( '%w', (datetime(start_time, '-? HOURS'))) as day, SUM(duration) as secs
+		// FROM station_histories
+		// WHERE start_time >= date('now', '-7 DAYS') AND schedule_id = 0
+		// GROUP BY day
+		// ORDER BY day ASC;
+	}
 	data.Service().DB.Raw(sqlQuery0, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults0)
 	data.Service().DB.Raw(sqlQuery1, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults1)
 	data.Service().DB.Raw(sqlQuery2, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults2)
