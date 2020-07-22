@@ -267,7 +267,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				ORDER BY station_id ASC`, strconv.Itoa(settings.Service().Pirri.UtcOffset))
 	} else {
 		sqlStr = fmt.Sprintf(`SELECT stations.id, 
-			strftime('%%H', time('start_time', '+ %s HOURS')) as hour, 
+			strftime('%%H', time(start_time, '%s HOURS')) as hour, 
 			(duration) as run_secs
 			FROM station_histories
 			JOIN stations ON stations.id = station_histories.station_id
