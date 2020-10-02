@@ -1,0 +1,15 @@
+[Unit]
+Description=Pi Irrigatoim Daemon
+Wants=network.target
+After=network.target
+
+[Service]
+ExecStart=/opt/pirrigo/src/pirri/pirri /opt/pirrigo/appconfig.json
+WorkingDirectory=/opt/pirrigo/src/pirri
+Environment=PIRRIGO_DB_PATH="pirrigo"
+Environment=PIRRIGO_DB_LOGMODE="ON"
+Environment=PIRRIGO_DB_TYPE="sqlite"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
