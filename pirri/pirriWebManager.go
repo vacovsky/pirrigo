@@ -2,14 +2,12 @@ package pirri
 
 import (
 	"net/http"
+	"os"
 	"runtime"
-
-	"github.com/vacovsky/pirrigo/settings"
 )
 
+// StartPirriWebApp starts the web server
 func StartPirriWebApp() {
-	set := settings.Service()
-
 	for k, v := range protectedRoutes {
 		// wrap each route and function in auth handler
 		http.HandleFunc(k, basicAuth(v))
@@ -26,7 +24,7 @@ func StartPirriWebApp() {
 	http.HandleFunc("/login", loginAuth)
 
 	// Host server
-	panic(http.ListenAndServe(":"+set.Web.Port, nil))
+	panic(http.ListenAndServe(":"+os.Getenv("PIRRIGO_WEB_PORT"), nil))
 }
 
 func logTraffic() string {

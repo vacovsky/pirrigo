@@ -17,7 +17,6 @@ func migrateDataSchema() {
 		&pirri.GpioPin{},
 		&pirri.StationHistory{},
 		&pirri.StationSchedule{},
-		// &settings.Settings{},
 	)
 
 	var m pirri.Metadata

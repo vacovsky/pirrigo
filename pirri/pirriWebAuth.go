@@ -4,10 +4,10 @@ import (
 	"encoding/base64"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 
 	"github.com/vacovsky/pirrigo/logging"
-	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 
@@ -60,9 +60,9 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		if strings.ToLower(pair[0]) != strings.ToLower(settings.Service().Web.User) || pair[1] != settings.Service().Web.Secret {
+		if strings.ToLower(pair[0]) != strings.ToLower(os.Getenv("PIRRIGO_USERNAME")) || pair[1] != os.Getenv("PIRRIGO_PASSWORD") {
 			http.Error(w, "Not authorized", 401)
-			log.LogError("HTTP Authentication Error.", zap.String("error", err.Error()))
+			log.LogError("HTTP Authentication Error.")
 			return
 		}
 		h.ServeHTTP(w, r)

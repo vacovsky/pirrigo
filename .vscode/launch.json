@@ -12,9 +12,13 @@
             "program": "${workspaceRoot}",
             "env": {
                 "GOPATH": "/home/joe/.go",
-                "PIRRIGO_DB_PATH": "pirrigo",
                 "PIRRIGO_DB_LOGMODE": "ON",
-                "PIRRIGO_DB_TYPE": "sqlite"
+                "PIRRIGO_SIMULATE_GPIO": "true",
+                "PIRRIGO_DB_TYPE": "sqlite",
+                "PIRRIGO_WEB_PORT": "8080",
+                "PIRRIGO_USERNAME": "joe",
+                "PIRRIGO_PASSWORD": "vacovsky",
+                "PIRRIGO_DB_PATH": "pirrigo.db",
             },
             "args": [],
             "showLog": true

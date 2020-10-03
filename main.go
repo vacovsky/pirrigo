@@ -3,7 +3,9 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
+	"strings"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
@@ -12,22 +14,27 @@ import (
 )
 
 func main() {
+	logger := logging.Service()
+
+	logger.LogEvent("PirriGo starting up!")
+
+	log.Println("PIRRIGO_WEB_PORT:", os.Getenv("PIRRIGO_WEB_PORT"))
+	log.Println("PIRRIGO_DB_TYPE:", os.Getenv("PIRRIGO_DB_TYPE"))
+	log.Println("PIRRIGO_DB_PATH:", os.Getenv("PIRRIGO_DB_PATH"))
+	log.Println("PIRRIGO_SIMULATE_GPIO:", os.Getenv("PIRRIGO_SIMULATE_GPIO"))
+
+	log.Println("PIRRIGO_USERNAME:", os.Getenv("PIRRIGO_USERNAME"))
+	log.Println("PIRRIGO_PASSWORD:", os.Getenv("PIRRIGO_PASSWORD"))
 
 	// initialize dependencies
-	set := settings.Service()
 	data.Service()
-	log := logging.Service()
-
-	fmt.Printf("\nLaunching PirriGo v%s\n\n", set.Pirri.Version)
-	log.LogEvent("PirriGo v" + set.Pirri.Version + " starting up")
 
 	// migrate DB schema and populate with seed data
-	// TODO: make this nicer.  Check before running anything.
 	migrateDataSchema()
 
 	// check if we are in local debug mode, or actually doing work.
 	// If not debug, reset the GPIO state
-	if !set.Debug.SimulateGPIO {
+	if strings.ToLower(os.Getenv("PIRRIGO_SIMULATE_GPIO")) != "true" {
 		pirri.GPIOClear()
 	}
 
@@ -44,11 +51,7 @@ func main() {
 	go pirri.StartTaskMonitor()
 
 	// Listen for tasks to execute
-	if set.Pirri.UseRabbitMQ {
-		go pirri.RabbitReceive(set.RabbitMQ.TaskQueue)
-	} else {
-		go pirri.ListenForTasks()
-	}
+	go pirri.ListenForTasks()
 
 	go listenForExit()
 
@@ -57,7 +60,7 @@ func main() {
 }
 
 func listenForExit() {
-	fmt.Println("=================== PRESS <ENTER> KEY TO EXIT ===================\n")
+	log.Println("=================== PRESS <ENTER> KEY TO EXIT ===================")
 	bufio.NewReader(os.Stdin).ReadBytes('\n')
 	logging.Service().LogEvent("PirriGo v" + settings.Service().Pirri.Version + " exiting due to the exit key being pressed.  You did this...")
 	pirri.WG.Done()
