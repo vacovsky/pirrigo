@@ -6,11 +6,9 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
-	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 	//	"time"
 )
@@ -176,9 +174,9 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		// GROUP BY day
 		// ORDER BY day ASC;
 	}
-	data.Service().DB.Raw(sqlQuery0, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults0)
-	data.Service().DB.Raw(sqlQuery1, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults1)
-	data.Service().DB.Raw(sqlQuery2, settings.Service().Pirri.UtcOffset, 7).Scan(&rawResults2)
+	data.Service().DB.Raw(sqlQuery0, os.Getenv("PIRRIGO_UTC_OFFSET"), 7).Scan(&rawResults0)
+	data.Service().DB.Raw(sqlQuery1, os.Getenv("PIRRIGO_UTC_OFFSET"), 7).Scan(&rawResults1)
+	data.Service().DB.Raw(sqlQuery2, os.Getenv("PIRRIGO_UTC_OFFSET"), 7).Scan(&rawResults2)
 
 	result.Data = [][]int{
 		[]int{0, 0, 0, 0, 0, 0, 0},
@@ -264,7 +262,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 				JOIN stations ON stations.id = station_histories.station_id
 				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
 					AND stations.id > 0
-				ORDER BY station_id ASC`, strconv.Itoa(settings.Service().Pirri.UtcOffset))
+				ORDER BY station_id ASC`, os.Getenv("PIRRIGO_UTC_OFFSET"))
 	} else {
 		sqlStr = fmt.Sprintf(`SELECT stations.id, 
 			strftime('%%H', time(start_time, '%s HOURS')) as hour, 
@@ -273,7 +271,7 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 			JOIN stations ON stations.id = station_histories.station_id
 			WHERE start_time >= date('now', '-7 DAYS') 
 				AND stations.id > 0
-			ORDER BY station_id ASC`, strconv.Itoa(settings.Service().Pirri.UtcOffset))
+			ORDER BY station_id ASC`, os.Getenv("PIRRIGO_UTC_OFFSET"))
 	}
 	seriesTracker := map[int]int{}
 

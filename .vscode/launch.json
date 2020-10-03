@@ -19,6 +19,7 @@
                 "PIRRIGO_USERNAME": "joe",
                 "PIRRIGO_PASSWORD": "vacovsky",
                 "PIRRIGO_DB_PATH": "pirrigo.db",
+                "PIRRIGO_UTC_OFFSET": "7"
             },
             "args": [],
             "showLog": true
