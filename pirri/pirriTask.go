@@ -1,12 +1,10 @@
 package pirri
 
 import (
-	"encoding/json"
 	"time"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
-	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 
@@ -33,20 +31,10 @@ func (t *Task) log() {
 
 func (t *Task) send() {
 	if t.Station.GPIO > 0 {
-		if settings.Service().Pirri.UseRabbitMQ {
-			logging.Service().LogEvent("Queuing Task for GPIO activation in RabbitMQ for station", zap.Int("gpio", t.Station.GPIO))
-			taskBlob, err := json.Marshal(&t)
-			if err != nil {
-				logging.Service().LogError("Could not JSONify task for sending.",
-					zap.String("error", err.Error()))
-			}
-			rabbitSend(settings.Service().RabbitMQ.TaskQueue, string(taskBlob))
-		} else {
-			ORQMutex.Lock()
-			logging.Service().LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
-			OfflineRunQueue = append(OfflineRunQueue, t)
-			ORQMutex.Unlock()
-		}
+		ORQMutex.Lock()
+		logging.Service().LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
+		OfflineRunQueue = append(OfflineRunQueue, t)
+		ORQMutex.Unlock()
 	}
 }
 

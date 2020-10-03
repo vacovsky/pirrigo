@@ -6,13 +6,14 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"go.uber.org/zap"
+
 	// This is how the documentation indicated to do it.
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
 	"github.com/vacovsky/pirrigo/logging"
 	"github.com/vacovsky/pirrigo/settings"
-	"go.uber.org/zap"
 )
 
 type ORM struct {
@@ -66,7 +67,7 @@ func (d *ORM) sqliteConnect() {
 	log.LogEvent("Pirrigo initializing with sqlite3 database at " + os.Getenv("PIRRIGO_DB_PATH"))
 	var err error
 
-	if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" && os.Getenv("PIRRIGO_DB_PATH") == "" {
+	if os.Getenv("PIRRIGO_DB_PATH") == "" {
 		os.Setenv("PIRRIGO_DB_PATH", "pirri.db")
 	}
 	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH"))

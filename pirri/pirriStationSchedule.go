@@ -8,7 +8,6 @@ import (
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
-	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap"
 )
 
@@ -55,12 +54,11 @@ func checkForTasks() {
 }
 
 func StartTaskMonitor() {
-	set := settings.Service()
 	logging.Service().LogEvent(`Starting monitoring at interval`,
-		zap.Int("interval", set.Pirri.MonitorInterval))
+		zap.Int("interval", 59))
 	for {
 		checkForTasks()
-		time.Sleep(time.Duration(set.Pirri.MonitorInterval) * time.Second)
+		time.Sleep(time.Duration(59) * time.Second)
 	}
 }
 

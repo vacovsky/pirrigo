@@ -1,6 +1,8 @@
 package pirri
 
 import (
+	"os"
+	"strings"
 	"time"
 
 	"github.com/stianeikeland/go-rpio"
@@ -26,9 +28,8 @@ func SetCommonWire() {
 }
 
 func gpioActivator(t *Task) {
-	set := settings.Service()
 	t.setStatus(true)
-	if set.Debug.SimulateGPIO {
+	if strings.ToLower(os.Getenv("PIRRIGO_SIMULATE_GPIO")) == "true" {
 		gpioSimulation(t.Station.GPIO, true, t.StationSchedule.Duration)
 	} else {
 		gpioActivate(t.Station.GPIO, true, t.StationSchedule.Duration)
@@ -40,7 +41,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 	log := logging.Service()
 
 	log.LogEvent(`GPIO Simulation starting.`,
-		zap.String("startTimeStamp", time.Now().Format(settings.Service().Pirri.DateFormat)),
+		zap.String("startTimeStamp", time.Now().Format(os.Getenv("PIRRIGO_DATE_FORMAT"))),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))
@@ -49,7 +50,7 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 		seconds--
 	}
 	log.LogEvent(`GPIO Simulation ending.`,
-		zap.String("endTimeStamp", time.Now().Format(settings.Service().Pirri.DateFormat)),
+		zap.String("endTimeStamp", time.Now().Format(os.Getenv("PIRRIGO_DATE_FORMAT"))),
 		zap.Int("gpio", gpio),
 		zap.Bool("state", state),
 		zap.Int("durationSeconds", seconds))

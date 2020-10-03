@@ -3,12 +3,12 @@ package logging
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
 	"time"
 
-	"github.com/vacovsky/pirrigo/settings"
 	"go.uber.org/zap/zapcore"
 
 	"go.uber.org/zap"
@@ -35,8 +35,6 @@ func Service() *PirriLogger {
 }
 
 func (l *PirriLogger) init() {
-	settingsService := settings.Service()
-
 	rawJSON := []byte(`{
 		"level": "debug",
 		"encoding": "json",
@@ -54,11 +52,8 @@ func (l *PirriLogger) init() {
 	}
 	// cfg.EncoderConfig.TimeKey = "time"
 	cfg.EncoderConfig.StacktraceKey = "stacktrace"
-	if settingsService.Debug.LogPath == "" {
-		settingsService.Debug.LogPath = "pirrigo.log"
-	}
-	cfg.ErrorOutputPaths = []string{settingsService.Debug.LogPath}
-	cfg.OutputPaths = []string{settingsService.Debug.LogPath}
+	cfg.ErrorOutputPaths = []string{os.Getenv("PIRRIGO_LOG_LOCATION")}
+	cfg.OutputPaths = []string{os.Getenv("PIRRIGO_LOG_LOCATION")}
 
 	logger, err := cfg.Build()
 	l.logger = logger
@@ -69,9 +64,7 @@ func (l *PirriLogger) init() {
 
 // LogEvent logs events
 func (l *PirriLogger) LogEvent(message string, fields ...zapcore.Field) {
-	settingsService := settings.Service()
-
-	if settings.Service().Debug.Pirri {
+	if os.Getenv("PIRRIGO_LOG_LOCATION") != "" {
 		fmt.Println("EVENT: ", message)
 		defer l.logger.Sync()
 		defer l.lock.Unlock()
@@ -79,8 +72,7 @@ func (l *PirriLogger) LogEvent(message string, fields ...zapcore.Field) {
 		fields = append(
 			fields,
 			[]zapcore.Field{
-				zap.String("version", settingsService.Pirri.Version),
-				zap.String("time", time.Now().Format(settingsService.Pirri.DateFormat)),
+				zap.String("time", time.Now().Format(os.Getenv("PIRRIGO_DATE_FORMAT"))),
 			}...,
 		)
 		l.logger.Debug(
@@ -92,7 +84,6 @@ func (l *PirriLogger) LogEvent(message string, fields ...zapcore.Field) {
 
 //LogError logs errors
 func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
-	settingsService := settings.Service()
 
 	defer l.logger.Sync()
 	defer l.lock.Unlock()
@@ -100,8 +91,7 @@ func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 	fields = append(
 		fields,
 		[]zapcore.Field{
-			zap.String("version", settingsService.Pirri.Version),
-			zap.String("time", time.Now().Format(settingsService.Pirri.DateFormat)),
+			zap.String("time", time.Now().Format(os.Getenv("PIRRIGO_DATE_FORMAT"))),
 		}...,
 	)
 	l.logger.Error(
@@ -111,16 +101,14 @@ func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 }
 
 func (l *PirriLogger) TailLogs(lines int) ([]string, error) {
-	settingsService := settings.Service()
-
 	defer l.lock.Unlock()
 	l.lock.Lock()
-	cmd := exec.Command("tail", "-n", fmt.Sprintf("%d", lines), settingsService.Debug.LogPath)
+	cmd := exec.Command("tail", "-n", fmt.Sprintf("%d", lines), os.Getenv("PIRRIGO_LOG_LOCATION"))
 	output, err := cmd.Output()
 	if err != nil {
 		l.LogError("Failed to tail log file.",
 			zap.String("error", err.Error()),
-			zap.String("logPath", settingsService.Debug.LogPath),
+			zap.String("logPath", os.Getenv("PIRRIGO_LOG_LOCATION")),
 			zap.Int("tailLines", lines),
 		)
 		return nil, err
