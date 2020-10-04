@@ -19,7 +19,9 @@
                 "PIRRIGO_USERNAME": "joe",
                 "PIRRIGO_PASSWORD": "vacovsky",
                 "PIRRIGO_DB_PATH": "pirrigo.db",
-                "PIRRIGO_UTC_OFFSET": "7"
+                "PIRRIGO_UTC_OFFSET": "7",
+                "PIRRIGO_DATE_FORMAT": "2006-01-02 15:04:05",
+                "PIRRIGO_LOG_LOCATION":"pirrigo.log"
             },
             "args": [],
             "showLog": true

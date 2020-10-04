@@ -5,19 +5,16 @@ After=network.target
 
 [Service]
 Environment=PIRRIGO_DB_PATH=pirrigo.db
-
 Environment=PIRRIGO_DB_LOGMODE=ON
 Environment=PIRRIGO_LOG_LOCATION=pirrigo.log
 Environment=PIRRIGO_DATE_FORMAT="2006-01-02 15:04:05"
-
 Environment=PIRRIGO_DB_TYPE=sqlite
 Environment=PIRRIGO_SIMULATE_GPIO=false
 Environment=PIRRIGO_WEB_PORT=80
 Environment=PIRRIGO_USERNAME=joe
 Environment=PIRRIGO_PASSWORD=vacovsky
 Environment=PIRRIGO_DB_PATH=pirrigo.db
-
-Environment=PIRRIGO_UTC_OFFSET=7
+Environment=PIRRIGO_UTC_OFFSET=-7
 ExecStart=/opt/pirrigo/pirrigo /opt/pirrigo/appconfig.json
 WorkingDirectory=/opt/pirrigo/src/pirri
 Restart=always
