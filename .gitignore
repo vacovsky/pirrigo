@@ -7,3 +7,5 @@ tags
 .utags
 .vscode
 pirrigo.log
+*.db
+*.swp

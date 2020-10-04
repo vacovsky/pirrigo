@@ -9,9 +9,19 @@
             "remotePath": "",
             "port": 2345,
             "host": "127.0.0.1",
-            "program": "${workspaceRoot}/src/pirri/",
+            "program": "${workspaceRoot}",
             "env": {
-                "GOPATH": "/home/joe/.go/installed_packages"
+                "GOPATH": "/home/joe/.go",
+                "PIRRIGO_DB_LOGMODE": "ON",
+                "PIRRIGO_SIMULATE_GPIO": "true",
+                "PIRRIGO_DB_TYPE": "sqlite",
+                "PIRRIGO_WEB_PORT": "8080",
+                "PIRRIGO_USERNAME": "joe",
+                "PIRRIGO_PASSWORD": "vacovsky",
+                "PIRRIGO_DB_PATH": "pirrigo.db",
+                "PIRRIGO_UTC_OFFSET": "7",
+                "PIRRIGO_DATE_FORMAT": "2006-01-02 15:04:05",
+                "PIRRIGO_LOG_LOCATION":"pirrigo.log"
             },
             "args": [],
             "showLog": true
