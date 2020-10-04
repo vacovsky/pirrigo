@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
@@ -60,9 +60,7 @@ func main() {
 }
 
 func listenForExit() {
-	log.Println("=================== PRESS <ENTER> KEY TO EXIT ===================")
-	bufio.NewReader(os.Stdin).ReadBytes('\n')
-	logging.Service().LogEvent("PirriGo exiting due to the exit key being pressed.  You did this...")
-	pirri.WG.Done()
-	os.Exit(0)
+	for {
+		time.Sleep(1000)
+	}
 }
