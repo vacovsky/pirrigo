@@ -1,9 +1,6 @@
 # PirriGo
 Irrigation and garden management application, in Go and Angular.  Based on <a href="https://github.com/vacoj/pirri">Pirri</a>.
 
-## Live Demo: http://pirri.vacovsky.us
-#### login/password are demo / demo
-
 ## Screenshots
 
 ### Login page
@@ -173,6 +170,3 @@ curl -X POST -d "{\"StationID\": 2, \"Duration\": 60}" http://localhost:8001/sta
 ```
 
 
-##### In case you're feeling generous
-
-Bitcoin address: 17FC2XP5phFFupAn2w4dGCwQuDUWRXE4EQ
