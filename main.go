@@ -25,6 +25,7 @@ func main() {
 	log.Println("PIRRIGO_UTC_OFFSET:", os.Getenv("PIRRIGO_UTC_OFFSET"))
 	log.Println("PIRRIGO_USERNAME:", os.Getenv("PIRRIGO_USERNAME"))
 	log.Println("PIRRIGO_PASSWORD:", os.Getenv("PIRRIGO_PASSWORD"))
+	// log.Println("PIRRIGO_ENABLE_AUTH:", os.Getenv("PIRRIGO_ENABLE_AUTH"))
 
 	// initialize dependencies
 	data.Service()

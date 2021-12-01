@@ -22,6 +22,7 @@ import { ApiClientService } from './services/apiclient.service';
 import { GlobalsService } from './services/globals.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     FormsModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTabsModule,
   ],
   providers: [
     HttpClient,

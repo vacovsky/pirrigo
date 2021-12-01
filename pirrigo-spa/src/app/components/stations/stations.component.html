@@ -1,1 +1,35 @@
-{{stations}}
+<mat-card>
+    <mat-accordion multi>
+        <div *ngFor="let station of stations">
+            <mat-expansion-panel hideToggle hideToggle *ngIf="station.Enabled">
+                <!-- TODO: where stations not hidden -->
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Station {{station.ID}}: {{station.Notes}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{station.Description}}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>GPIO: {{station.GPIO}}</p>
+            </mat-expansion-panel>
+        </div>
+    </mat-accordion>
+
+    <mat-accordion>
+        <div *ngFor="let station of stations">
+            <mat-expansion-panel hideToggle *ngIf="!station.Enabled">
+                <!-- TODO: where stations hidden -->
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Station {{station.ID}}: {{station.Notes}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{station.Description}}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <p>GPIO: {{station.GPIO}}</p>
+            </mat-expansion-panel>
+        </div>
+    </mat-accordion>
+</mat-card>

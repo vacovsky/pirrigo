@@ -68,3 +68,10 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		h.ServeHTTP(w, r)
 	}
 }
+
+func enableCors(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		(w).Header().Set("Access-Control-Allow-Origin", "*")
+		h.ServeHTTP(w, r)
+	}
+}
