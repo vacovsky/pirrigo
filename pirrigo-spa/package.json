@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "~13.0.0",
     "@angular/router": "~13.0.0",
     "@swimlane/ngx-charts": "^19.1.0",
+    "@types/d3-scale": "^4.0.2",
+    "@types/d3-selection": "^3.0.1",
     "angular-gauge": "^4.0.0",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",

@@ -17,6 +17,12 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsageCalculatorComponent } from './components/usage-calculator/usage-calculator.component';
+import { ChartTransformService } from './services/chart-transform.service';
+import { ApiClientService } from './services/apiclient.service';
+import { GlobalsService } from './services/globals.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 @NgModule({
   declarations: [
@@ -39,10 +45,15 @@ import { UsageCalculatorComponent } from './components/usage-calculator/usage-ca
     MatFormFieldModule,
     MatNativeDateModule,
     FormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatExpansionModule
   ],
   providers: [
     HttpClient,
+    ChartTransformService,
+    ApiClientService,
+    GlobalsService
 
   ],
   bootstrap: [AppComponent]
