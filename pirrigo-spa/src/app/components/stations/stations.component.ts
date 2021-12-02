@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiClientService } from 'src/app/services/apiclient.service';
-import { Station } from 'src/app/structs/station';
+import { Station, StationStatus } from 'src/app/structs/station';
+import { MwlGaugeObj } from 'src/app/structs/mwl-gauge-obj';
+import { GlobalsService } from 'src/app/services/globals.service';
+
+
+
 @Component({
   selector: 'app-stations',
   templateUrl: './stations.component.html',
@@ -9,22 +14,72 @@ import { Station } from 'src/app/structs/station';
 export class StationsComponent implements OnInit {
 
   panelOpenState = false;
-
+  status: StationStatus;
+  runningGauge: MwlGaugeObj;
   stations: Station[];
 
   constructor(
-    private _api: ApiClientService
+    private _api: ApiClientService,
+    private _globals: GlobalsService
   ) { }
 
   ngOnInit(): void {
-    this.loadStations()
+    this.loadStations().then(() =>
+      this.loadStationRunStatus()
+    )
+    setInterval(() => {
+      this.loadStationRunStatus();
+    }, this._globals.statusRefreshRateMs);
   }
 
-  loadStations() {
+  async loadStations() {
     this._api.getAllStations().subscribe((data) => {
       this.stations = data.stations
+      console.log(this.stations)
     })
   }
+
+  loadStationRunStatus() {
+    this._api.getStationStatus().subscribe(data => {
+      this.status = data
+      console.log(this.status)
+      this.runningGauge = this.gaugeFactory(
+        2900,
+        0,
+        3600,
+        data.Duration
+      )
+    })
+  }
+
+  findDateDiffForGaugeInSeconds(date: Date, duration: number): number {
+    return 150
+
+    // var duration = moment.duration(end.diff(startTime));
+    // var hours = duration.asHours();
+  }
+
+  gaugeFactory(
+    value: number,
+    min: number,
+    max: number,
+    label: any = ((inp: number) => { return inp }),
+    color: any = ((inp: number) => { return inp })
+  ): MwlGaugeObj {
+    let g = new MwlGaugeObj()
+    g.Value = value
+    g.Max = max
+    g.Min = min
+    g.Animated = true
+    g.AnimationDuration = 5
+    g.DialEndAngle = -180
+    g.DialStartAngle = 180
+    g.Label = label
+    g.Color = color
+
+    return g
+  }
+
 }
 
 

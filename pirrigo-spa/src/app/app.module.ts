@@ -23,7 +23,11 @@ import { GlobalsService } from './services/globals.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { StatusComponent } from './components/stations/status/status.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,8 @@ import { MatTabsModule } from '@angular/material/tabs';
     CalendarComponent,
     LogsComponent,
     SettingsComponent,
-    UsageCalculatorComponent
+    UsageCalculatorComponent,
+    StatusComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +54,13 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatProgressSpinnerModule,
     MatCardModule,
     MatExpansionModule,
+    MatIconModule,
     MatTabsModule,
+    MatTableModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
   ],
   providers: [
     HttpClient,

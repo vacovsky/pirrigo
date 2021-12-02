@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalsService } from './globals.service'
-import { ChartData } from '../structs/chart-data'
 import { Observable } from 'rxjs';
-import { StationResponse } from '../structs/station';
+import { StationResponse, StationStatus, } from '../structs/station';
+import { StationHistoryResponse } from 'src/app/structs/station-history';
+import { StationLogsResponse } from '../structs/station-logs';
+import { StationScheduleResponse } from '../structs/station-schedule';
 
 @Injectable()
 export class ApiClientService {
@@ -13,17 +15,37 @@ export class ApiClientService {
     private _globals: GlobalsService
   ) { }
 
-  getHistoryChart(startDate: number, endDate: number): Observable<ChartData> {
-    const uri = `${this._globals.uriStem}/tempchartdata?startTime=${startDate}&endTime=${endDate}`;
-    return this._http.get<ChartData>(uri)
+  getRunHistory(station: any, earliest: number): Observable<StationHistoryResponse> {
+    const uri = `${this._globals.uriStem}/history?station=${station}&earliest=${earliest}`;
+    return this._http.get<StationHistoryResponse>(uri)
+  }
+
+  getStationLogs(): Observable<StationLogsResponse> {
+    const uri = `${this._globals.uriStem}/logs/all`
+    return this._http.get<StationLogsResponse>(uri)
   }
 
   getAllStations(): Observable<StationResponse> {
     const uri = `${this._globals.uriStem}/station/all`
     return this._http.get<StationResponse>(uri)
-  };
+  }
+
+  getStationSchedules(): Observable<StationScheduleResponse> {
+    const uri = `${this._globals.uriStem}/schedule/all`
+    return this._http.get<StationScheduleResponse>(uri)
+  }
+
+  getStationStatus(): Observable<StationStatus> {
+    const uri = `${this._globals.uriStem}/status/run`
+    return this._http.get<StationStatus>(uri)
+  }
 }
 
+// schedule/all
+// { "stationSchedules": [{"ID":1,"StartDate":"2017-03-10T17:08:40Z","EndDate":"2027-03-10T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":true,"Friday":false,"Saturday":true,"StationID":4,"StartTime":100,"Duration":1800,"Repeating":false},{"ID":2,"StartDate":"2017-03-11T00:18:22Z","EndDate":"2027-03-10T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":true,"Friday":false,"Saturday":false,"StationID":5,"StartTime":100,"Duration":1800,"Repeating":false},{"ID":3,"StartDate":"2017-03-11T00:18:55Z","EndDate":"2027-03-10T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":true,"Friday":false,"Saturday":true,"StationID":6,"StartTime":100,"Duration":1800,"Repeating":false},{"ID":4,"StartDate":"2017-03-11T08:00:25Z","EndDate":"2027-03-11T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":true,"Friday":false,"Saturday":false,"StationID":7,"StartTime":100,"Duration":1800,"Repeating":false},{"ID":5,"StartDate":"2017-03-11T08:01:01Z","EndDate":"2027-03-11T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":false,"Wednesday":true,"Thursday":false,"Friday":true,"Saturday":false,"StationID":9,"StartTime":100,"Duration":300,"Repeating":false},{"ID":6,"StartDate":"2017-03-11T08:01:23Z","EndDate":"2027-03-11T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":false,"Wednesday":true,"Thursday":false,"Friday":true,"Saturday":false,"StationID":10,"StartTime":100,"Duration":300,"Repeating":false},{"ID":7,"StartDate":"2017-03-11T08:01:52Z","EndDate":"2027-03-11T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":true,"Friday":false,"Saturday":false,"StationID":17,"StartTime":100,"Duration":300,"Repeating":false},{"ID":9,"StartDate":"2017-03-11T08:02:38Z","EndDate":"2027-03-11T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":false,"Friday":true,"Saturday":false,"StationID":16,"StartTime":100,"Duration":300,"Repeating":false},{"ID":10,"StartDate":"2017-03-12T17:33:13Z","EndDate":"2027-03-12T08:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":false,"Friday":true,"Saturday":false,"StationID":15,"StartTime":1900,"Duration":300,"Repeating":false},{"ID":100,"StartDate":"2020-01-01T01:01:01.000000001Z","EndDate":"2150-01-01T01:01:01.000000001Z","Sunday":false,"Monday":false,"Tuesday":false,"Wednesday":false,"Thursday":false,"Friday":false,"Saturday":false,"StationID":100,"StartTime":0,"Duration":10,"Repeating":false},{"ID":104,"StartDate":"2017-03-12T17:33:13Z","EndDate":"2031-05-02T07:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":false,"Friday":true,"Saturday":false,"StationID":14,"StartTime":1930,"Duration":300,"Repeating":false},{"ID":105,"StartDate":"2017-03-12T17:33:13Z","EndDate":"2031-05-02T07:00:00Z","Sunday":true,"Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":false,"Friday":true,"Saturday":false,"StationID":13,"StartTime":2000,"Duration":300,"Repeating":false}]}
+
+// logs/all
+// { "logs": [{"level":"debug","message":"Starting monitoring at interval","application":"PirriGo","interval":59,"time":""},{"level":"debug","message":"Queuing Task for GPIO activation in OfflineRunQueue for station","application":"PirriGo","gpio":16,"time":""},{"level":"debug","message":"Queuing Task for GPIO activation in OfflineRunQueue for station","application":"PirriGo","gpio":18,"time":""},{"level":"debug","message":"Executing task for station","application":"PirriGo","stationID":10,"time":""},{"level":"debug","message":"Logging task for station","application":"PirriGo","stationID":10,"startTime":100,"time":""},{"level":"debug","message":"Activating GPIOs","application":"PirriGo","commonWire":21,"gpio":18,"durationSeconds":300,"time":""},{"level":"debug","message":"Queuing Task for GPIO activation in OfflineRunQueue for station","application":"PirriGo","gpio":16,"time":""},{"level":"debug","message":"Queuing Task for GPIO activation in OfflineRunQueue for station","application":"PirriGo","gpio":18,"time":""},{"level":"debug","message":"Deactivating GPIOs","application":"PirriGo","commonWire":21,"gpio":18,"durationSeconds":0,"time":""},{"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":10,"time":""},{"level":"debug","message":"Executing task for station","application":"PirriGo","stationID":10,"time":""},{"level":"debug","message":"Logging task for station","application":"PirriGo","stationID":10,"startTime":100,"time":""},{"level":"debug","message":"Activating GPIOs","application":"PirriGo","commonWire":21,"gpio":18,"durationSeconds":300,"time":""},{"level":"debug","message":"Deactivating GPIOs","application":"PirriGo","commonWire":21,"gpio":18,"durationSeconds":0,"time":""},{"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":10,"time":""},{"level":"debug","message":"Executing task for station","application":"PirriGo","stationID":9,"time":""},{"level":"debug","message":"Logging task for station","application":"PirriGo","stationID":9,"startTime":100,"time":""},{"level":"debug","message":"Activating GPIOs","application":"PirriGo","commonWire":21,"gpio":16,"durationSeconds":300,"time":""},{"level":"debug","message":"Deactivating GPIOs","application":"PirriGo","commonWire":21,"gpio":16,"durationSeconds":0,"time":""},{"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":9,"time":""},{"level":"debug","message":"Executing task for station","application":"PirriGo","stationID":9,"time":""},{"level":"debug","message":"Logging task for station","application":"PirriGo","stationID":9,"startTime":100,"time":""},{"level":"debug","message":"Activating GPIOs","application":"PirriGo","commonWire":21,"gpio":16,"durationSeconds":300,"time":""},{"level":"debug","message":"Deactivating GPIOs","application":"PirriGo","commonWire":21,"gpio":16,"durationSeconds":0,"time":""},{"level":"debug","message":"Task execution complete for station","application":"PirriGo","stationID":9,"time":""}]}
 // status/run
 // {"IsIdle":true,"IsManual":false,"StartTime":"0001-01-01T00:00:00Z","Duration":0,"ScheduleID":0,"StationID":0,"Cancel":false}
 

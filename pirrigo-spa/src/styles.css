@@ -4,6 +4,7 @@
 
 @import "~@angular/material/prebuilt-themes/purple-green.css";
 
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 
 body {
     background-color: rgb(56, 75, 78);

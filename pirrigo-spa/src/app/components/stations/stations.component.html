@@ -5,6 +5,14 @@
                 <!-- TODO: where stations not hidden -->
                 <mat-expansion-panel-header>
                     <mat-panel-title>
+
+                        <p *ngIf="status.StationID == station.ID">{{station}}</p>
+                        <mwl-gauge [max]="runningGauge.Max" [dialStartAngle]="runningGauge.DialStartAngle"
+                            [dialEndAngle]="runningGauge.DialEndAngle" [value]="runningGauge.Value"
+                            [animated]="runningGauge.Animated" [animationDuration]="runningGauge.AnimationDuration"
+                            [label]="runningGauge.Label" [color]="runningGauge.Color">
+                        </mwl-gauge>
+
                         Station {{station.ID}}: {{station.Notes}}
                     </mat-panel-title>
                     <mat-panel-description>

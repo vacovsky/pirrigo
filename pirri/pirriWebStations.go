@@ -43,6 +43,10 @@ func stationAllWeb(rw http.ResponseWriter, req *http.Request) {
 func stationGetWeb(rw http.ResponseWriter, req *http.Request) {
 	var station Station
 	stationID, err := strconv.Atoi(req.URL.Query()["stationid"][0])
+	if err != nil {
+		logging.Service().LogError("Error while loading a station.",
+			zap.String("error", err.Error()))
+	}
 
 	data.Service().DB.Where("id = ?", stationID).Find(&station)
 	blob, err := json.Marshal(&station)
