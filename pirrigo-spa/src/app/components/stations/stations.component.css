@@ -2,3 +2,20 @@
   .mat-form-field + .mat-form-field {
     margin-left: 8px;
   }
+
+  md-progress-bar .md-container {
+    height: 20px;
+}
+
+md-progress-linear .md-container .md-bar {
+    height: 20px;
+}
+
+mat-spinner {
+  zoom: 0.2;
+  padding-right: 2%;
+}
+
+mat-slider {
+  width: 300px;
+}

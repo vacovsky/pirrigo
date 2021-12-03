@@ -2,10 +2,10 @@
 
 /* @import "~@angular/material/prebuilt-themes/pink-bluegray.css"; */
 
-@import "~@angular/material/prebuilt-themes/purple-green.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 @import "../node_modules/angular-calendar/css/angular-calendar.css";
 
 body {
-    background-color: rgb(56, 75, 78);
+    background-color: rgb(181, 194, 196);
 }

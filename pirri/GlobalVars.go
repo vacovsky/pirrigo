@@ -36,6 +36,7 @@ var (
 		// run status
 		"/status/run":    statusRunWeb,
 		"/status/cancel": statusRunCancel,
+		"/status/queue":  statusRunQueue,
 
 		// nodes
 		"/nodes":        nodeAllWeb,

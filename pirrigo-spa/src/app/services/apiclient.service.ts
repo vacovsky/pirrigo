@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalsService } from './globals.service'
 import { Observable } from 'rxjs';
-import { StationResponse, StationStatus, } from '../structs/station';
+import { StationResponse, StationRunRequestBody, StationStatus, StationRunJob } from '../structs/station';
 import { StationHistoryResponse } from 'src/app/structs/station-history';
 import { StationLogsResponse } from '../structs/station-logs';
 import { StationScheduleResponse } from '../structs/station-schedule';
@@ -39,6 +39,38 @@ export class ApiClientService {
     const uri = `${this._globals.uriStem}/status/run`
     return this._http.get<StationStatus>(uri)
   }
+
+  postStationRun(body: StationRunRequestBody): void {
+    const uri = `${this._globals.uriStem}/station/run`
+    // TODO: return response and parse for errors
+    this._http.post(
+      uri, body, { headers: this._globals.headers }
+    ).subscribe(() => {
+      console.log("Running Station:", body.StationID)
+    })
+  }
+
+  cancelActiveStationRun() {
+    const uri = `${this._globals.uriStem}/status/cancel`
+    return this._http.get<StationScheduleResponse>(uri)
+  }
+
+  getStationRunQueue(): Observable<StationRunJob[]> {
+    const uri = `${this._globals.uriStem}/status/queue`
+    return this._http.get<StationRunJob[]>(uri)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 // schedule/all

@@ -28,6 +28,9 @@ import { MatTableModule } from '@angular/material/table';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { StatusComponent } from './components/stations/status/status.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -61,6 +64,9 @@ import { StatusComponent } from './components/stations/status/status.component';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    MatProgressBarModule,
+    MatSliderModule,
+    MatListModule
   ],
   providers: [
     HttpClient,

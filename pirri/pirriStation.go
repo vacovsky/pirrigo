@@ -11,4 +11,5 @@ type Station struct {
 	Description string
 	LastRun     time.Time
 	NextRun     time.Time
+	Enabled     bool
 }

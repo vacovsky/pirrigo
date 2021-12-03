@@ -1,3 +1,5 @@
+import { StationSchedule } from "./station-schedule"
+
 export class Station {
     ID: number
     GPIO: number
@@ -23,3 +25,19 @@ export class StationStatus {
     StationID: number
     Cancel: boolean
 }
+
+export class StationProgressBar {
+    StationID: number
+    percentComplete: number
+}
+
+export class StationRunRequestBody {
+    Duration: number
+    StationID: number
+}
+
+export class StationRunJob {
+    station: Station
+    stationSchedule: StationSchedule
+}
+

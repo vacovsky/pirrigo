@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiClientService } from 'src/app/services/apiclient.service';
-import { Station, StationStatus } from 'src/app/structs/station';
+import { Station, StationStatus, StationProgressBar, StationRunJob, StationRunRequestBody } from 'src/app/structs/station';
 import { MwlGaugeObj } from 'src/app/structs/mwl-gauge-obj';
 import { GlobalsService } from 'src/app/services/globals.service';
+import * as moment from 'moment';
 
 
 
@@ -17,6 +18,11 @@ export class StationsComponent implements OnInit {
   status: StationStatus;
   runningGauge: MwlGaugeObj;
   stations: Station[];
+  stationProgressBar: StationProgressBar;
+
+  runQueue: StationRunJob[];
+  rrDuration: number = 15;
+  runRequest: StationRunRequestBody;
 
   constructor(
     private _api: ApiClientService,
@@ -24,11 +30,13 @@ export class StationsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadStations().then(() =>
+    this.loadStations().then(() => {
+      this.loadStationsRunQueue()
       this.loadStationRunStatus()
-    )
+    })
     setInterval(() => {
       this.loadStationRunStatus();
+      this.loadStationsRunQueue()
     }, this._globals.statusRefreshRateMs);
   }
 
@@ -39,24 +47,38 @@ export class StationsComponent implements OnInit {
     })
   }
 
+  async loadStationsRunQueue() {
+    this._api.getStationRunQueue().subscribe((data) => {
+      this.runQueue = data
+      console.log(this.runQueue)
+    })
+  }
+
   loadStationRunStatus() {
     this._api.getStationStatus().subscribe(data => {
       this.status = data
-      console.log(this.status)
-      this.runningGauge = this.gaugeFactory(
-        2900,
-        0,
-        3600,
-        data.Duration
-      )
+      let tempPB = new StationProgressBar()
+      tempPB.StationID = this.status.StationID
+      tempPB.percentComplete = this.findDateDiffPercent(this.status.StartTime, this.status.Duration)
+      this.stationProgressBar = tempPB
+      console.log(this.stationProgressBar)
     })
   }
 
   findDateDiffForGaugeInSeconds(date: Date, duration: number): number {
-    return 150
+    let now = moment(new Date());
+    let end = moment(date).add(duration, "s");
+    let durationDiff = moment.duration(now.diff(end));
+    let sec = durationDiff.asSeconds()
+    return -sec
+  }
 
-    // var duration = moment.duration(end.diff(startTime));
-    // var hours = duration.asHours();
+  findDateDiffPercent(date: Date, duration: number): number {
+    let now = moment(new Date());
+    let end = moment(date).add(duration, "s");
+    let durationDiff = moment.duration(now.diff(end));
+    let sec = durationDiff.asSeconds()
+    return Math.round(100 - ((-sec / this.status.Duration) * 100))
   }
 
   gaugeFactory(
@@ -72,16 +94,35 @@ export class StationsComponent implements OnInit {
     g.Min = min
     g.Animated = true
     g.AnimationDuration = 5
-    g.DialEndAngle = -180
-    g.DialStartAngle = 180
+    g.DialEndAngle = -179
+    g.DialStartAngle = 179
     g.Label = label
     g.Color = color
-
     return g
+  }
+
+  runStation(station: number, seconds: number) {
+    this.runRequest = new StationRunRequestBody()
+    this.runRequest.Duration = seconds
+    this.runRequest.StationID = station
+    this._api.postStationRun(this.runRequest)
   }
 
 }
 
+// doGaugeStuff() {
+  // this.runningGauge = this.gaugeFactory(
+  //   this.findDateDiffForGaugeInSeconds(data.StartTime, data.Duration) / 60,
+  //   0,
+  //   data.Duration / -60,
+  //   (l: any) => {
+  //     return this.findDateDiffForGaugeInSeconds(data.StartTime, data.Duration) / 60
+  //   },
+  //   () => {
+  //     return `#DD9155`
+  //   }
+  // )
+// }
 
 
 // async ngOnInit() {
@@ -98,7 +139,7 @@ export class StationsComponent implements OnInit {
 //       this.curTemp,
 //       25,
 //       125,
-//       (d) => `${d}°F`,
+//       (d) => `${ d }°F`,
 //       (d) => {
 //         if (d < 35) {
 //           return "#000aff";
@@ -116,7 +157,7 @@ export class StationsComponent implements OnInit {
 //       this.curHum,
 //       0,
 //       100,
-//       (d) => `${d}%rh`,
+//       (d) => `${ d } % rh`,
 //       (d) => {
 //         if (d < 35) {
 //           return "#DD9155";
