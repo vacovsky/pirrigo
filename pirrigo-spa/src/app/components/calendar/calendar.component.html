@@ -1,3 +1,4 @@
 <mat-card>
-    <mwl-calendar-week-view *ngIf="events != undefined" [viewDate]="viewDate" [events]="events">
+    <mwl-calendar-week-view *ngIf="events != undefined" [viewDate]="viewDate" (eventClicked)="eventClicked($event)"
+        [events]="events">
         <!-- </mat-card> -->

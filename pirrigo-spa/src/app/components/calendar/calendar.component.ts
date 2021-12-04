@@ -3,8 +3,7 @@ import { CalendarEvent } from 'calendar-utils';
 import { ApiClientService } from 'src/app/services/apiclient.service';
 import { StationSchedule } from 'src/app/structs/station-schedule';
 import * as moment from 'moment';
-import { SchedulerLike } from 'rxjs';
-// import { endianness } from 'os';
+
 
 @Component({
   selector: 'app-calendar',
@@ -48,6 +47,10 @@ export class CalendarComponent implements OnInit {
     )
   }
 
+  eventClicked({ event }: { event: CalendarEvent }): void {
+    console.log(event);
+  }
+
 
   loadstuff(event: StationSchedule): any {
     let dayIsActiveHash = {
@@ -65,7 +68,7 @@ export class CalendarComponent implements OnInit {
   convertScheduleToCalendarEvents(schedule: StationSchedule[]): CalendarEvent[] {
     let events: CalendarEvent[] = [];
     for (let i = -8; i < this.DOW.length; i++) {
-      let d: moment.Moment = moment(new Date()).add(i, "d")
+      let d: moment.Moment = moment(new Date().setHours(0, 0, 0, 0)).add(i, "d")
       for (let event of schedule) {
 
         if (
@@ -77,22 +80,17 @@ export class CalendarComponent implements OnInit {
           || (d.format('dddd') == "Friday" && event.Friday)
           || (d.format('dddd') == "Saturday" && event.Saturday)
         ) {
-          let start: moment.Moment = d
-            .add(
-              (Math.floor(event.StartTime / 10), "h"))
-            .add(
-              (event.StartTime - (Math.floor(event.StartTime / 60)), "m")
-            )
-          // console.log(start.format())
-          let end: Date = moment(start.toDate()).add((event.Duration / 60), "m").toDate()
-          // console.log(moment(end).format())
+
+          let hm = this.convertMilIntTo12h(event.StartTime)
+          let start: moment.Moment = d.add(hm[0], 'h').add(hm[1], "m")
+          let end: Date = moment(start.toDate()).add(event.Duration, "s").toDate()
 
           let newEvent = {
             "id": event.ID,
             "start": start.toDate(),
             "end": end,
             "title": "Station Run: " + event.StationID,
-            "color": this.colors.red,
+            "color": this.colors.blue,
             // "actions": EventAction[],
             "allDay": false,
             // "cssClass": string,
@@ -116,6 +114,11 @@ export class CalendarComponent implements OnInit {
     return this.DOW.find(day => day == moment(date).format('dddd'))
   }
 
+
+  convertMilIntTo12h(mt: number | string): string[] {
+    mt = mt.toString()
+    return [mt.substring(0, mt.length - 2), mt.substring(mt.length - 2, mt.length)];
+  }
 
   // {"ID":1,
   // "StartDate":"2017-03-10T17:08:40Z",
