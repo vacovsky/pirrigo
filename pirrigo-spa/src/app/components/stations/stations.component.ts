@@ -59,25 +59,26 @@ export class StationsComponent implements OnInit {
   }
 
   async loadStationsRunQueue() {
-
-    this._api.getStationRunQueue().subscribe((data) => {
-      let totalSeconds: number = 0;
-      let currentRunRemainingSec: number = this.findDateDiffInSeconds(this.status.StartTime, this.status.Duration)
-      totalSeconds += currentRunRemainingSec
-      let qi = 0
-      for (let job of data) {
-        if (self.status != undefined) {
-          let now = moment(new Date())
-          job.startTime = now.add(totalSeconds, "s").fromNow()
-          totalSeconds += currentRunRemainingSec
-          job.queueIndex = qi
-          qi++
-          // console.log(totalSeconds, job.startTime, totalSeconds)
+    if (this.status != undefined) {
+      this._api.getStationRunQueue().subscribe((data) => {
+        let totalSeconds: number = 0;
+        let currentRunRemainingSec: number = this.findDateDiffInSeconds(this.status.StartTime, this.status.Duration)
+        totalSeconds += currentRunRemainingSec
+        let qi = 0
+        for (let job of data) {
+          if (self.status != undefined) {
+            let now = moment(new Date())
+            job.startTime = now.add(totalSeconds, "s").fromNow()
+            totalSeconds += currentRunRemainingSec
+            job.queueIndex = qi
+            qi++
+            // console.log(totalSeconds, job.startTime, totalSeconds)
+          }
         }
-      }
-      this.runQueue = data
-      // console.log(this.runQueue)
-    })
+        this.runQueue = data
+        // console.log(this.runQueue)
+      })
+    }
   }
 
   async loadStationRunStatus() {

@@ -13,8 +13,22 @@ export class StationSchedule {
     StartTime: number
     Duration: number
     Repeating: boolean
+
+    // dayIsActiveHash: any;
+
+    // public populatDayIsActiveHash(): void {
+    //     this.dayIsActiveHash = {
+    //         "Sunday": this.Sunday,
+    //         "Monday": this.Monday,
+    //         "Tuesday": this.Tuesday,
+    //         "Wednesday": this.Wednesday,
+    //         "Thursday": this.Thursday,
+    //         "Friday": this.Friday,
+    //         "Saturday": this.Saturday,
+    //     }
+    // }
 }
 
 export class StationScheduleResponse {
-    schedule: StationSchedule[]
+    stationSchedules: StationSchedule[]
 }
