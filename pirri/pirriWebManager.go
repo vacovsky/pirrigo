@@ -26,18 +26,6 @@ func StartPirriWebApp() {
 		(w).Header().Set("Access-Control-Allow-Origin", "*")
 		(w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
 		(w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-
-		// (w).Header().Set("Access-Control-Allow-Headers", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
-		// (w).Header().Set("Accept", "application/json")
-		// (w).Header().Set("User-Agent", "*")
-		// (w).Header().Set("Content-Type", "application/json")
-		// (w).Header().Set("Referer", "*")
-
-		// Accept: applicatoin/json
-		// Content-Type: applicatoin/json
-		// Referer: http://localhost:4200/
-		// User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36
-
 		http.ServeFile(w, r, r.URL.Path[1:])
 	})
 

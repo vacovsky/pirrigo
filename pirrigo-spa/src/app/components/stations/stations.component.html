@@ -1,28 +1,52 @@
-<mat-card>
-    <mat-card-title>Jobs List</mat-card-title>
-    <mat-selection-list [multiple]="false">
-        <mat-list-option *ngFor="let job of runQueue" [value]="job">
-
-            <!-- TODO: if this is running, show progress bar.  If it's queued, make a control to remove it from the queue -->
-            Station {{job.station.ID}}
-        </mat-list-option>
-    </mat-selection-list>
-
-    <!-- <p>
-        Option selected: {{jobs}}
-    </p> -->
+<mat-card *ngIf="runQueue.length > 0 || (status != undefined && !status.IsIdle)">
+    <mat-card-title>
+        Jobs
+        <p *ngIf="status != undefined && stationProgressBar != undefined">
+            <mat-progress-bar mode="determinate" [value]="stationProgressBar.percentComplete">
+            </mat-progress-bar>
+        </p>
+    </mat-card-title>
+    <p *ngIf="status != undefined">
+        <button (click)=" cancelRunStation()">
+            <mat-icon>stop</mat-icon>
+        </button>&nbsp;&nbsp;
+        Current Station Run is {{stationProgressBar.percentComplete}}% complete (about {{ (this.status.Duration / 60) -
+        getPercentComplete(stationProgressBar.percentComplete) }} minutes remain)
+    </p>
+    <br />
+    <br />
+    <div *ngIf="runQueue.length">
+        <p>Next up:</p>
+        <mat-selection-list [multiple]=" false">
+            <mat-list-option *ngFor="let job of runQueue" [value]="job">
+                <p>
+                    <button (click)="cancelJobInQueue(job.queueIndex)">
+                        <mat-icon>cancel</mat-icon>
+                    </button> &nbsp; &nbsp;
+                    Position in Queue: {{ job.queueIndex }}&nbsp; &nbsp; &nbsp; &nbsp; Station {{job.station.ID}},
+                    starting
+                    {{job.startTime}}
+                </p>
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
 </mat-card>
 
 <mat-card>
-    <mat-card-title>Enabled Stations</mat-card-title>
-    <mat-accordion>
+    <mat-card-title>Stations</mat-card-title>
+    <mat-accordion *ngIf="stations != undefined">
         <mat-expansion-panel *ngFor="let station of stations" hideToggle>
-            <!-- TODO: where stations hidden -->
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <mat-spinner *ngIf="status != undefined && station.ID == status.StationID &&
+                    <p>
+                        Station {{station.ID}}
+                        &nbsp;
+                        &nbsp;
+                    </p>
+                    <p>
+                        <mat-spinner class="spinner-pad-left" *ngIf="status != undefined && station.ID == status.StationID &&
                             stationProgressBar != undefined" [diameter]="70"></mat-spinner>
-                    Station {{station.ID}}
+                    </p>
                 </mat-panel-title>
                 <mat-panel-description>
                     <p>
@@ -30,24 +54,29 @@
                     </p>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <!-- <mat-icon (click)="runStation(station.ID, 60)">play_circle_filled</mat-icon> -->
-
             <p *ngIf="status != undefined && station.ID == status.StationID &&
                 stationProgressBar != undefined">
                 <mat-progress-bar mode="determinate" [value]="stationProgressBar.percentComplete">
                 </mat-progress-bar>
                 {{stationProgressBar.percentComplete}}% complete
             </p>
-
-            <button (click)="runStation(station.ID, rrDuration * 60)">
-                <mat-icon>play_arrow</mat-icon>
-            </button>
+            <span>
+                <button *ngIf="status != undefined && station.ID == status.StationID &&
+                stationProgressBar != undefined" (click)=" cancelRunStation()">
+                    <mat-icon>stop</mat-icon>
+                </button>
+                &nbsp;
+                <button (click)="runStation(station.ID, rrDuration * 60)">
+                    <mat-icon>play_arrow</mat-icon>
+                </button>
+            </span>
+            &nbsp;
             <mat-slider thumbLabel min="1" max="60" step="1" [value]="rrDuration"></mat-slider>
             {{station.Description}}
         </mat-expansion-panel>
     </mat-accordion>
 </mat-card>
-
+<!-- 
 <mat-card>
     <mat-card-title>
         Disabled Stations
@@ -55,7 +84,6 @@
     <mat-accordion multi>
         <div *ngFor="let station of stations">
             <mat-expansion-panel hideToggle hideToggle *ngIf="station.Enabled">
-                <!-- TODO: where stations not hidden -->
                 <mat-expansion-panel-header>
                     <mat-panel-title>
                         gdergrea
@@ -64,8 +92,8 @@
                         {{station.Description}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
-                <p>GPIO: {{station.GPIO}}</p>
+                <p>GPIO: {{station.GPIO`}}</p>
             </mat-expansion-panel>
         </div>
     </mat-accordion>
-</mat-card>
+</mat-card> -->

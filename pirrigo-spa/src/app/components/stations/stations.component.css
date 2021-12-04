@@ -19,3 +19,12 @@ mat-spinner {
 mat-slider {
   width: 300px;
 }
+
+.button-pad-right {
+  /* padding-right: 15px; */
+}
+
+.spinner-pad-left {
+  /* padding-left: .5em; */
+}
+

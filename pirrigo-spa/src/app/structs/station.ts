@@ -37,6 +37,8 @@ export class StationRunRequestBody {
 }
 
 export class StationRunJob {
+    queueIndex: number
+    startTime: string
     station: Station
     stationSchedule: StationSchedule
 }

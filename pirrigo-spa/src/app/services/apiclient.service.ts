@@ -46,13 +46,13 @@ export class ApiClientService {
     this._http.post(
       uri, body, { headers: this._globals.headers }
     ).subscribe(() => {
-      console.log("Running Station:", body.StationID)
+      // console.log("Running Station:", body.StationID)
     })
   }
 
   cancelActiveStationRun() {
     const uri = `${this._globals.uriStem}/status/cancel`
-    return this._http.get<StationScheduleResponse>(uri)
+    return this._http.get<StationStatus>(uri)
   }
 
   getStationRunQueue(): Observable<StationRunJob[]> {
@@ -60,8 +60,12 @@ export class ApiClientService {
     return this._http.get<StationRunJob[]>(uri)
   }
 
-
-
+  cancelQueuedJob(body: any): Observable<StationRunJob[]> {
+    const uri = `${this._globals.uriStem}/status/queue/remove`
+    return this._http.post<StationRunJob[]>(
+      uri, body, { headers: this._globals.headers }
+    )
+  }
 
 
 

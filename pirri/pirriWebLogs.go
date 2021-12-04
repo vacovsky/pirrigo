@@ -9,7 +9,7 @@ import (
 
 func logsAllWeb(rw http.ResponseWriter, req *http.Request) {
 	result := `{ "logs": [`
-	logs, _ := logging.Service().TailLogs(25)
+	logs, _ := logging.Service().TailLogs(50)
 	for n, log := range logs {
 		result += log
 		if n < len(logs)-2 {
