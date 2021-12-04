@@ -82,14 +82,15 @@ export class CalendarComponent implements OnInit {
         ) {
 
           let hm = this.convertMilIntTo12h(event.StartTime)
-          let start: moment.Moment = d.add(hm[0], 'h').add(hm[1], "m")
+          let start: moment.Moment = moment(d).add(hm[0], 'h').add(hm[1], "m")
+
           let end: Date = moment(start.toDate()).add(event.Duration, "s").toDate()
 
           let newEvent = {
             "id": event.ID,
             "start": start.toDate(),
             "end": end,
-            "title": "Station Run: " + event.StationID,
+            "title": `Station ${event.StationID} for ${event.Duration / 60} minutes`,
             "color": this.colors.blue,
             // "actions": EventAction[],
             "allDay": false,
