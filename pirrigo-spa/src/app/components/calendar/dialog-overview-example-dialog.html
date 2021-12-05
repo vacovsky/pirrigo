@@ -12,7 +12,12 @@
 
     <br />
 
-
+    <div *ngIf="tempStation != undefined">
+        <p>Station ID: {{tempStation.ID}}</p>
+        <p>Station Name: {{tempStation.FriendlyName}}</p>
+        <p>Station GPIO: {{tempStation.GPIO}}</p>
+        <p>Station Notes: {{tempStation.Notes}}</p>
+    </div>
     <br />
 
     <mat-form-field appearance="outline">
@@ -79,20 +84,16 @@
 
     <p>
         <mat-form-field appearance="outline">
-            <mat-label>Start time:</mat-label>
-            <!-- <div class="ngx-timepicker-field-example">
-                <ngx-timepicker-field [format]="24" [value]="data.StartTime.to" [defaultTime]="data.StartTime.toString()">
-                </ngx-timepicker-field>
-            </div> -->
-            <input matInput readonly placeholder="{{data.StartTime}}" [format]="24" aria-label="24hr format"
-                [ngxTimepicker]="fullTime" (ngModelChange)="setStartTime($event)" [value]="tempStartTime">
+            <mat-label>Start Time</mat-label>
+            <input matInput readonly [format]="24" aria-label="24hr format" [ngxTimepicker]="fullTime"
+                [(ngModel)]="tempStartTime" (ngModelChange)="setStartTime(tempStartTime)">
         </mat-form-field>
         <ngx-material-timepicker #fullTime></ngx-material-timepicker>
     </p>
 
     <p>
         <mat-label>Duration:</mat-label>
-        <mat-slider thumbLabel (change)="setDuration($event)" [displayWith]="formatSliderLabel" min="1" max="120"
+        <mat-slider thumbLabel (change)=" setDuration($event)" [displayWith]="formatSliderLabel" min="1" max="120"
             step="1" [value]="data.Duration / 60">
 
         </mat-slider>
@@ -101,5 +102,9 @@
 
     <button (click)="submitScheduleChange(data)" mat-fab color="accent" aria-label="Save Schedule">
         <mat-icon>save</mat-icon>
+    </button>
+    <button style="float: right;" (click)="closeEditSchedule()" mat-fab color="warn"
+        aria-label="Close Edit Schedule Dialog">
+        <mat-icon>close</mat-icon>
     </button>
 </mat-card>

@@ -1,7 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, AfterViewInit } from '@angular/core';
 import { CalendarEvent } from 'calendar-utils';
 import { ApiClientService } from 'src/app/services/apiclient.service';
 import { StationSchedule } from 'src/app/structs/station-schedule';
+import { Station } from 'src/app/structs/station';
 import * as moment from 'moment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
@@ -51,11 +52,21 @@ export class CalendarComponent implements OnInit {
     )
   }
 
+
+  openNewScheduleDialog(): void {
+    let sch = new StationSchedule()
+    sch.StartDate = moment(new Date().setHours(0, 0, 0, 0)).toDate();
+    sch.EndDate = moment().add(15, "y").toDate();
+    this.openDialog(sch)
+  }
+
   eventClicked({ event }: { event: CalendarEvent }): void {
     this.editingSchedule = JSON.parse(event.title.split(" | ")[1])
-    let mstart = moment(event.start)
-    let mend = moment(event.end)
-    this.editingSchedule.StartDate = new Date();
+    // let mstart = moment(event.start)
+    // let mend = moment(event.end)
+
+
+    this.editingSchedule.StartDate = moment(new Date().setHours(0, 0, 0, 0)).toDate();
     this.editingSchedule.EndDate = moment().add(15, "y").toDate();
     this.openDialog(this.editingSchedule)
   }
@@ -146,9 +157,10 @@ export class CalendarComponent implements OnInit {
   selector: 'dialog-overview-example-dialog',
   templateUrl: `./dialog-overview-example-dialog.html`,
 })
-export class EditScheduleDialog {
+export class EditScheduleDialog implements OnInit, AfterViewInit {
 
   tempStartTime: string;
+  tempStation: Station;
 
   constructor(
     private _api: ApiClientService,
@@ -156,9 +168,20 @@ export class EditScheduleDialog {
     @Inject(MAT_DIALOG_DATA) public data: StationSchedule,
   ) { }
 
-  setStartTime(event: any): void {
-    console.log(event)
+
+  ngOnInit() {
+    this._api.getStationForScheduleEdit(this.data.StationID).subscribe(stationdata => {
+      this.tempStation = stationdata
+    })
+  }
+
+  ngAfterViewInit() {
+    // this.tempStartTime = this.data.StartTime.toString()
+  }
+
+  setStartTime(event: string): void {
     this.tempStartTime = event
+    this.data.StartTime = Number(event.replace(":", ""))
   }
 
   setDuration(event: any): void {
@@ -171,8 +194,16 @@ export class EditScheduleDialog {
 
   submitScheduleChange(schedule: StationSchedule): void {
     console.log(schedule)
+    this._api.postStationScheduleChange(schedule).subscribe(() => {
+      this.dialogRef.close();
+      console.log(this.data)
+    })
+
   }
 
+  closeEditSchedule() {
+    this.dialogRef.close();
+  }
 
   onNoClick(): void {
     this.dialogRef.close();

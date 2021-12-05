@@ -1,5 +1,23 @@
 <!-- <button mat-button (click)="openDialog()">Launch dialog</button> -->
 
 <mat-card>
+    <style>
+        .add-new-button {
+            position: absolute;
+            /* right: 100px; */
+            z-index: 1000;
+            /* float: right; */
+            top: 3em;
+        }
+    </style>
+    <button class="add-new-button" (click)="openNewScheduleDialog()" mat-fab color="accent"
+        aria-label="Close Edit Schedule Dialog">
+        <mat-icon>add</mat-icon>
+    </button>
+    <mat-card-title>Station Schedule
+
+    </mat-card-title>
+
+
     <mwl-calendar-week-view *ngIf="events != undefined" (eventTimesChanged)="eventTimesChanged($event)"
         [viewDate]="viewDate" (eventClicked)="eventClicked($event)" [events]="events">

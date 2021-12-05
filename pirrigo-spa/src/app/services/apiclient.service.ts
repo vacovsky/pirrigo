@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { GlobalsService } from './globals.service'
 import { Observable } from 'rxjs';
-import { StationResponse, StationRunRequestBody, StationStatus, StationRunJob } from '../structs/station';
+import { StationResponse, StationRunRequestBody, Station, StationStatus, StationRunJob } from '../structs/station';
 import { StationHistoryResponse } from 'src/app/structs/station-history';
 import { StationLogsResponse } from '../structs/station-logs';
 import { StationSchedule, StationScheduleResponse } from '../structs/station-schedule';
@@ -73,7 +73,10 @@ export class ApiClientService {
     return this._http.post<StationScheduleResponse>(uri, body, { headers: this._globals.headers })
   }
 
-
+  getStationForScheduleEdit(stationID: number): Observable<Station> {
+    const uri = `${this._globals.uriStem}/station?stationid=${stationID}`
+    return this._http.get<Station>(uri)
+  }
 
 
   // /schedule/edit POST
