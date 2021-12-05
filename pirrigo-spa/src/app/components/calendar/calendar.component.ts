@@ -46,16 +46,17 @@ export class CalendarComponent implements OnInit {
     this._api.getStationSchedules().subscribe(
       (data) => {
         this.events = this.convertScheduleToCalendarEvents(data.stationSchedules)
-        console.log(this.events)
+        // console.log(this.events)
       }
     )
   }
 
   eventClicked({ event }: { event: CalendarEvent }): void {
-
     this.editingSchedule = JSON.parse(event.title.split(" | ")[1])
     let mstart = moment(event.start)
     let mend = moment(event.end)
+    this.editingSchedule.StartDate = new Date();
+    this.editingSchedule.EndDate = moment().add(15, "y").toDate();
     this.openDialog(this.editingSchedule)
   }
 
@@ -123,13 +124,12 @@ export class CalendarComponent implements OnInit {
 
   openDialog(es: StationSchedule): void {
     const dialogRef = this.dialog.open(EditScheduleDialog, {
-      width: '80%',
+      // width: '80%',
       data: es
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(`make this do stuff`, result)
+      this.ngOnInit()
     });
   }
 
@@ -142,28 +142,41 @@ export class CalendarComponent implements OnInit {
 
 
 @Component({
+  styleUrls: ['./calendar.component.css'],
   selector: 'dialog-overview-example-dialog',
   templateUrl: `./dialog-overview-example-dialog.html`,
 })
 export class EditScheduleDialog {
+
+  tempStartTime: string;
+
   constructor(
     private _api: ApiClientService,
     public dialogRef: MatDialogRef<EditScheduleDialog>,
     @Inject(MAT_DIALOG_DATA) public data: StationSchedule,
   ) { }
 
-  printSomething(input: StationSchedule) {
-    console.log(input)
-    console.log(this.data)
+  setStartTime(event: any): void {
+    console.log(event)
+    this.tempStartTime = event
+  }
+
+  setDuration(event: any): void {
+    this.data.Duration = event.value * 60
+  }
+
+  formatSliderLabel(value: number) {
+    return `${value}m`;
   }
 
   submitScheduleChange(schedule: StationSchedule): void {
-    this._api.postStationScheduleChange(schedule).subscribe((data) => {
-
-    })
+    console.log(schedule)
   }
+
+
   onNoClick(): void {
     this.dialogRef.close();
     console.log(this.data)
   }
+
 }

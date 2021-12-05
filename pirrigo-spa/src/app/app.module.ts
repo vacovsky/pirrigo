@@ -33,8 +33,9 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { EditScheduleDialog } from './components/calendar/calendar.component';
-
+import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
 @NgModule({
   declarations: [
@@ -61,8 +62,10 @@ import { MatInputModule } from '@angular/material/input';
     MatNativeDateModule,
     FormsModule,
     MatProgressSpinnerModule,
+    MatButtonModule,
     MatCardModule,
     MatExpansionModule,
+    NgxMaterialTimepickerModule,
     MatIconModule,
     MatTabsModule,
     MatTableModule,
