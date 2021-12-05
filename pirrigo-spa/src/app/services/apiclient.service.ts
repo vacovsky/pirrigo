@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 import { StationResponse, StationRunRequestBody, StationStatus, StationRunJob } from '../structs/station';
 import { StationHistoryResponse } from 'src/app/structs/station-history';
 import { StationLogsResponse } from '../structs/station-logs';
-import { StationScheduleResponse } from '../structs/station-schedule';
+import { StationSchedule, StationScheduleResponse } from '../structs/station-schedule';
+
 
 @Injectable()
 export class ApiClientService {
@@ -67,13 +68,30 @@ export class ApiClientService {
     )
   }
 
+  postStationScheduleChange(body: StationSchedule): Observable<StationScheduleResponse> {
+    const uri = `${this._globals.uriStem}/schedule/edit`
+    return this._http.post<StationScheduleResponse>(uri, body, { headers: this._globals.headers })
+  }
 
 
 
 
-
-
-
+  // /schedule/edit POST
+  //   stationSchedules: [{ID: 1, StartDate: "2017-03-10T17:08:40Z", EndDate: "2027-03-10T08:00:00Z", Sunday: true,…}
+  // Duration: 1800
+  // EndDate: "2027-03-10T08:00:00Z"
+  // Friday: false
+  // ID: 1
+  // Monday: false
+  // Repeating: false
+  // Saturday: true
+  // StartDate: "2017-03-10T17:08:40Z"
+  // StartTime: 100
+  // StationID: 4
+  // Sunday: true
+  // Thursday: true
+  // Tuesday: true
+  // Wednesday: false
 
 }
 

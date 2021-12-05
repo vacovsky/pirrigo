@@ -35,7 +35,7 @@
 <mat-card>
     <mat-card-title>Stations</mat-card-title>
     <mat-accordion *ngIf="stations != undefined">
-        <mat-expansion-panel *ngFor="let station of stations" hideToggle>
+        <mat-expansion-panel (afterExpand)="runRequestRunTime = 15" *ngFor="let station of stations" hideToggle>
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <p>
@@ -66,12 +66,14 @@
                     <mat-icon>stop</mat-icon>
                 </button>
                 &nbsp;
-                <button (click)="runStation(station.ID, rrDuration * 60)">
+                <button (click)="runStation(station.ID, runRequestRunTime * 60)">
                     <mat-icon>play_arrow</mat-icon>
                 </button>
             </span>
             &nbsp;
-            <mat-slider thumbLabel min="1" max="60" step="1" [value]="rrDuration"></mat-slider>
+            <mat-slider thumbLabel (change)="updateSliderValue($event)" [displayWith]="formatSliderLabel" min="1"
+                max="120" step="1" [value]="runRequestRunTime">
+            </mat-slider>
             {{station.Description}}
         </mat-expansion-panel>
     </mat-accordion>

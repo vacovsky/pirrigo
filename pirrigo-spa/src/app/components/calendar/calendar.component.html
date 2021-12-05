@@ -1,4 +1,5 @@
+<!-- <button mat-button (click)="openDialog()">Launch dialog</button> -->
+
 <mat-card>
-    <mwl-calendar-week-view *ngIf="events != undefined" [viewDate]="viewDate" (eventClicked)="eventClicked($event)"
-        [events]="events">
-        <!-- </mat-card> -->
+    <mwl-calendar-week-view *ngIf="events != undefined" (eventTimesChanged)="eventTimesChanged($event)"
+        [viewDate]="viewDate" (eventClicked)="eventClicked($event)" [events]="events">

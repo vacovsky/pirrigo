@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { CalendarEvent } from 'calendar-utils';
 import { ApiClientService } from 'src/app/services/apiclient.service';
 import { StationSchedule } from 'src/app/structs/station-schedule';
 import * as moment from 'moment';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
 
 
 @Component({
@@ -12,6 +14,7 @@ import * as moment from 'moment';
 })
 export class CalendarComponent implements OnInit {
 
+  editingSchedule: StationSchedule;
   viewDate: Date;
   events: CalendarEvent[];
   colors: any = {
@@ -30,7 +33,8 @@ export class CalendarComponent implements OnInit {
   };
 
   constructor(
-    private _api: ApiClientService
+    private _api: ApiClientService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -48,21 +52,15 @@ export class CalendarComponent implements OnInit {
   }
 
   eventClicked({ event }: { event: CalendarEvent }): void {
-    console.log(event);
+
+    this.editingSchedule = JSON.parse(event.title.split(" | ")[1])
+    let mstart = moment(event.start)
+    let mend = moment(event.end)
+    this.openDialog(this.editingSchedule)
   }
 
-
-  loadstuff(event: StationSchedule): any {
-    let dayIsActiveHash = {
-      "Sunday": event.Sunday,
-      "Monday": event.Monday,
-      "Tuesday": event.Tuesday,
-      "Wednesday": event.Wednesday,
-      "Thursday": event.Thursday,
-      "Friday": event.Friday,
-      "Saturday": event.Saturday,
-    }
-    return dayIsActiveHash
+  eventTimesChanged({ event }: { event: CalendarEvent }): void {
+    console.log(event);
   }
 
   convertScheduleToCalendarEvents(schedule: StationSchedule[]): CalendarEvent[] {
@@ -70,7 +68,6 @@ export class CalendarComponent implements OnInit {
     for (let i = -8; i < this.DOW.length; i++) {
       let d: moment.Moment = moment(new Date().setHours(0, 0, 0, 0)).add(i, "d")
       for (let event of schedule) {
-
         if (
           (d.format('dddd') == "Sunday" && event.Sunday)
           || (d.format('dddd') == "Monday" && event.Monday)
@@ -80,55 +77,39 @@ export class CalendarComponent implements OnInit {
           || (d.format('dddd') == "Friday" && event.Friday)
           || (d.format('dddd') == "Saturday" && event.Saturday)
         ) {
-
           let hm = this.convertMilIntTo12h(event.StartTime)
           let start: moment.Moment = moment(d).add(hm[0], 'h').add(hm[1], "m")
-
           let end: Date = moment(start.toDate()).add(event.Duration, "s").toDate()
-
           let newEvent = {
             "id": event.ID,
             "start": start.toDate(),
             "end": end,
-            "title": `Station ${event.StationID} for ${event.Duration / 60} minutes`,
+            "title": `Station ${event.StationID} for ${event.Duration / 60} minutes<br/><br/><br/><br/> | ${JSON.stringify(event)}
+            `,
             "color": this.colors.blue,
-            // "actions": EventAction[],
             "allDay": false,
-            // "cssClass": string,
             "resizable": {
               "beforeStart": false,
               "afterEnd": false,
             },
             "draggable": false,
-            // "meta": MetaType,
           }
           events.push(newEvent)
-          // console.log(newEvent)
         }
       }
     }
     return events
   }
 
-
   getDOWForMoment(date: Date): string | undefined {
     return this.DOW.find(day => day == moment(date).format('dddd'))
   }
-
 
   convertMilIntTo12h(mt: number | string): string[] {
     mt = mt.toString()
     return [mt.substring(0, mt.length - 2), mt.substring(mt.length - 2, mt.length)];
   }
 
-  // {"ID":1,
-  // "StartDate":"2017-03-10T17:08:40Z",
-  // "EndDate":"2027-03-10T08:00:00Z",
-  // "Sunday":true,  "Monday":false,"Tuesday":true,"Wednesday":false,"Thursday":true,"Friday":false,"Saturday":true,
-  // "StationID":4,
-  // "StartTime":100,
-  // "Duration":1800,
-  // "Repeating":false}
   DOW: string[] = [
     "Sunday",
     "Monday",
@@ -138,4 +119,51 @@ export class CalendarComponent implements OnInit {
     "Friday",
     "Saturday"
   ]
+
+
+  openDialog(es: StationSchedule): void {
+    const dialogRef = this.dialog.open(EditScheduleDialog, {
+      width: '80%',
+      data: es
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(`make this do stuff`, result)
+    });
+  }
+
+  submitScheduleChange(schedule: StationSchedule): void {
+    this._api.postStationScheduleChange(schedule).subscribe((data) => {
+      this.events = this.convertScheduleToCalendarEvents(data.stationSchedules)
+    })
+  }
+}
+
+
+@Component({
+  selector: 'dialog-overview-example-dialog',
+  templateUrl: `./dialog-overview-example-dialog.html`,
+})
+export class EditScheduleDialog {
+  constructor(
+    private _api: ApiClientService,
+    public dialogRef: MatDialogRef<EditScheduleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: StationSchedule,
+  ) { }
+
+  printSomething(input: StationSchedule) {
+    console.log(input)
+    console.log(this.data)
+  }
+
+  submitScheduleChange(schedule: StationSchedule): void {
+    this._api.postStationScheduleChange(schedule).subscribe((data) => {
+
+    })
+  }
+  onNoClick(): void {
+    this.dialogRef.close();
+    console.log(this.data)
+  }
 }

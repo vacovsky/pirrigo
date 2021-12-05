@@ -4,8 +4,6 @@ import { Station, StationStatus, StationProgressBar, StationRunJob, StationRunRe
 import { MwlGaugeObj } from 'src/app/structs/mwl-gauge-obj';
 import { GlobalsService } from 'src/app/services/globals.service';
 import * as moment from 'moment';
-import { quartersInYear } from 'date-fns';
-
 
 
 @Component({
@@ -15,6 +13,7 @@ import { quartersInYear } from 'date-fns';
 })
 export class StationsComponent implements OnInit {
 
+  runRequestRunTime: number = 15;
   panelOpenState = false;
   status: StationStatus;
   runningGauge: MwlGaugeObj;
@@ -22,7 +21,6 @@ export class StationsComponent implements OnInit {
   stationProgressBar: StationProgressBar;
 
   runQueue: StationRunJob[] = [];
-  rrDuration: number = 15;
   runRequest: StationRunRequestBody;
 
   constructor(
@@ -127,7 +125,7 @@ export class StationsComponent implements OnInit {
     })
   }
 
-  // status/cancel
+
   cancelJobInQueue(queueIndex: number) {
     this._api.cancelQueuedJob({ QueueIndex: queueIndex }).subscribe((data) => {
       this.loadStationsRunQueue()
@@ -152,5 +150,13 @@ export class StationsComponent implements OnInit {
     g.Label = label
     g.Color = color
     return g
+  }
+
+  updateSliderValue(event: any): void {
+    this.runRequestRunTime = event.value
+  }
+
+  formatSliderLabel(value: number) {
+    return `${value}m`;
   }
 }

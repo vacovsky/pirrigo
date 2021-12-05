@@ -31,6 +31,10 @@ import { StatusComponent } from './components/stations/status/status.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { EditScheduleDialog } from './components/calendar/calendar.component';
+
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -41,7 +45,8 @@ import { MatListModule } from '@angular/material/list';
     LogsComponent,
     SettingsComponent,
     UsageCalculatorComponent,
-    StatusComponent
+    StatusComponent,
+    EditScheduleDialog
   ],
   imports: [
     BrowserModule,
@@ -52,6 +57,7 @@ import { MatListModule } from '@angular/material/list';
     MatGridListModule,
     MatDatepickerModule,
     MatFormFieldModule,
+    MatInputModule,
     MatNativeDateModule,
     FormsModule,
     MatProgressSpinnerModule,
@@ -66,7 +72,8 @@ import { MatListModule } from '@angular/material/list';
     }),
     MatProgressBarModule,
     MatSliderModule,
-    MatListModule
+    MatListModule,
+    MatDialogModule
   ],
   providers: [
     HttpClient,
