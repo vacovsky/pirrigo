@@ -74,28 +74,24 @@
             <mat-slider thumbLabel (change)="updateSliderValue($event)" [displayWith]="formatSliderLabel" min="1"
                 max="120" step="1" [value]="runRequestRunTime">
             </mat-slider>
-            {{station.Description}}
+            <p>
+                {{station.Description}}
+                <button style="float: right;" (click)=" deleteStation(station.ID)" mat-fab color="accent"
+                    aria-label="Refresh data">
+                    <mat-icon>add</mat-icon>
+                </button>
+            </p>
+
         </mat-expansion-panel>
     </mat-accordion>
+
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        &nbsp;
+        <button (click)=" addNewStation()" mat-fab color="accent" aria-label="Add station">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
 </mat-card>
-<!-- 
-<mat-card>
-    <mat-card-title>
-        Disabled Stations
-    </mat-card-title>
-    <mat-accordion multi>
-        <div *ngFor="let station of stations">
-            <mat-expansion-panel hideToggle hideToggle *ngIf="station.Enabled">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        gdergrea
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        {{station.Description}}
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <p>GPIO: {{station.GPIO`}}</p>
-            </mat-expansion-panel>
-        </div>
-    </mat-accordion>
-</mat-card> -->

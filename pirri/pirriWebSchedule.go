@@ -45,6 +45,6 @@ func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		logging.Service().LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
 	}
-	data.Service().DB.Delete(&scheduleItem)
+	data.Service().DB.Delete(&scheduleItem, scheduleItem.ID)
 	stationScheduleAllWeb(rw, req)
 }

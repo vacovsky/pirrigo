@@ -1,4 +1,7 @@
 <mat-card>
+    <mat-card-title>
+        Station Run History
+    </mat-card-title>
     <table mat-table [dataSource]="history" class="mat-elevation-z8">
         <ng-container matColumnDef="Station ID">
             <th mat-header-cell *matHeaderCellDef> Station ID </th>
@@ -25,4 +28,9 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
 </mat-card>

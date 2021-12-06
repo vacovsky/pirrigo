@@ -1,14 +1,17 @@
 package logging
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/b4b4r07/go-pipe"
 	"go.uber.org/zap/zapcore"
 
 	"go.uber.org/zap"
@@ -100,18 +103,28 @@ func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 	)
 }
 
-func (l *PirriLogger) TailLogs(lines int) ([]string, error) {
+func (l *PirriLogger) LoadJournalCtlLogs() []string {
 	defer l.lock.Unlock()
+
+	var b bytes.Buffer
+	pipe.Command(&b,
+		exec.Command("journalctl", "-xe"),
+		exec.Command("grep", "pirrigo"),
+	)
+	io.Copy(os.Stdout, &b)
+
 	l.lock.Lock()
-	cmd := exec.Command("tail", "-n", fmt.Sprintf("%d", lines), os.Getenv("PIRRIGO_LOG_LOCATION"))
-	output, err := cmd.Output()
-	if err != nil {
-		l.LogError("Failed to tail log file.",
-			zap.String("error", err.Error()),
-			zap.String("logPath", os.Getenv("PIRRIGO_LOG_LOCATION")),
-			zap.Int("tailLines", lines),
-		)
-		return nil, err
+
+	return reverseLogs(strings.Split(b.String(), "\n"))
+}
+
+func reverseLogs(s []string) []string {
+	i := 0
+	j := len(s) - 1
+	for i < j {
+		s[i], s[j] = s[j], s[i]
+		i++
+		j--
 	}
-	return strings.Split(string(output), "\n"), nil
+	return s
 }

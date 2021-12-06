@@ -36,6 +36,9 @@ import { EditScheduleDialog } from './components/calendar/calendar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { MatSelectModule } from '@angular/material/select';
+
+
 
 @NgModule({
   declarations: [
@@ -65,6 +68,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatButtonModule,
     MatCardModule,
     MatExpansionModule,
+    MatSelectModule,
     NgxMaterialTimepickerModule,
     MatIconModule,
     MatTabsModule,

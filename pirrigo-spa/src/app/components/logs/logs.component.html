@@ -1,4 +1,18 @@
 <mat-card>
+    <style>
+        .refresh-button {
+            position: fixed;
+
+            /* position: absolute; */
+            right: 50%;
+            z-index: 1000;
+            /* float: right; */
+            bottom: 3em;
+        }
+    </style>
+    <mat-card-title>
+        Logs (systemd)
+    </mat-card-title>
     <table mat-table #table [dataSource]="logs" class="mat-elevation-z8">
         <ng-container matColumnDef="time">
             <th mat-header-cell *matHeaderCellDef> Time </th>
@@ -28,4 +42,9 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
 </mat-card>

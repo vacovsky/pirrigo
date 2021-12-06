@@ -78,6 +78,14 @@ export class ApiClientService {
     return this._http.get<Station>(uri)
   }
 
+  deleteStationScheduleItem(id: number): Observable<StationScheduleResponse> {
+    const uri = `${this._globals.uriStem}/schedule/delete`
+    return this._http.post<StationScheduleResponse>(
+      uri, { "ID": id }, { headers: this._globals.headers }
+    )
+  }
+
+  // schedule/delete {ID: 134} POST
 
   // /schedule/edit POST
   //   stationSchedules: [{ID: 1, StartDate: "2017-03-10T17:08:40Z", EndDate: "2027-03-10T08:00:00Z", Sunday: true,…}

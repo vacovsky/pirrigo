@@ -1,1 +1,22 @@
-<p>settings works!</p>
+<mat-card>
+    <mat-card-title>
+        Settings
+    </mat-card-title>
+
+    <style>
+        .refresh-button {
+            position: fixed;
+
+            /* position: absolute; */
+            right: 50%;
+            z-index: 1000;
+            /* float: right; */
+            bottom: 3em;
+        }
+    </style>
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
+</mat-card>

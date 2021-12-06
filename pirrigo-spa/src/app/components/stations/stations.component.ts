@@ -159,4 +159,17 @@ export class StationsComponent implements OnInit {
   formatSliderLabel(value: number) {
     return `${value}m`;
   }
+
+  // 
+
+  addNewStation(): void {
+
+    this.ngOnInit()
+  }
+
+  deleteStation(id: number) {
+
+    this.ngOnInit()
+  }
+
 }

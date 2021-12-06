@@ -62,10 +62,6 @@ export class CalendarComponent implements OnInit {
 
   eventClicked({ event }: { event: CalendarEvent }): void {
     this.editingSchedule = JSON.parse(event.title.split(" | ")[1])
-    // let mstart = moment(event.start)
-    // let mend = moment(event.end)
-
-
     this.editingSchedule.StartDate = moment(new Date().setHours(0, 0, 0, 0)).toDate();
     this.editingSchedule.EndDate = moment().add(15, "y").toDate();
     this.openDialog(this.editingSchedule)
@@ -135,7 +131,6 @@ export class CalendarComponent implements OnInit {
 
   openDialog(es: StationSchedule): void {
     const dialogRef = this.dialog.open(EditScheduleDialog, {
-      // width: '80%',
       data: es
     });
 
@@ -154,13 +149,14 @@ export class CalendarComponent implements OnInit {
 
 @Component({
   styleUrls: ['./calendar.component.css'],
-  selector: 'dialog-overview-example-dialog',
-  templateUrl: `./dialog-overview-example-dialog.html`,
+  selector: 'dialog-scheduleform',
+  templateUrl: `./dialog-scheduleform.html`,
 })
 export class EditScheduleDialog implements OnInit, AfterViewInit {
 
   tempStartTime: string;
   tempStation: Station;
+  tempStationsList: Station[];
 
   constructor(
     private _api: ApiClientService,
@@ -170,13 +166,26 @@ export class EditScheduleDialog implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    this._api.getStationForScheduleEdit(this.data.StationID).subscribe(stationdata => {
-      this.tempStation = stationdata
-    })
+    if (this.data.StationID == undefined) {
+      this._api.getAllStations().subscribe(stationdata => {
+        this.tempStationsList = stationdata.stations
+        console.log(this.tempStationsList)
+      })
+
+    } else {
+      this._api.getStationForScheduleEdit(this.data.StationID).subscribe(stationdata => {
+        this.tempStation = stationdata
+      })
+    }
   }
 
   ngAfterViewInit() {
     // this.tempStartTime = this.data.StartTime.toString()
+  }
+
+  setStationId(event: any): void {
+    this.data.StationID = event.value
+    // console.log(event.value)
   }
 
   setStartTime(event: string): void {
@@ -192,13 +201,18 @@ export class EditScheduleDialog implements OnInit, AfterViewInit {
     return `${value}m`;
   }
 
+  deleteScheduleItem(id: number): void {
+    this._api.deleteStationScheduleItem(id).subscribe((d) => {
+      this.dialogRef.close();
+    })
+  }
+
   submitScheduleChange(schedule: StationSchedule): void {
     console.log(schedule)
     this._api.postStationScheduleChange(schedule).subscribe(() => {
       this.dialogRef.close();
       console.log(this.data)
     })
-
   }
 
   closeEditSchedule() {

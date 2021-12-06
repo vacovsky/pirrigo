@@ -1,20 +1,16 @@
 <!-- <button mat-button (click)="openDialog()">Launch dialog</button> -->
 
 <mat-card>
-    <style>
-        .add-new-button {
-            position: absolute;
-            /* right: 100px; */
-            z-index: 1000;
-            /* float: right; */
-            top: 3em;
-        }
-    </style>
-    <button class="add-new-button" (click)="openNewScheduleDialog()" mat-fab color="accent"
-        aria-label="Close Edit Schedule Dialog">
-        <mat-icon>add</mat-icon>
-    </button>
-    <mat-card-title>Station Schedule
+    <div class="control-buttons">
+        <button (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        &nbsp;
+        <button (click)="openNewScheduleDialog()" mat-fab color="accent" aria-label="Close Edit Schedule Dialog">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-card-title>Scheduling
 
     </mat-card-title>
 
