@@ -39,6 +39,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatSelectModule } from '@angular/material/select';
 import { EditStationDialog } from './components/stations/stations.component';
+import { AnalyticsComponent } from './components/analytics/analytics.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { EditStationDialog } from './components/stations/stations.component';
     UsageCalculatorComponent,
     StatusComponent,
     EditScheduleDialog,
-    EditStationDialog
+    EditStationDialog,
+    AnalyticsComponent
   ],
   imports: [
     BrowserModule,

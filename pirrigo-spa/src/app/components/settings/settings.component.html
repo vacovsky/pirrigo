@@ -2,12 +2,8 @@
     <mat-card-title>
         Settings
     </mat-card-title>
-
-
-
     <br />
-
-    <p>
+    <p *ngIf="gpioCurrentCommon != undefined">
         GPIO for Common: {{gpioCurrentCommon.GPIO}}
     </p>
     <p *ngIf="gpioList != undefined">
@@ -20,8 +16,6 @@
             </mat-select>
         </mat-form-field>
     </p>
-
-
     <style>
         .refresh-button {
             position: fixed;

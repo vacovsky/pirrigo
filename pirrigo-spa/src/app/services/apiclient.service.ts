@@ -7,7 +7,7 @@ import { StationHistoryResponse } from 'src/app/structs/station-history';
 import { StationLogsResponse } from '../structs/station-logs';
 import { StationSchedule, StationScheduleResponse } from '../structs/station-schedule';
 import { Gpio, GpioResponse } from '../structs/gpio';
-
+import { ChartData } from '../structs/chart-data';
 
 @Injectable()
 export class ApiClientService {
@@ -116,6 +116,13 @@ export class ApiClientService {
     return this._http.post<GpioResponse>(
       uri, { "GPIO": gpio }, { headers: this._globals.headers }
     )
+  }
+
+
+  loadChartByID(chart: number, startDate: number, endDate: number): Observable<ChartData> {
+    const uri = `${this._globals.uriStem}/stats/${4}`;
+    // const uri = `${this._globals.uriStem}/tempchartdata?startTime=${startDate}&endTime=${endDate}`;
+    return this._http.get<ChartData>(uri)
   }
   // /gpio/common/set
 
