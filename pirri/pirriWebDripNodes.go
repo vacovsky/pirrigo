@@ -42,7 +42,7 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		logging.Service().LogError("Could not delete a node through the web interface.", zap.String("error", err.Error()))
 	}
-	data.Service().DB.Delete(&node)
+	data.Service().DB.Delete(&node, node.ID)
 	nodeAllWeb(rw, req)
 }
 

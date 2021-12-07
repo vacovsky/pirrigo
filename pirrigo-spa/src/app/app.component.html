@@ -1,0 +1,48 @@
+<mat-card class="main-card">
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">home</mat-icon>
+          Zones
+        </ng-template>
+        <app-stations></app-stations>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">edit_calendar</mat-icon>
+          Schedule
+        </ng-template>
+        <app-calendar></app-calendar>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">stacked_bar_chart</mat-icon>
+          Analytics
+        </ng-template>
+        <app-analytics></app-analytics>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">history</mat-icon>
+          History
+        </ng-template>
+        <app-history></app-history>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">bug_report</mat-icon>
+          Logs
+        </ng-template>
+        <app-logs></app-logs>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">settings</mat-icon>
+          Settings
+        </ng-template>
+        <app-settings></app-settings>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

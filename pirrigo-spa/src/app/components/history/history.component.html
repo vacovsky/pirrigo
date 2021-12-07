@@ -1,0 +1,36 @@
+<mat-card>
+    <mat-card-title>
+        Station Run History
+    </mat-card-title>
+    <table mat-table [dataSource]="history" class="mat-elevation-z8">
+        <ng-container matColumnDef="Station ID">
+            <th mat-header-cell *matHeaderCellDef> Zone ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.StationID}} </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="Schedule ID">
+            <th mat-header-cell *matHeaderCellDef> Schedule ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.ScheduleID}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="Start Time">
+            <th mat-header-cell *matHeaderCellDef> Start Time </th>
+            <td mat-cell *matCellDef="let element"> {{parseDateTimeForHumans(element.StartTime)}} </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="Duration">
+            <th mat-header-cell *matHeaderCellDef> Run Duration </th>
+            <td mat-cell *matCellDef="let element"> {{element.Duration / 60 }} min </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
+</mat-card>

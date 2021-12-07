@@ -1,0 +1,135 @@
+<mat-card>
+
+    <style>
+        ngx-material-timepicker-container {
+            z-index: 9999 !important;
+        }
+    </style>
+    <mat-card-title>
+        Editing Schedule {{data.ID}} corresponding to Zone {{data.StationID}}
+    </mat-card-title>
+    <hr />
+
+    <br />
+
+    <div *ngIf="tempStation != undefined">
+        <p>Zone ID: {{tempStation.ID}}</p>
+        <p>Zone Enabled: {{tempStation.Enabled}}</p>
+        <p>Zone GPIO: {{tempStation.GPIO}}</p>
+        <p>Zone Name: {{tempStation.Name}}</p>
+        <p>Zone Notes: {{tempStation.Notes}}</p>
+    </div>
+    <br />
+    <hr />
+
+    <p *ngIf="tempStationsList != undefined">
+        <mat-form-field appearance="outline">
+            <mat-label>Select Station</mat-label>
+            <mat-select placeholder="Zone ID" (selectionChange)="setStationId($event)">
+                <mat-option *ngFor="let st of tempStationsList" [value]="st.ID">
+                    {{st.ID}}: {{st.Name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Active Between Dates</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Start date" [(ngModel)]="data.StartDate">
+                <input matEndDate placeholder=" End date" [(ngModel)]="data.EndDate">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]=" picker">
+            </mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+    </p>
+
+    <div class="checkbox">
+        <p>
+
+            <mat-label>Select Days to Run</mat-label>
+        </p>
+
+        <table style="border: 1px solid black; border-collapse: collapse; text-align: center;">
+            <tbody>
+                <tr>
+                    <th style="cursor:pointer; background-color:  #4CAF50; padding: 3px; text-align: center;"
+                        *ngIf="data.Sunday" (click)="data.Sunday = !data.Sunday">Sun
+                    </th>
+                    <th *ngIf="!data.Sunday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Sunday = !data.Sunday">Sun</th>
+
+                    <th style="cursor:pointer; background-color: #4CAF50; padding: 3px; text-align: center;"
+                        (click)="data.Monday = !data.Monday" *ngIf="data.Monday">Mon
+                    </th>
+                    <th *ngIf="!data.Monday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Monday = !data.Monday">Mon</th>
+
+                    <th style="cursor:pointer; background-color: #4CAF50; padding: 3px; text-align: center;"
+                        (click)="data.Tuesday = !data.Tuesday" *ngIf="data.Tuesday">Tue
+                    </th>
+                    <th *ngIf="!data.Tuesday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Tuesday = !data.Tuesday">Tue</th>
+
+                    <th style="cursor:pointer; background-color: #4CAF50; padding: 3px; text-align: center;"
+                        (click)="data.Wednesday = !data.Wednesday" *ngIf="data.Wednesday">Wed
+                    </th>
+                    <th *ngIf="!data.Wednesday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Wednesday = !data.Wednesday">Wed</th>
+
+                    <th style="cursor:pointer; background-color: #4CAF50; padding: 3px; text-align: center;"
+                        (click)="data.Thursday = !data.Thursday" *ngIf="data.Thursday">Thu
+                    </th>
+                    <th *ngIf="!data.Thursday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Thursday = !data.Thursday">Thu</th>
+
+                    <th style="cursor:pointer; background-color: #4CAF50; padding: 3px; text-align: center;"
+                        (click)="data.Friday = !data.Friday" *ngIf="data.Friday">Fri
+                    </th>
+                    <th *ngIf="!data.Friday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Friday = !data.Friday">Fri</th>
+
+                    <th style="cursor:pointer; background-color: #4CAF50; padding: 3px; text-align: center;"
+                        (click)="data.Saturday = !data.Saturday" *ngIf="data.Saturday">Sat
+                    </th>
+                    <th *ngIf="!data.Saturday" style="cursor:pointer; padding: 3px; text-align: center;"
+                        (click)="data.Saturday = !data.Saturday">Sat</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <p>
+        <mat-form-field appearance="outline">
+            <mat-label>Start Time</mat-label>
+            <input matInput readonly [format]="24" aria-label="24hr format" [ngxTimepicker]="fullTime"
+                [(ngModel)]="tempStartTime" (ngModelChange)="setStartTime(tempStartTime)">
+        </mat-form-field>
+        <ngx-material-timepicker #fullTime></ngx-material-timepicker>
+    </p>
+    <p>
+        <mat-label>Duration:</mat-label>
+        <mat-slider thumbLabel (change)=" setDuration($event)" [displayWith]="formatSliderLabel" min="1" max="120"
+            step="1" [value]="data.Duration / 60">
+
+        </mat-slider>
+        {{data.Duration / 60}} minutes
+    </p>
+
+    <button (click)="submitScheduleChange(data)" mat-fab color="accent" aria-label="Save Schedule">
+        <mat-icon>save</mat-icon>
+    </button>
+    &nbsp;
+
+    <button style="float: right;" (click)="closeEditSchedule()" mat-fab color="warn"
+        aria-label="Close Edit Schedule Dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+    &nbsp;
+    <button *ngIf="data.ID != undefined" style="" (click)=" deleteScheduleItem(data.ID)" mat-fab color="warn"
+        aria-label="Close Edit Schedule Dialog">
+        <mat-icon>delete</mat-icon>
+    </button>
+
+</mat-card>

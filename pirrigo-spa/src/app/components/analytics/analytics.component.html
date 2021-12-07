@@ -1,0 +1,95 @@
+<mat-card>
+    <div class="control-buttons">
+        <button (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
+    <mat-form-field appearance="fill">
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+            <input matEndDate placeholder=" End date" [(ngModel)]="endDate" (dateChange)="loadAllCharts()">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]=" picker">
+        </mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+
+    <mat-tab-group>
+        <!-- <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">home</mat-icon>
+            Zone Activity
+        </ng-template>
+        <hr />
+        <div #containerRef>
+            <div *ngIf="chartLoading" class="center-spinner">
+                <mat-spinner></mat-spinner>
+            </div>
+            <div class="history-chart">
+                <ngx-charts-line-chart *ngIf="overallUsageChartData != undefined && !chartLoading"
+                    [view]="[containerRef.offsetWidth, 400]" schema="colorScheme" [legend]="chart4Options.legend"
+                    [showXAxisLabel]="chart4Options.showXAxisLabel" [showYAxisLabel]="chart4Options.showYAxisLabel"
+                    [xAxis]="chart4Options.xAxis" [yAxis]="chart4Options.yAxis" [xAxisLabel]="chart4Options.xAxisLabel"
+                    [yAxisLabel]="chart4Options.yAxisLabel" [timeline]="chart4Options.timeline"
+                    [results]="zoneActivityChartData">
+                </ngx-charts-line-chart>
+            </div>
+        </div>
+    </mat-tab> -->
+
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <mat-icon class="tab-icon">edit_calendar</mat-icon>
+                Overall Usage
+            </ng-template>
+
+            <hr />
+            <div #containerRef>
+                <div *ngIf="chartLoading" class="center-spinner">
+                    <mat-spinner></mat-spinner>
+                </div>
+                <div class="history-chart">
+                    <ngx-charts-line-chart *ngIf="overallUsageChartData != undefined && !chartLoading"
+                        [view]="[containerRef.offsetWidth, 400]" schema="colorScheme" [legend]="chart4Options.legend"
+                        [showXAxisLabel]="chart4Options.showXAxisLabel" [showYAxisLabel]="chart4Options.showYAxisLabel"
+                        [xAxis]="chart4Options.xAxis" [yAxis]="chart4Options.yAxis"
+                        [xAxisLabel]="chart4Options.xAxisLabel" [yAxisLabel]="chart4Options.yAxisLabel"
+                        [timeline]="chart4Options.timeline" [results]="overallUsageChartData">
+                    </ngx-charts-line-chart>
+                </div>
+            </div>
+
+        </mat-tab>
+    </mat-tab-group>
+
+    <!-- <span style="float:right;">
+    <mat-form-field appearance="fill">
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [rangePicker]="picker">
+            <input matStartDate placeholder="Start date" [(ngModel)]="startDate">
+            <input matEndDate placeholder=" End date" [(ngModel)]="endDate" (dateChange)="loadCharts()">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matSuffix [for]=" picker">
+        </mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+</span>
+
+<hr />
+<div #containerRef>
+    <div *ngIf="!chartLoaded" class="center-spinner">
+        <mat-spinner></mat-spinner>
+    </div>
+    <div class="history-chart">
+        <ngx-charts-line-chart *ngIf="multi$ != undefined && chartLoaded" [view]="[containerRef.offsetWidth, 400]"
+            schema="colorScheme" [legend]="legend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+            [xAxis]="xAxis" [yAxis]="yAxis" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" [timeline]="timeline"
+            [results]="multi$" (select)="onSelect($event)" (activate)="onActivate($event)"
+            (deactivate)="onDeactivate($event)">
+        </ngx-charts-line-chart>
+    </div>
+</div> -->
+
+</mat-card>

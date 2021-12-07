@@ -34,8 +34,10 @@ var (
 		"/stats/4": statsStationActivity,
 
 		// run status
-		"/status/run":    statusRunWeb,
-		"/status/cancel": statusRunCancel,
+		"/status/run":          statusRunWeb,
+		"/status/cancel":       statusRunCancel,
+		"/status/queue":        statusRunQueue,
+		"/status/queue/remove": removeJobFromRunQueue,
 
 		// nodes
 		"/nodes":        nodeAllWeb,

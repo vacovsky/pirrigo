@@ -3,19 +3,20 @@ package pirri
 import (
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/vacovsky/pirrigo/logging"
 )
 
 func logsAllWeb(rw http.ResponseWriter, req *http.Request) {
 	result := `{ "logs": [`
-	logs, _ := logging.Service().TailLogs(25)
+	logs := logging.Service().LoadJournalCtlLogs()
 	for n, log := range logs {
-		result += log
-		if n < len(logs)-2 {
-			result += ","
-		}
+		result += strconv.Itoa(n) + " " + log
+		// if n < len(logs)-2 {
+		// 	result += ","
+		// }
 	}
 	result += "]}"
-	io.WriteString(rw, result)
+	io.WriteString(rw, string(result))
 }

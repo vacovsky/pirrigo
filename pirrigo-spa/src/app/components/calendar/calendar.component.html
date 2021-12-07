@@ -1,0 +1,19 @@
+<!-- <button mat-button (click)="openDialog()">Launch dialog</button> -->
+
+<mat-card>
+    <div class="control-buttons">
+        <button (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        &nbsp;
+        <button (click)="openNewScheduleDialog()" mat-fab color="accent" aria-label="Close Edit Schedule Dialog">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-card-title>Scheduling
+
+    </mat-card-title>
+
+
+    <mwl-calendar-week-view *ngIf="events != undefined" (eventTimesChanged)="eventTimesChanged($event)"
+        [viewDate]="viewDate" (eventClicked)="eventClicked($event)" [events]="events">

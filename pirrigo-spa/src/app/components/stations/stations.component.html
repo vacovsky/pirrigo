@@ -1,0 +1,97 @@
+<mat-card *ngIf="runQueue.length > 0 || (status != undefined && !status.IsIdle)">
+    <mat-card-title>
+        Jobs
+        <p *ngIf="status != undefined && stationProgressBar != undefined">
+            <mat-progress-bar mode="determinate" [value]="stationProgressBar.percentComplete">
+            </mat-progress-bar>
+        </p>
+    </mat-card-title>
+    <p *ngIf="status != undefined">
+        <button (click)=" cancelRunStation()">
+            <mat-icon>stop</mat-icon>
+        </button>&nbsp;&nbsp;
+        Current Zone Run is {{stationProgressBar.percentComplete}}% complete (about {{ (this.status.Duration / 60) -
+        getPercentComplete(stationProgressBar.percentComplete) }} minutes remain)
+    </p>
+    <br />
+    <br />
+    <div *ngIf="runQueue.length">
+        <p>Next up:</p>
+        <mat-selection-list [multiple]=" false">
+            <mat-list-option *ngFor="let job of runQueue" [value]="job">
+                <p>
+                    <button (click)="cancelJobInQueue(job.queueIndex)">
+                        <mat-icon>cancel</mat-icon>
+                    </button> &nbsp; &nbsp;
+                    Position in Queue: {{ job.queueIndex }}&nbsp; &nbsp; &nbsp; &nbsp; Station {{job.station.ID}},
+                    starting
+                    {{job.startTime}}
+                </p>
+            </mat-list-option>
+        </mat-selection-list>
+    </div>
+</mat-card>
+
+<mat-card>
+    <mat-card-title>Zones</mat-card-title>
+    <mat-accordion *ngIf="stations != undefined">
+        <mat-expansion-panel (afterExpand)="runRequestRunTime = 15" *ngFor="let station of stations" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <p>
+                        Zone {{station.ID}}
+                        &nbsp;
+                        &nbsp;
+                    </p>
+                    <p>
+                        <mat-spinner class="spinner-pad-left" *ngIf="status != undefined && station.ID == status.StationID &&
+                            stationProgressBar != undefined" [diameter]="70"></mat-spinner>
+                    </p>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <p>
+                        Name:{{station.Name}}; GPIO: {{station.GPIO}}; Notes: {{station.Notes}};
+                    </p>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p *ngIf="status != undefined && station.ID == status.StationID &&
+                stationProgressBar != undefined">
+                <mat-progress-bar mode="determinate" [value]="stationProgressBar.percentComplete">
+                </mat-progress-bar>
+                {{stationProgressBar.percentComplete}}% complete
+            </p>
+            <span>
+                <button *ngIf="status != undefined && station.ID == status.StationID &&
+                stationProgressBar != undefined" (click)=" cancelRunStation()">
+                    <mat-icon>stop</mat-icon>
+                </button>
+                &nbsp;
+                <button (click)="runStation(station.ID, runRequestRunTime * 60)">
+                    <mat-icon>play_arrow</mat-icon>
+                </button>
+            </span>
+            &nbsp;
+            <mat-slider thumbLabel (change)="updateSliderValue($event)" [displayWith]="formatSliderLabel" min="1"
+                max="120" step="1" [value]="runRequestRunTime">
+            </mat-slider>
+            <p>
+                {{station.Description}}
+                <button style="float: right;" (click)=" stationEditClicked(station)" mat-fab color="accent"
+                    aria-label="Refresh data">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </p>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        &nbsp;
+        <button (click)="openNewStationDialog()" mat-fab color="accent" aria-label="Add station">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</mat-card>

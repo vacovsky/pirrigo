@@ -1,0 +1,35 @@
+<mat-card>
+    <mat-card-title>
+        Settings
+    </mat-card-title>
+    <br />
+    <p *ngIf="gpioCurrentCommon != undefined">
+        GPIO for Common: {{gpioCurrentCommon.GPIO}}
+    </p>
+    <p *ngIf="gpioList != undefined">
+        <mat-form-field appearance="outline">
+            <mat-label>Select GPIO for Common Wire</mat-label>
+            <mat-select placeholder="{{gpioCurrentCommon.GPIO}}" (selectionChange)="setCommon($event.value)">
+                <mat-option *ngFor="let gpio of gpioList" [value]="gpio.GPIO">
+                    {{gpio.GPIO}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </p>
+    <style>
+        .refresh-button {
+            position: fixed;
+
+            /* position: absolute; */
+            right: 50%;
+            z-index: 1000;
+            /* float: right; */
+            bottom: 3em;
+        }
+    </style>
+    <div class="control-buttons">
+        <button class="refresh-button" (click)=" ngOnInit()" mat-fab color="accent" aria-label="Refresh data">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
+</mat-card>
