@@ -6,25 +6,28 @@
         }
     </style>
     <mat-card-title>
-        Editing Schedule {{data.ID}} corresponding to Station {{data.StationID}}
+        Editing Schedule {{data.ID}} corresponding to Zone {{data.StationID}}
     </mat-card-title>
+    <hr />
 
     <br />
 
     <div *ngIf="tempStation != undefined">
-        <p>Station ID: {{tempStation.ID}}</p>
-        <p>Station Name: {{tempStation.Name}}</p>
-        <p>Station GPIO: {{tempStation.GPIO}}</p>
-        <p>Station Notes: {{tempStation.Notes}}</p>
+        <p>Zone ID: {{tempStation.ID}}</p>
+        <p>Zone Enabled: {{tempStation.Enabled}}</p>
+        <p>Zone GPIO: {{tempStation.GPIO}}</p>
+        <p>Zone Name: {{tempStation.Name}}</p>
+        <p>Zone Notes: {{tempStation.Notes}}</p>
     </div>
+    <br />
     <hr />
 
     <p *ngIf="tempStationsList != undefined">
         <mat-form-field appearance="outline">
             <mat-label>Select Station</mat-label>
-            <mat-select placeholder="Station ID" (selectionChange)="setStationId($event)">
+            <mat-select placeholder="Zone ID" (selectionChange)="setStationId($event)">
                 <mat-option *ngFor="let st of tempStationsList" [value]="st.ID">
-                    {{st.ID}}: {{st.Notes}}
+                    {{st.ID}}: {{st.Name}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

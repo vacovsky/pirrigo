@@ -97,12 +97,28 @@ export class ApiClientService {
   }
 
 
+  getAllGPIOs(): Observable<GpioResponse> {
+    const uri = `${this._globals.uriStem}/gpio/all`
+    return this._http.get<GpioResponse>(uri)
+  }
+
+
+
   deleteStation(id: number): Observable<StationScheduleResponse> {
     const uri = `${this._globals.uriStem}/station/delete`
     return this._http.post<StationScheduleResponse>(
       uri, { "ID": id }, { headers: this._globals.headers }
     )
   }
+
+  setCommonWireGpio(gpio: number): Observable<GpioResponse> {
+    const uri = `${this._globals.uriStem}/gpio/common/set`
+    return this._http.post<GpioResponse>(
+      uri, { "GPIO": gpio }, { headers: this._globals.headers }
+    )
+  }
+  // /gpio/common/set
+
 
   // schedule/delete {ID: 134} POST
 
