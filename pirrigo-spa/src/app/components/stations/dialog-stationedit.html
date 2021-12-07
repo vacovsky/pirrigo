@@ -1,0 +1,47 @@
+<mat-card>
+    <mat-card-title>
+        Editing Zone {{data.ID}}
+    </mat-card-title>
+    <br />
+    <p>
+        <mat-form-field hidden id="zone_notes" appearance="outline">
+            <mat-label>Friendly Name</mat-label>
+            <input [(ngModel)]="data.Name" matInput [value]="data.Name" placeholder="A helpful name">
+            <mat-icon matSuffix>supervised_user_circle</mat-icon>
+            <mat-hint>*optional</mat-hint>
+        </mat-form-field>
+    </p>
+    <p *ngIf="tempGPIOs != undefined">
+        <mat-form-field appearance="outline">
+            <mat-label>Select GPIO</mat-label>
+            <mat-select [(ngModel)]="data.GPIO" placeholder="Unassigned GPIO" (selectionChange)="setGPIO($event)">
+                <mat-option *ngFor="let gpio of tempGPIOs" [value]="gpio.GPIO">
+                    {{gpio.GPIO}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field id="zone_notes" appearance="outline">
+            <mat-label>Notes</mat-label>
+            <input matInput [(ngModel)]="data.Notes" [value]="data.Notes" placeholder="location, etc.">
+            <mat-icon matSuffix>notepad</mat-icon>
+            <mat-hint>*optional</mat-hint>
+        </mat-form-field>
+    </p>
+    <mat-checkbox [(ngModel)]="data.Enabled">Enabled</mat-checkbox>
+    <br />
+    <button (click)="submitStationEdit(data)" mat-fab color="accent" aria-label="Save Station">
+        <mat-icon>save</mat-icon>
+    </button>
+    &nbsp;
+    <button style="float: right;" (click)="closeEditStation()" mat-fab color="warn"
+        aria-label="Close Edit Schedule Dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+    &nbsp;
+    <button *ngIf="data.ID != undefined" (click)=" deleteStation(data.ID)" mat-fab color="warn"
+        aria-label="Delete station">
+        <mat-icon>delete</mat-icon>
+    </button>
+</mat-card>

@@ -13,7 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AppComponent } from './app.component';
 import { StationsComponent } from './components/stations/stations.component';
 import { HistoryComponent } from './components/history/history.component';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { CalendarComponent, EditScheduleDialog } from './components/calendar/calendar.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsageCalculatorComponent } from './components/usage-calculator/usage-calculator.component';
@@ -28,17 +28,17 @@ import { MatTableModule } from '@angular/material/table';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { StatusComponent } from './components/stations/status/status.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
-import { EditScheduleDialog } from './components/calendar/calendar.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatSelectModule } from '@angular/material/select';
-
-
+import { EditStationDialog } from './components/stations/stations.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +50,8 @@ import { MatSelectModule } from '@angular/material/select';
     SettingsComponent,
     UsageCalculatorComponent,
     StatusComponent,
-    EditScheduleDialog
+    EditScheduleDialog,
+    EditStationDialog
   ],
   imports: [
     BrowserModule,
@@ -62,6 +63,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCheckboxModule,
     MatNativeDateModule,
     FormsModule,
     MatProgressSpinnerModule,

@@ -5,8 +5,6 @@ import { StationSchedule } from 'src/app/structs/station-schedule';
 import { Station } from 'src/app/structs/station';
 import * as moment from 'moment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatCardModule } from '@angular/material/card';
-
 
 @Component({
   selector: 'app-calendar',
@@ -92,7 +90,7 @@ export class CalendarComponent implements OnInit {
             "id": event.ID,
             "start": start.toDate(),
             "end": end,
-            "title": `Station ${event.StationID} for ${event.Duration / 60} minutes<br/><br/><br/><br/> | ${JSON.stringify(event)}
+            "title": `Zone ${event.StationID} for ${event.Duration / 60} minutes<br/><br/><br/><br/> | ${JSON.stringify(event)}
             `,
             "color": this.colors.blue,
             "allDay": false,

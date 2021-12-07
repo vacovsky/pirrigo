@@ -76,5 +76,8 @@ func enableCors(h http.HandlerFunc) http.HandlerFunc {
 		(w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 
 		h.ServeHTTP(w, r)
+		if r.Method == "OPTIONS" {
+			return
+		}
 	}
 }

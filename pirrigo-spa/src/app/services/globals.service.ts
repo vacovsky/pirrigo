@@ -14,7 +14,7 @@ export class GlobalsService {
     'Content-Type': 'application/json'
   });
 
-  public statusRefreshRateMs: number = 1000;
+  public statusRefreshRateMs: number = 3000;
 
   constructor() { }
 }

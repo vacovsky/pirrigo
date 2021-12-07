@@ -6,7 +6,7 @@ export class Station {
     Notes: string
     Description: string
     Enabled: boolean
-    FriendlyName: string
+    Name: string
     LastRun: Date
     NextRun: Date
     Status: StationStatus

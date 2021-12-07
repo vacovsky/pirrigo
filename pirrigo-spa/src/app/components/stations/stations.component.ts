@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { ApiClientService } from 'src/app/services/apiclient.service';
 import { Station, StationStatus, StationProgressBar, StationRunJob, StationRunRequestBody } from 'src/app/structs/station';
 import { MwlGaugeObj } from 'src/app/structs/mwl-gauge-obj';
 import { GlobalsService } from 'src/app/services/globals.service';
 import * as moment from 'moment';
-
-
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+// import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { Gpio } from 'src/app/structs/gpio';
 @Component({
   selector: 'app-stations',
   templateUrl: './stations.component.html',
@@ -25,7 +26,8 @@ export class StationsComponent implements OnInit {
 
   constructor(
     private _api: ApiClientService,
-    private _globals: GlobalsService
+    private _globals: GlobalsService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -160,16 +162,103 @@ export class StationsComponent implements OnInit {
     return `${value}m`;
   }
 
-  // 
 
   addNewStation(): void {
-
     this.ngOnInit()
   }
 
-  deleteStation(id: number) {
 
-    this.ngOnInit()
+  openNewStationDialog(): void {
+    let sch = new Station()
+    this.openDialog(sch)
+  }
+
+  stationEditClicked(station: Station): void {
+    this.openDialog(station)
+  }
+
+  openDialog(es: Station): void {
+    const dialogRef = this.dialog.open(EditStationDialog, {
+      data: es
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.ngOnInit()
+    });
+  }
+
+}
+
+
+
+
+
+@Component({
+  styleUrls: ['./stations.component.css'],
+  selector: 'dialog-scheduleform',
+  templateUrl: `./dialog-stationedit.html`,
+})
+export class EditStationDialog implements OnInit, AfterViewInit {
+  // @ViewChild('autosize') autosize: CdkTextareaAutosize;
+  tempGPIOs: Gpio[];
+  // tempStationsList: Station[];
+
+  constructor(
+    private _api: ApiClientService,
+    // private _ngZone: NgZone,
+    public dialogRef: MatDialogRef<EditStationDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: Station,
+  ) { }
+
+
+  ngOnInit() {
+    this._api.getGPIOsForStationEdit().subscribe(stationdata => {
+      this.tempGPIOs = stationdata.gpios
+    })
+
+    if (this.data.GPIO == undefined) {
+
+    } else {
+
+    }
+  }
+
+  setGPIO(event: any): void {
+    this.data.GPIO = event.value
+  }
+
+
+  ngAfterViewInit() {
+  }
+
+  setStationGPIO(event: any): void {
+    this.data.GPIO = event.value
+    console.log(event.value)
+  }
+
+  formatSliderLabel(value: number) {
+    return `${value}m`;
+  }
+
+  deleteStation(id: number): void {
+    this._api.deleteStation(id).subscribe((d) => {
+      this.dialogRef.close();
+    })
+  }
+
+  submitStationEdit(station: Station): void {
+    this._api.postStationChange(station).subscribe(() => {
+      this.dialogRef.close();
+    })
+  }
+
+  closeEditStation() {
+    this.dialogRef.close();
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+    console.log(this.data)
   }
 
 }

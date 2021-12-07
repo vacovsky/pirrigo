@@ -96,6 +96,6 @@ func stationDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 
 	}
 
-	data.Service().DB.Delete(&station)
+	data.Service().DB.Delete(&station, station.ID)
 	stationAllWeb(rw, req)
 }

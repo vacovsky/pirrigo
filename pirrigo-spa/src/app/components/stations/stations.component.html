@@ -10,7 +10,7 @@
         <button (click)=" cancelRunStation()">
             <mat-icon>stop</mat-icon>
         </button>&nbsp;&nbsp;
-        Current Station Run is {{stationProgressBar.percentComplete}}% complete (about {{ (this.status.Duration / 60) -
+        Current Zone Run is {{stationProgressBar.percentComplete}}% complete (about {{ (this.status.Duration / 60) -
         getPercentComplete(stationProgressBar.percentComplete) }} minutes remain)
     </p>
     <br />
@@ -33,13 +33,13 @@
 </mat-card>
 
 <mat-card>
-    <mat-card-title>Stations</mat-card-title>
+    <mat-card-title>Zones</mat-card-title>
     <mat-accordion *ngIf="stations != undefined">
         <mat-expansion-panel (afterExpand)="runRequestRunTime = 15" *ngFor="let station of stations" hideToggle>
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <p>
-                        Station {{station.ID}}
+                        Zone {{station.ID}}
                         &nbsp;
                         &nbsp;
                     </p>
@@ -50,7 +50,7 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     <p>
-                        GPIO: {{station.GPIO}}; {{station.Notes}}
+                        Name:{{station.Name}}; GPIO: {{station.GPIO}}; Notes: {{station.Notes}};
                     </p>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -76,9 +76,9 @@
             </mat-slider>
             <p>
                 {{station.Description}}
-                <button style="float: right;" (click)=" deleteStation(station.ID)" mat-fab color="accent"
+                <button style="float: right;" (click)=" stationEditClicked(station)" mat-fab color="accent"
                     aria-label="Refresh data">
-                    <mat-icon>add</mat-icon>
+                    <mat-icon>edit</mat-icon>
                 </button>
             </p>
 
@@ -90,7 +90,7 @@
             <mat-icon>refresh</mat-icon>
         </button>
         &nbsp;
-        <button (click)=" addNewStation()" mat-fab color="accent" aria-label="Add station">
+        <button (click)="openNewStationDialog()" mat-fab color="accent" aria-label="Add station">
             <mat-icon>add</mat-icon>
         </button>
     </div>

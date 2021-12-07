@@ -6,6 +6,7 @@ import { StationResponse, StationRunRequestBody, Station, StationStatus, Station
 import { StationHistoryResponse } from 'src/app/structs/station-history';
 import { StationLogsResponse } from '../structs/station-logs';
 import { StationSchedule, StationScheduleResponse } from '../structs/station-schedule';
+import { Gpio, GpioResponse } from '../structs/gpio';
 
 
 @Injectable()
@@ -80,6 +81,24 @@ export class ApiClientService {
 
   deleteStationScheduleItem(id: number): Observable<StationScheduleResponse> {
     const uri = `${this._globals.uriStem}/schedule/delete`
+    return this._http.post<StationScheduleResponse>(
+      uri, { "ID": id }, { headers: this._globals.headers }
+    )
+  }
+
+  postStationChange(station: Station): Observable<any> {
+    const uri = `${this._globals.uriStem}/station/edit`
+    return this._http.post(uri, station, { headers: this._globals.headers })
+  }
+
+  getGPIOsForStationEdit(): Observable<GpioResponse> {
+    const uri = `${this._globals.uriStem}/gpio/available`
+    return this._http.get<GpioResponse>(uri)
+  }
+
+
+  deleteStation(id: number): Observable<StationScheduleResponse> {
+    const uri = `${this._globals.uriStem}/station/delete`
     return this._http.post<StationScheduleResponse>(
       uri, { "ID": id }, { headers: this._globals.headers }
     )
