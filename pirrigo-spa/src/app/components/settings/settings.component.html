@@ -13,7 +13,7 @@
     <p *ngIf="gpioList != undefined">
         <mat-form-field appearance="outline">
             <mat-label>Select GPIO for Common Wire</mat-label>
-            <mat-select placeholder="GPIO for Common Wire" (selectionChange)="setCommon($event.value)">
+            <mat-select placeholder="{{gpioCurrentCommon.GPIO}}" (selectionChange)="setCommon($event.value)">
                 <mat-option *ngFor="let gpio of gpioList" [value]="gpio.GPIO">
                     {{gpio.GPIO}}
                 </mat-option>
