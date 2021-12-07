@@ -5,23 +5,23 @@ Irrigation and garden management application, in Go and Angular 13.  Based on <a
 
 ### Zones
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/main.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/zones.JPG" alt="Stations" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/zones.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/zones.JPG" alt="Stations" height="150"></a>
 
 ### Calendar
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/calendar.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/calendar.JPG" alt="Calendar"  height="150"></a>
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/calendar.JPG"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/calendar.JPG" alt="Calendar"  height="150"></a>
 
 ### Station Scheduler
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/scheduler.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/scheduler.JPG" alt="Scheduler"  height="150"></a>
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/scheduler.JPG"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/scheduler.JPG" alt="Scheduler"  height="150"></a>
 
 ### History of Activity
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/history.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/history.JPG" alt="History" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/history.JPG"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/history.JPG" alt="History" height="150"></a>
 
 ### Charted Run Stats
 
-<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/charts.png"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/analytics.JPG" alt="Run Stats" height="150"></a>
+<a href="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/analytics.JPG"><img src="https://raw.githubusercontent.com/vacoj/pirrigo/master/screenshots/newui/analytics.JPG" alt="Run Stats" height="150"></a>
 
 
 ### Hardware
