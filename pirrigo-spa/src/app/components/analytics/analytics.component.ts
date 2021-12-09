@@ -15,8 +15,10 @@ export class AnalyticsComponent implements OnInit {
 
   overallUsageChartData: any;
   zoneActivityChartData: any;
-  chartLoading: boolean
+  usageByDOWChartData: any;
 
+  chartLoading: boolean
+  chartTab: number = 4;
 
   chart4Options: any = {
     // options
@@ -32,6 +34,22 @@ export class AnalyticsComponent implements OnInit {
     timeline: true,
   }
 
+
+  chart2Options: any = {
+    // options
+    legend: true,
+    showLabels: true,
+    animations: true,
+    xAxis: true,
+    yAxis: true,
+    showYAxisLabel: true,
+    showXAxisLabel: true,
+    xAxisLabel: 'day of week',
+    yAxisLabel: 'minutes',
+    timeline: true,
+  }
+
+
   colorScheme = {
     domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
   };
@@ -44,14 +62,41 @@ export class AnalyticsComponent implements OnInit {
   ngOnInit(): void {
     this.endDate = moment().toDate()
     this.startDate = moment().add(-14, "d").toDate()
-    this.loadAllCharts()
+    this.loadChart()
   }
 
 
-  loadAllCharts(): void {
+  loadChart(): void {
+    // if (this.chartTab == 4) {
+    this.loadZoneUsageChart()
+    // } else if (this.chartTab == 2) {
+    this.loadStatsActivityByDayOfWeek()
+    // }
+
+  }
+
+  // "/stats/1": statsActivityByStation,
+  // "/stats/2": statsActivityByDayOfWeek,
+  // "/stats/3": statsActivityPerStationByDOW,
+  // "/stats/4": statsStationActivity,
+
+  loadZoneUsageChart(): void {
+    this.chartLoading = true
+
     this._api.loadChartByID(4, moment(this.startDate).unix(), moment(this.endDate).unix()).subscribe(data => {
-      this.overallUsageChartData = this._cts.transformChartDataForNgxChartsWithStringLabels(data)
+      this.zoneActivityChartData = this._cts.transformChartDataForNgxChartsWithStringLabels(data)
+      this.chartLoading = false
       console.log(data)
+    })
+  }
+
+
+  loadStatsActivityByDayOfWeek(): void {
+    this.chartLoading = true
+    this._api.loadChartByID(2, moment(this.startDate).unix(), moment(this.endDate).unix()).subscribe(data => {
+      this.usageByDOWChartData = this._cts.transformChartDataForNgxChartsWithStringLabels(data)
+      console.log(data)
+      this.chartLoading = false
     })
   }
 }

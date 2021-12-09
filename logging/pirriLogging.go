@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -105,17 +106,26 @@ func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 
 func (l *PirriLogger) LoadJournalCtlLogs() []string {
 	defer l.lock.Unlock()
-
 	var b bytes.Buffer
-	pipe.Command(&b,
+
+	if err := pipe.Command(&b,
 		exec.Command("journalctl", "-xe"),
 		exec.Command("grep", "pirrigo"),
-	)
-	io.Copy(os.Stdout, &b)
-
+	); err != nil {
+		log.Fatal(err)
+	}
+	// pipe.Command(&b,
+	// 	exec.Command("journalctl", "-xe"),
+	// 	exec.Command("grep", "pirrigo"),
+	// )
+	io.Copy(os.Stderr, &b)
 	l.lock.Lock()
 
-	return reverseLogs(strings.Split(b.String(), "\n"))
+	// return b.String()
+	result := strings.Split(b.String(), "\n")
+	log.Println("=======================================", result)
+
+	return reverseLogs(result)
 }
 
 func reverseLogs(s []string) []string {
