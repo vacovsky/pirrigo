@@ -18,8 +18,32 @@ var (
 )
 
 func makeGetCall(url string) (*http.Response, []byte, error) {
+
 	hc := http.Client{Timeout: 10 * time.Second}
+
 	r, err := hc.Get(url)
+	if err != nil {
+		log.Panicln(err)
+	}
+	defer r.Body.Close()
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.Panicln(err)
+	}
+	return r, body, err
+}
+
+func callGetPrinterStatus(url string) (*http.Response, []byte, error) {
+	// hc := http.Client{Timeout: 10 * time.Second}
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Println("can't make htto req")
+	}
+	req.Header.Set("X-Api-Key", "D420DE95C1EF45F2BFEBA00E8D2FB696")
+
+	client := &http.Client{}
+	r, err := client.Do(req)
 	if err != nil {
 		log.Panicln(err)
 	}
