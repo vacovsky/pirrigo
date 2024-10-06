@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxChartsModule } from '@swimlane/ngx-charts'
 import { GaugeModule } from 'angular-gauge';
@@ -41,58 +41,51 @@ import { MatSelectModule } from '@angular/material/select';
 import { EditStationDialog } from './components/stations/stations.component';
 import { AnalyticsComponent } from './components/analytics/analytics.component';
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    StationsComponent,
-    HistoryComponent,
-    CalendarComponent,
-    LogsComponent,
-    SettingsComponent,
-    UsageCalculatorComponent,
-    StatusComponent,
-    EditScheduleDialog,
-    EditStationDialog,
-    AnalyticsComponent
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    NgxChartsModule,
-    GaugeModule.forRoot(),
-    MatGridListModule,
-    MatDatepickerModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCheckboxModule,
-    MatNativeDateModule,
-    FormsModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatSelectModule,
-    NgxMaterialTimepickerModule,
-    MatIconModule,
-    MatTabsModule,
-    MatTableModule,
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory,
-    }),
-    MatProgressBarModule,
-    MatSliderModule,
-    MatListModule,
-    MatDialogModule
-  ],
-  providers: [
-    HttpClient,
-    ChartTransformService,
-    ApiClientService,
-    GlobalsService
-
-  ],
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent,
+        StationsComponent,
+        HistoryComponent,
+        CalendarComponent,
+        LogsComponent,
+        SettingsComponent,
+        UsageCalculatorComponent,
+        StatusComponent,
+        EditScheduleDialog,
+        EditStationDialog,
+        AnalyticsComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        NgxChartsModule,
+        GaugeModule.forRoot(),
+        MatGridListModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatNativeDateModule,
+        FormsModule,
+        MatProgressSpinnerModule,
+        MatButtonModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatSelectModule,
+        NgxMaterialTimepickerModule,
+        MatIconModule,
+        MatTabsModule,
+        MatTableModule,
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory,
+        }),
+        MatProgressBarModule,
+        MatSliderModule,
+        MatListModule,
+        MatDialogModule], providers: [
+        HttpClient,
+        ChartTransformService,
+        ApiClientService,
+        GlobalsService,
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { }
