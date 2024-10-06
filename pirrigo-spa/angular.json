@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "pirrigo-spa:build:production"
+              "buildTarget": "pirrigo-spa:build:production"
             },
             "development": {
-              "browserTarget": "pirrigo-spa:build:development"
+              "buildTarget": "pirrigo-spa:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "pirrigo-spa:build"
+            "buildTarget": "pirrigo-spa:build"
           }
         },
         "test": {
