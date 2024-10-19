@@ -7,7 +7,8 @@ import { HttpHeaders } from '@angular/common/http';
 export class GlobalsService {
 
   public currentPage: string = "stations";
-  public uriStem: string = "http://192.168.111.130"
+  // public uriStem: string = "http://192.168.111.130" 192.168.86.102
+  public uriStem: string = "http://192.168.86.102" 
 
   public headers: HttpHeaders = new HttpHeaders({
     'Accept': 'application/json',

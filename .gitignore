@@ -1,6 +1,7 @@
 bower_components
 src/src
 src/debug
+pirrigo-spa/dist
 src/pirrigo.log
 .ctags
 tags

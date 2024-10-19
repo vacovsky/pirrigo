@@ -71,8 +71,8 @@
                 </button>
             </span>
             &nbsp;
-            <mat-slider thumbLabel (change)="updateSliderValue($event)" [displayWith]="formatSliderLabel" min="1"
-                max="120" step="1" [value]="runRequestRunTime">
+            <mat-slider>
+                 <input matSliderThumb (change)="updateSliderValue($event)" min="1" max="120" step="1" [value]="runRequestRunTime">
             </mat-slider>
             <p>
                 {{station.Description}}

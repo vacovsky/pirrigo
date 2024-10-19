@@ -110,7 +110,8 @@
     </p>
     <p>
         <mat-label>Duration:</mat-label>
-        <mat-slider thumbLabel (change)=" setDuration($event)" [displayWith]="formatSliderLabel" min="1" max="120"
+        <mat-slider> 
+            <input matSliderThumb (change)=" setDuration($event)"  min="1" max="120"
             step="1" [value]="data.Duration / 60">
 
         </mat-slider>

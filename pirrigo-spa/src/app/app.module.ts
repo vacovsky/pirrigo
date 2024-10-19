@@ -29,7 +29,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { StatusComponent } from './components/stations/status/status.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatListModule } from '@angular/material/list';

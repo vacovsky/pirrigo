@@ -1,5 +1,6 @@
 import { Component, Inject, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { ApiClientService } from 'src/app/services/apiclient.service';
+import { MatSliderModule } from '@angular/material/slider';
 import { Station, StationStatus, StationProgressBar, StationRunJob, StationRunRequestBody } from 'src/app/structs/station';
 import { MwlGaugeObj } from 'src/app/structs/mwl-gauge-obj';
 import { GlobalsService } from 'src/app/services/globals.service';
