@@ -67,17 +67,15 @@ export class StationsComponent implements OnInit {
         totalSeconds += currentRunRemainingSec
         let qi = 0
         for (let job of data) {
-          if (self.status != undefined) {
+          if (this.status != undefined) {
             let now = moment(new Date())
             job.startTime = now.add(totalSeconds, "s").fromNow()
             totalSeconds += currentRunRemainingSec
             job.queueIndex = qi
             qi++
-            // console.log(totalSeconds, job.startTime, totalSeconds)
           }
         }
         this.runQueue = data
-        // console.log(this.runQueue)
       })
     }
   }
@@ -102,6 +100,7 @@ export class StationsComponent implements OnInit {
   }
 
   findDateDiffPercent(date: Date, duration: number): number {
+    if (this.status.Duration === 0) return 0
     let now = moment(new Date());
     let end = moment(date).add(duration, "s");
     let durationDiff = moment.duration(now.diff(end));

@@ -81,7 +81,6 @@ import { AnalyticsComponent } from './components/analytics/analytics.component';
         MatSliderModule,
         MatListModule,
         MatDialogModule], providers: [
-        HttpClient,
         ChartTransformService,
         ApiClientService,
         GlobalsService,

@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-//Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
+// Task describes a Station activation sent to a RabbitMQ server for processing in serial by the application.
 type Task struct {
 	Station         Station         `json:"station"`         //`gorm:"ForeignKey:Station"`
 	StationSchedule StationSchedule `json:"stationSchedule"` //`gorm:"ForeignKey:StationSchedule"`
@@ -31,8 +31,8 @@ func (t *Task) log() {
 
 func (t *Task) send() {
 	if t.Station.GPIO > 0 {
-		ORQMutex.Lock()
 		logging.Service().LogEvent("Queuing Task for GPIO activation in OfflineRunQueue for station", zap.Int("gpio", t.Station.GPIO))
+		ORQMutex.Lock()
 		OfflineRunQueue = append(OfflineRunQueue, t)
 		ORQMutex.Unlock()
 	}
@@ -49,6 +49,8 @@ func (t *Task) execute() {
 }
 
 func (t *Task) setStatus(active bool) {
+	ORQMutex.Lock()
+	defer ORQMutex.Unlock()
 	if active {
 		manual := t.StationSchedule.ID == 0
 		RUNSTATUS = RunStatus{

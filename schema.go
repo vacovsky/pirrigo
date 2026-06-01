@@ -20,7 +20,12 @@ func migrateDataSchema() {
 	)
 
 	var m pirri.Metadata
-	d.DB.Select(&m)
+	err := d.DB.First(&m).Error
+	if err != nil {
+		// No metadata record exists yet; this is first run
+		firstRunDBSetup()
+		return
+	}
 	if !m.FirstRunComplete {
 		firstRunDBSetup()
 	}
@@ -30,46 +35,48 @@ func firstRunDBSetup() {
 	log := logging.Service()
 	log.LogEvent("Beginning first run DB setup...")
 	d := data.Service()
-	addGPIOs := `INSERT INTO gpio_pins (gpio) VALUES (4),(5),(6),(12),(13),(16),(18),(20),(21),(22),(23),(24),(25),(26),(27);`
-	setCommonWire := `UPDATE gpio_pins SET notes='common' WHERE gpio=21;`
-	addDays := `INSERT INTO station_schedules
-	('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'station_id', 'start_time', 'duration') 
-	VALUES
-	('true', 'true', 'true', 'true', 'true', 'true', 'true', 1, 1235, 60);`
 
 	log.LogEvent("Adding set of valid GPIOs.")
-	d.DB.Raw(addGPIOs)
-
-	log.LogEvent("Setting common wire relay pin.")
-	d.DB.Raw(setCommonWire)
-
-	log.LogEvent("Inserting days of the week to to station_schedules table.")
-	d.DB.Raw(addDays)
-
-	d.DB.Save(pirri.Station{
-		GPIO:  100,
-		ID:    100,
-		Notes: "example node",
-	})
-
-	location, _ := time.LoadLocation("UTC")
-
-	d.DB.Save(&pirri.StationSchedule{
-		Duration:  10,
-		EndDate:   time.Date(2150, 1, 1, 1, 1, 1, 1, location),
-		StartDate: time.Date(2020, 1, 1, 1, 1, 1, 1, location),
-		ID:        100,
-		StationID: 100,
-	})
-
-	gpios := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28}
-	for pin := range gpios {
+	gpioValues := []int{4, 5, 6, 12, 13, 16, 18, 20, 21, 22, 23, 24, 25, 26, 27}
+	for _, gpio := range gpioValues {
 		d.DB.Create(&pirri.GpioPin{
-			GPIO:   pin,
+			GPIO:   gpio,
 			Notes:  "",
 			Common: false,
 		})
 	}
+
+	log.LogEvent("Setting common wire relay pin.")
+	d.DB.Model(&pirri.GpioPin{}).Where("gpio = ?", 21).Update("common", true)
+
+	log.LogEvent("Inserting example station.")
+	exampleStation := pirri.Station{
+		GPIO:    4,
+		Notes:   "example station",
+		Enabled: true,
+	}
+	d.DB.Create(&exampleStation)
+
+	location, _ := time.LoadLocation("UTC")
+
+	log.LogEvent("Inserting example schedule.")
+	d.DB.Create(&pirri.StationSchedule{
+		Duration:  10,
+		EndDate:   time.Date(2150, 1, 1, 0, 0, 0, 0, location),
+		StartDate: time.Date(2020, 1, 1, 0, 0, 0, 0, location),
+		StationID: exampleStation.ID,
+		Sunday:    true,
+		Monday:    true,
+		Tuesday:   true,
+		Wednesday: true,
+		Thursday:  true,
+		Friday:    true,
+		Saturday:  true,
+		StartTime: 1235,
+	})
+
+	log.LogEvent("Marking first run as complete.")
+	d.DB.Create(&pirri.Metadata{FirstRunComplete: true})
 
 	log.LogEvent("First run setup complete.")
 }

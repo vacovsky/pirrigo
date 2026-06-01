@@ -10,7 +10,10 @@ import (
 )
 
 func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
-	blob, err := json.Marshal(&RUNSTATUS)
+	ORQMutex.Lock()
+	status := RUNSTATUS
+	ORQMutex.Unlock()
+	blob, err := json.Marshal(&status)
 	if err != nil {
 		logging.Service().LogError("Error while marshalling Run Status from SQL.",
 			zap.String("error", err.Error()))
@@ -19,17 +22,23 @@ func statusRunWeb(rw http.ResponseWriter, req *http.Request) {
 }
 
 func statusRunCancel(rw http.ResponseWriter, req *http.Request) {
-	blob, err := json.Marshal(&RUNSTATUS)
+	ORQMutex.Lock()
+	RUNSTATUS.Cancel = true
+	status := RUNSTATUS
+	ORQMutex.Unlock()
+	blob, err := json.Marshal(&status)
 	if err != nil {
 		logging.Service().LogError("Error while marshalling run status from SQL.",
 			zap.String("error", err.Error()))
 	}
-	RUNSTATUS.Cancel = true
 	io.WriteString(rw, string(blob))
 }
 
 func statusRunQueue(rw http.ResponseWriter, req *http.Request) {
-	blob, err := json.Marshal(&OfflineRunQueue)
+	ORQMutex.Lock()
+	queue := OfflineRunQueue
+	ORQMutex.Unlock()
+	blob, err := json.Marshal(&queue)
 	if err != nil {
 		logging.Service().LogError("Error while marshalling Run Status from SQL.",
 			zap.String("error", err.Error()))
@@ -38,7 +47,6 @@ func statusRunQueue(rw http.ResponseWriter, req *http.Request) {
 }
 
 func removeJobFromRunQueue(rw http.ResponseWriter, req *http.Request) {
-	// if req.Method == "POST" {
 	type queueId struct {
 		QueueIndex int
 	}
@@ -47,22 +55,26 @@ func removeJobFromRunQueue(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		logging.Service().LogError("Error while removing job from run queue.",
 			zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
-	// ORQMutex.Lock()
+	ORQMutex.Lock()
+	if qid.QueueIndex < 0 || qid.QueueIndex >= len(OfflineRunQueue) {
+		ORQMutex.Unlock()
+		http.Error(rw, "Invalid queue index", http.StatusBadRequest)
+		return
+	}
 	OfflineRunQueue = removeFromSliceByIndex(OfflineRunQueue, qid.QueueIndex)
-	// ORQMutex.Unlock()
-	blob, err := json.Marshal(&OfflineRunQueue)
+	queue := OfflineRunQueue
+	ORQMutex.Unlock()
+	blob, err := json.Marshal(&queue)
 	if err != nil {
 		logging.Service().LogError("Error while marshalling Run Status from SQL.",
 			zap.String("error", err.Error()))
-		http.Error(rw, "Error getting updatede queue", http.StatusInternalServerError)
+		http.Error(rw, "Error getting updated queue", http.StatusInternalServerError)
 		return
 	}
 	io.WriteString(rw, string(blob))
-	// } else {
-	// 	http.Error(rw, "Use POST Method", 400)
-	// 	return
-	// }
 }
 
 func removeFromSliceByIndex(sl []*Task, s int) []*Task {

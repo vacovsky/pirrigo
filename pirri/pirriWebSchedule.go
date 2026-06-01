@@ -15,7 +15,7 @@ import (
 
 func stationScheduleAllWeb(rw http.ResponseWriter, req *http.Request) {
 	stationSchedules := []StationSchedule{}
-	data.Service().DB.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Find(&stationSchedules).Order("ASC")
+	data.Service().DB.Where("end_date > ? AND start_date <= ?", time.Now(), time.Now()).Order("start_date ASC").Find(&stationSchedules)
 	blob, err := json.Marshal(&stationSchedules)
 	if err != nil {
 		logging.Service().LogError("Unable to retrieve station schedules via web interface.", zap.String("error", err.Error()))
@@ -29,6 +29,8 @@ func stationScheduleEditWeb(rw http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		logging.Service().LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 
 	if data.Service().DB.NewRecord(&scheduleItem) {
@@ -44,6 +46,8 @@ func stationScheduleDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	err := json.NewDecoder(req.Body).Decode(&scheduleItem)
 	if err != nil {
 		logging.Service().LogError("Problem while attempting to decode request body into a station schedule.", zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 	data.Service().DB.Delete(&scheduleItem, scheduleItem.ID)
 	stationScheduleAllWeb(rw, req)

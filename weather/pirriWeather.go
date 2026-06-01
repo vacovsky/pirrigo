@@ -145,6 +145,7 @@ func (w *Weather) Current() CurrentWeatherResponse {
 				zap.String("stateAbbreviation", set.Weather.StateAbbreviation),
 				zap.String("city", set.Weather.City),
 				zap.String("error", err.Error()))
+			return weather
 		}
 		defer r.Body.Close()
 		body, err := ioutil.ReadAll(r.Body)

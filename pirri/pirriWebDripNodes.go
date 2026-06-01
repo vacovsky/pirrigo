@@ -26,11 +26,9 @@ func nodeAddWeb(rw http.ResponseWriter, req *http.Request) {
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
 		logging.Service().LogError("Could not add a node through the web interface.",
-			// zap.String("count", strconv.Itoa(node.Count)),
-			// zap.String("gph", fmt.Sprintf("%f", node.GPH)),
-			// zap.String("nodeID", strconv.Itoa(node.ID)),
-			// zap.String("stationID", strconv.Itoa(node.StationID)),
 			zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 	data.Service().DB.Create(&node)
 	nodeAllWeb(rw, req)
@@ -41,6 +39,8 @@ func nodeDeleteWeb(rw http.ResponseWriter, req *http.Request) {
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
 		logging.Service().LogError("Could not delete a node through the web interface.", zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 	data.Service().DB.Delete(&node, node.ID)
 	nodeAllWeb(rw, req)
@@ -51,6 +51,8 @@ func nodeEditWeb(rw http.ResponseWriter, req *http.Request) {
 	err := json.NewDecoder(req.Body).Decode(&node)
 	if err != nil {
 		logging.Service().LogError("Could not edit a node through the web interface.", zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 	data.Service().DB.Save(&node)
 	nodeAllWeb(rw, req)
@@ -69,7 +71,7 @@ func nodeUsageStatsWeb(rw http.ResponseWriter, req *http.Request) {
 	sqlStr := `
 SELECT DISTINCT drip_nodes.station_id,
            SUM((duration / 60 )) as run_mins,
-           (SELECT sum((gph * count) + 0.0) as total_gph from drip_nodes where drip_nodes.station_id=station_histories.station_ID) as total_gph,
+           (SELECT sum((gph * count) + 0.0) as total_gph from drip_nodes where drip_nodes.station_id=station_histories.station_id) as total_gph,
            stations.notes
        FROM station_histories
        INNER JOIN drip_nodes ON drip_nodes.station_id=station_histories.station_id

@@ -9,4 +9,6 @@ tags
 .vscode
 pirrigo.log
 *.db
-*.swp
+*.swppirrigo
+pirrigo
+.DS_Store

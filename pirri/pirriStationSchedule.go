@@ -11,9 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-var lastTriggeredItem string
-
-//StationSchedule describes a scheduled activation for a Station
+// StationSchedule describes a scheduled activation for a Station
 type StationSchedule struct {
 	ID        int       `sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	StartDate time.Time `sql:"DEFAULT:current_timestamp" gorm:"not null"`
@@ -32,6 +30,7 @@ type StationSchedule struct {
 }
 
 func checkForTasks() {
+
 	scheds := []StationSchedule{}
 	nowTime := time.Now()
 
@@ -42,7 +41,7 @@ func checkForTasks() {
 		nowString = "date('now')"
 	}
 	// sqlFilter = fmt.Sprintf("(start_date <= NOW() AND end_date > NOW()) AND %s=true AND start_time=%s",
-	sqlFilter := fmt.Sprintf("(start_date <= %s AND end_date > %s) AND %s=true AND start_time=%s",
+	sqlFilter := fmt.Sprintf("(start_date <= %s AND end_date > %s) AND %s = 1 AND start_time = %s",
 		nowString,
 		nowString,
 		nowTime.Weekday(),
@@ -54,6 +53,7 @@ func checkForTasks() {
 }
 
 func StartTaskMonitor() {
+	defer WG.Done()
 	logging.Service().LogEvent(`Starting monitoring at interval`,
 		zap.Int("interval", 59))
 	for {
@@ -65,7 +65,11 @@ func StartTaskMonitor() {
 func sendFoundScheduleItems(items []StationSchedule) {
 	for i := range items {
 		task := Task{StationSchedule: items[i]}
-		data.Service().DB.Where(Station{ID: task.StationSchedule.StationID}).Find(&task.Station)
+		err := data.Service().DB.Where(Station{ID: task.StationSchedule.StationID}).Find(&task.Station).Error
+		if err != nil {
+			logging.Service().LogError("Failed to find station for schedule", zap.Int("scheduleID", items[i].ID), zap.Error(err))
+			continue
+		}
 		task.send()
 	}
 }

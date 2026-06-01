@@ -1,5 +1,5 @@
-//go:build linux && arm
-// +build linux,arm
+//go:build !linux || !arm
+// +build !linux !arm
 
 package pirri
 
@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stianeikeland/go-rpio"
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
 	"github.com/vacovsky/pirrigo/settings"
@@ -69,54 +68,27 @@ func gpioSimulation(gpio int, state bool, seconds int) {
 
 func GPIOClear() {
 	log := logging.Service()
-
-	db := data.Service()
-
-	rpio.Open()
-	defer rpio.Close()
-
-	gpios := []GpioPin{}
-	sql := "SELECT gpio_pins.* FROM gpio_pins WHERE EXISTS(SELECT 1 FROM stations WHERE stations.gpio=gpio_pins.gpio) OR gpio_pins.common = true"
-	db.DB.Raw(sql).Find(&gpios)
-
-	for i := range gpios {
-		pin := rpio.Pin(gpios[i].GPIO)
-		log.LogEvent("Deactivating GPIO",
-			zap.Int("gpio", gpios[i].GPIO),
-		)
-		pin.High()
-	}
+	log.LogEvent("GPIO Clear skipped (not on Raspberry Pi)")
 }
 
 func gpioActivate(gpio int, state bool, seconds int) {
 	log := logging.Service()
 	set := settings.Service()
-	rpio.Open()
-	defer rpio.Close()
-	pin := rpio.Pin(gpio)
-	common := rpio.Pin(set.GPIO.CommonWire)
-	pin.Output()
-	common.Output()
 
-	log.LogEvent("Activating GPIOs",
+	log.LogEvent("GPIO Activate simulated",
 		zap.Int("commonWire", set.GPIO.CommonWire),
 		zap.Int("gpio", gpio),
 		zap.Int("durationSeconds", seconds),
 	)
-
-	common.Low()
-	pin.Low()
 
 	// start countdown
 	for seconds > 0 && !RUNSTATUS.Cancel {
 		time.Sleep(time.Duration(1) * time.Second)
 		seconds--
 	}
-	log.LogEvent("Deactivating GPIOs",
+	log.LogEvent("GPIO Deactivate simulated",
 		zap.Int("commonWire", set.GPIO.CommonWire),
 		zap.Int("gpio", gpio),
 		zap.Int("durationSeconds", seconds),
 	)
-	common.High()
-	pin.High()
 }

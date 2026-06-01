@@ -38,8 +38,6 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 	var sqlQuery1 string
 
 	seriesTracker := map[int]int{}
-	tracker0 := 0
-	tracker1 := 0
 
 	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
 
@@ -77,26 +75,25 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 	result.Data = [][]int{[]int{}, []int{}}
 
 	for _, i := range rawResult0 {
-		result.Data[0] = append(result.Data[0], 0)
-		result.Data[1] = append(result.Data[1], 0)
-
 		if loc, ok := seriesTracker[i.StationID]; ok {
 			result.Data[0][loc] += i.Secs / 60
 		} else {
-			seriesTracker[i.StationID] = tracker0
+			idx := len(result.Labels)
+			seriesTracker[i.StationID] = idx
 			result.Labels = append(result.Labels, i.StationID)
-			result.Data[0][tracker0] += i.Secs / 60
-			tracker0++
+			result.Data[0] = append(result.Data[0], i.Secs/60)
+			result.Data[1] = append(result.Data[1], 0)
 		}
 	}
 	for _, i := range rawResult1 {
 		if loc, ok := seriesTracker[i.StationID]; ok {
 			result.Data[1][loc] += i.Secs / 60
 		} else {
-			seriesTracker[i.StationID] = tracker1
+			idx := len(result.Labels)
+			seriesTracker[i.StationID] = idx
 			result.Labels = append(result.Labels, i.StationID)
-			result.Data[1][tracker1] += i.Secs / 60
-			tracker1++
+			result.Data[0] = append(result.Data[0], 0)
+			result.Data[1] = append(result.Data[1], i.Secs/60)
 		}
 	}
 
@@ -185,13 +182,31 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	for _, v := range rawResults0 {
-		result.Data[0][v.Day-1] = v.Secs / 60
+		dayIdx := v.Day - 1
+		if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
+			dayIdx = v.Day
+		}
+		if dayIdx >= 0 && dayIdx < 7 {
+			result.Data[0][dayIdx] = v.Secs / 60
+		}
 	}
 	for _, v := range rawResults1 {
-		result.Data[1][v.Day-1] = v.Secs / 60
+		dayIdx := v.Day - 1
+		if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
+			dayIdx = v.Day
+		}
+		if dayIdx >= 0 && dayIdx < 7 {
+			result.Data[1][dayIdx] = v.Secs / 60
+		}
 	}
 	for _, v := range rawResults2 {
-		result.Data[2][v.Day-1] = v.Secs / 60
+		dayIdx := v.Day - 1
+		if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
+			dayIdx = v.Day
+		}
+		if dayIdx >= 0 && dayIdx < 7 {
+			result.Data[2][dayIdx] = v.Secs / 60
+		}
 	}
 
 	blob, err := json.Marshal(&result)

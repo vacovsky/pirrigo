@@ -26,7 +26,7 @@ type PirriLogger struct {
 	logger *zap.Logger
 }
 
-//Service returns logging service in a singleton
+// Service returns logging service in a singleton
 func Service() *PirriLogger {
 	once.Do(func() {
 		instance = &PirriLogger{
@@ -69,9 +69,9 @@ func (l *PirriLogger) init() {
 func (l *PirriLogger) LogEvent(message string, fields ...zapcore.Field) {
 	if os.Getenv("PIRRIGO_LOG_LOCATION") != "" {
 		fmt.Println("EVENT: ", message)
-		defer l.logger.Sync()
-		defer l.lock.Unlock()
 		l.lock.Lock()
+		defer l.lock.Unlock()
+		defer l.logger.Sync()
 		fields = append(
 			fields,
 			[]zapcore.Field{
@@ -85,12 +85,11 @@ func (l *PirriLogger) LogEvent(message string, fields ...zapcore.Field) {
 	}
 }
 
-//LogError logs errors
+// LogError logs errors
 func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
-
-	defer l.logger.Sync()
-	defer l.lock.Unlock()
 	l.lock.Lock()
+	defer l.lock.Unlock()
+	defer l.logger.Sync()
 	fields = append(
 		fields,
 		[]zapcore.Field{
@@ -104,16 +103,18 @@ func (l *PirriLogger) LogError(message string, fields ...zapcore.Field) {
 }
 
 func (l *PirriLogger) LoadJournalCtlLogs() []string {
-	defer l.lock.Unlock()
-
 	var b bytes.Buffer
-	pipe.Command(&b,
+	err := pipe.Command(&b,
 		exec.Command("journalctl", "-xe"),
 		exec.Command("grep", "pirrigo"),
 	)
+	if err != nil {
+		return []string{}
+	}
 	io.Copy(os.Stdout, &b)
 
 	l.lock.Lock()
+	defer l.lock.Unlock()
 
 	return reverseLogs(strings.Split(b.String(), "\n"))
 }

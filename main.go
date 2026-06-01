@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/signal"
 	"strings"
-	"time"
+	"syscall"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
@@ -24,7 +25,7 @@ func main() {
 	log.Println("PIRRIGO_DB_LOGMODE:", os.Getenv("PIRRIGO_DB_LOGMODE"))
 	log.Println("PIRRIGO_UTC_OFFSET:", os.Getenv("PIRRIGO_UTC_OFFSET"))
 	log.Println("PIRRIGO_USERNAME:", os.Getenv("PIRRIGO_USERNAME"))
-	log.Println("PIRRIGO_PASSWORD:", os.Getenv("PIRRIGO_PASSWORD"))
+	log.Println("PIRRIGO_PASSWORD:", "***REDACTED***")
 	// log.Println("PIRRIGO_ENABLE_AUTH:", os.Getenv("PIRRIGO_ENABLE_AUTH"))
 
 	// initialize dependencies
@@ -43,7 +44,7 @@ func main() {
 	pirri.SetCommonWire()
 
 	// init waitgroups for concurrent processing
-	pirri.WG.Add(3)
+	pirri.WG.Add(4)
 
 	// Start the Web application for management of schedule etc.
 	go pirri.StartPirriWebApp()
@@ -61,7 +62,8 @@ func main() {
 }
 
 func listenForExit() {
-	for {
-		time.Sleep(1000)
-	}
+	defer pirri.WG.Done()
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
 }

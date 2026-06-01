@@ -2,8 +2,8 @@ package pirri
 
 import (
 	"encoding/base64"
+	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 
@@ -12,7 +12,9 @@ import (
 )
 
 func loginCheck(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "Congrats, you're logged in!", 200)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	io.WriteString(w, `{"status": "authenticated"}`)
 }
 
 func webHome(w http.ResponseWriter, r *http.Request) {
@@ -31,21 +33,9 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 		w.Header().Set("WWW-Authenticate", `Basic realm="Restricted"`)
 		s := strings.SplitN(r.Header.Get("Authorization"), " ", 2)
 		if len(s) != 2 {
-
-			// try cookie auth!?
-			c, _ := r.Cookie("Authorization")
-			q, err := url.ParseQuery(c.Value)
-			for k := range q {
-				s = strings.SplitN(k, " ", 2)
-			}
-			if len(s) != 2 || err != nil {
-				http.Error(w, err.Error(), 401)
-				log.LogError("HTTP Authentication Error.",
-					zap.String("authCookieKey", s[0]),
-					// zap.String("authCookieValue", s[1]),
-					zap.String("error", err.Error()))
-				return
-			}
+			http.Error(w, "Invalid credentials", 401)
+			log.LogError("HTTP Authentication Error - missing or malformed Authorization header.")
+			return
 		}
 		b, err := base64.StdEncoding.DecodeString(s[1])
 		if err != nil {
@@ -65,6 +55,7 @@ func basicAuth(h http.HandlerFunc) http.HandlerFunc {
 			log.LogError("HTTP Authentication Error.")
 			return
 		}
+		w.Header().Set("Content-Type", "application/json")
 		h.ServeHTTP(w, r)
 	}
 }
@@ -74,6 +65,7 @@ func enableCors(h http.HandlerFunc) http.HandlerFunc {
 		(w).Header().Set("Access-Control-Allow-Origin", "*")
 		(w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
 		(w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+		(w).Header().Set("Content-Type", "application/json")
 
 		h.ServeHTTP(w, r)
 		if r.Method == "OPTIONS" {

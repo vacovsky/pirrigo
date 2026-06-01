@@ -65,10 +65,6 @@ export class CalendarComponent implements OnInit {
     this.openDialog(this.editingSchedule)
   }
 
-  eventTimesChanged({ event }: { event: CalendarEvent }): void {
-    console.log(event);
-  }
-
   convertScheduleToCalendarEvents(schedule: StationSchedule[]): CalendarEvent[] {
     let events: CalendarEvent[] = [];
     for (let i = -8; i < this.DOW.length; i++) {
@@ -90,7 +86,7 @@ export class CalendarComponent implements OnInit {
             "id": event.ID,
             "start": start.toDate(),
             "end": end,
-            "title": `Zone ${event.StationID} for ${event.Duration / 60} minutes<br/><br/><br/><br/> | ${JSON.stringify(event)}
+            "title": `Zone ${event.StationID} for ${event.Duration / 60} minutes<br/><br/><br/><br/> | ${this.escapeHtml(JSON.stringify(event))}
             `,
             "color": this.colors.blue,
             "allDay": false,
@@ -125,6 +121,10 @@ export class CalendarComponent implements OnInit {
     "Friday",
     "Saturday"
   ]
+
+  escapeHtml(str: string): string {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
 
   openDialog(es: StationSchedule): void {

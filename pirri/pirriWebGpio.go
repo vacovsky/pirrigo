@@ -57,13 +57,12 @@ func gpioPinsCommonSetWeb(rw http.ResponseWriter, req *http.Request) {
 	err := json.NewDecoder(req.Body).Decode(&gpio)
 	if err != nil {
 		logging.Service().LogError("Unable to decode request body when setting common GPIO pin.",
-			// zap.String("gpio.GPIO", strconv.Itoa(gpio.GPIO)),
-			// zap.String("gpio.ID", strconv.Itoa(gpio.ID)),
-			// zap.String("gpio.Notes", gpio.Notes),
 			zap.String("error", err.Error()))
+		http.Error(rw, "Invalid request body", http.StatusBadRequest)
+		return
 	}
 	gpio.Common = true
-	data.Service().DB.Exec("UPDATE `gpio_pins` SET `common` = false")
-	data.Service().DB.Exec("UPDATE `gpio_pins` SET `common` = true WHERE (gpio = ?)", gpio.GPIO)
+	data.Service().DB.Exec("UPDATE gpio_pins SET common = false")
+	data.Service().DB.Exec("UPDATE gpio_pins SET common = true WHERE gpio = ?", gpio.GPIO)
 	gpioPinsCommonWeb(rw, req)
 }

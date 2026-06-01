@@ -24,7 +24,7 @@ type ORM struct {
 var instance *ORM
 var once sync.Once
 
-//Service returns logging service in a singleton
+// Service returns logging service in a singleton
 func Service() *ORM {
 	once.Do(func() {
 		instance = &ORM{
@@ -40,23 +40,25 @@ func (d *ORM) connect() {
 	set := settings.Service()
 	var err error
 	d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
-	d.DB.LogMode(set.Debug.GORM)
 	if err != nil {
-		log.LogError("Unable to connect to SQL.  Trying again in 15 seconds.",
-			zap.String("DB.ype", set.SQL.DBType),
+		log.LogError("Unable to connect to SQL. Trying again in 15 seconds.",
+			zap.String("DB.Type", set.SQL.DBType),
 			zap.String("connectionString", set.SQL.ConnectionString),
 			zap.String("error", err.Error()))
-		for d.DB == nil {
-			time.Sleep(time.Duration(15) * time.Second)
-			d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
-			log.LogError("Unable to connect to SQL on second attempt.  Fatal?  Probably.",
-				zap.String("DB.ype", set.SQL.DBType),
+		time.Sleep(time.Duration(15) * time.Second)
+		d.DB, err = gorm.Open(set.SQL.DBType, set.SQL.ConnectionString)
+		if err != nil {
+			log.LogError("Fatal: Unable to connect to SQL on retry.",
+				zap.String("DB.Type", set.SQL.DBType),
 				zap.String("connectionString", set.SQL.ConnectionString),
 				zap.String("error", err.Error()))
+			panic("Failed to connect to database: " + err.Error())
 		}
 	}
-	err = d.DB.DB().Ping()
-	if err != nil {
+	d.DB.LogMode(set.Debug.GORM)
+
+	sqlDB := d.DB.DB()
+	if err := sqlDB.Ping(); err != nil {
 		log.LogError("Ping against SQL database failed.",
 			zap.String("error", err.Error()))
 	}
@@ -74,6 +76,7 @@ func (d *ORM) sqliteConnect() {
 
 	if err != nil {
 		log.LogError(err.Error())
+		panic("Failed to connect to sqlite3 database: " + err.Error())
 	}
 	if os.Getenv("PIRRIGO_DB_LOGMODE") == "" {
 		os.Setenv(`PIRRIGO_DB_LOGMODE`, "ON")

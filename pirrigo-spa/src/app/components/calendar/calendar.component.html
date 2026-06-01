@@ -15,5 +15,5 @@
     </mat-card-title>
 
 
-    <mwl-calendar-week-view *ngIf="events != undefined" (eventTimesChanged)="eventTimesChanged($event)"
+    <mwl-calendar-week-view *ngIf="events != undefined"
         [viewDate]="viewDate" (eventClicked)="eventClicked($event)" [events]="events">
