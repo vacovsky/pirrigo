@@ -55,8 +55,16 @@ func (l *PirriLogger) init() {
 	}
 	// cfg.EncoderConfig.TimeKey = "time"
 	cfg.EncoderConfig.StacktraceKey = "stacktrace"
-	cfg.ErrorOutputPaths = []string{os.Getenv("PIRRIGO_LOG_LOCATION")}
-	cfg.OutputPaths = []string{os.Getenv("PIRRIGO_LOG_LOCATION")}
+
+	logPath := os.Getenv("PIRRIGO_LOG_LOCATION")
+	if logPath != "" {
+		cfg.ErrorOutputPaths = []string{logPath}
+		cfg.OutputPaths = []string{logPath}
+	} else {
+		// ponytail: default to stderr so tests don't panic
+		cfg.ErrorOutputPaths = []string{"stderr"}
+		cfg.OutputPaths = []string{"stderr"}
+	}
 
 	logger, err := cfg.Build()
 	l.logger = logger
