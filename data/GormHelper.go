@@ -5,16 +5,24 @@ import (
 	"sync"
 	"time"
 
+	"database/sql"
+
 	"github.com/jinzhu/gorm"
 	"go.uber.org/zap"
 
 	// This is how the documentation indicated to do it.
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+
+	// ponytail: pure-Go SQLite (no CGO) — re-register as "sqlite3" for GORM v1 compat
+	modernsqlite "modernc.org/sqlite"
 
 	"github.com/vacovsky/pirrigo/logging"
 	"github.com/vacovsky/pirrigo/settings"
 )
+
+func init() {
+	sql.Register("sqlite3", &modernsqlite.Driver{})
+}
 
 type ORM struct {
 	DB   *gorm.DB

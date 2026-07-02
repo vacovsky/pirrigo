@@ -14,3 +14,9 @@
 - [x] **Bug 8: Dead `templates/` directory** — Deleted.
 - [x] **Bug 9: `ioutil.ReadAll` deprecated** — Replaced with `io.ReadAll` in weather rewrite.
 - [x] **Bug 10: API docs in source** — Stripped ~50 lines of commented API response examples from `apiclient.service.ts`.
+
+## Tests
+
+- `pirri/pirriWebStats_test.go` — 6 table-driven tests for `parseDaysParam` (default, explicit, zero, negative, garbage, one) + smoke test for chart #3.
+- `weather/pirriWeather_test.go` — no-coords short-circuit test (returns Error status when lat/lon missing).
+- `logging/pirriLogging.go` — fixed panic when `PIRRIGO_LOG_LOCATION` is unset (defaults to stderr).
