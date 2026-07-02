@@ -112,7 +112,9 @@ export class StationsComponent implements OnInit {
     this.runRequest = new StationRunRequestBody()
     this.runRequest.Duration = seconds
     this.runRequest.StationID = station
-    this._api.postStationRun(this.runRequest)
+    this._api.postStationRun(this.runRequest).subscribe({
+      error: (err) => console.error('Failed to run station', err)
+    })
   }
 
   // status/cancel
@@ -215,29 +217,10 @@ export class EditStationDialog implements OnInit, AfterViewInit {
     this._api.getGPIOsForStationEdit().subscribe(stationdata => {
       this.tempGPIOs = stationdata.gpios
     })
-
-    if (this.data.GPIO == undefined) {
-
-    } else {
-
-    }
   }
 
   setGPIO(event: any): void {
     this.data.GPIO = event.value
-  }
-
-
-  ngAfterViewInit() {
-  }
-
-  setStationGPIO(event: any): void {
-    this.data.GPIO = event.value
-    console.log(event.value)
-  }
-
-  formatSliderLabel(value: number) {
-    return `${value}m`;
   }
 
   deleteStation(id: number): void {

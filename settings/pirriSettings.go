@@ -64,11 +64,13 @@ type Settings struct {
 		Secret string `json:"secret"`
 	} `json:"web"`
 	Weather struct {
-		Units             string `json:"units"` //imperial or metric
-		Station           string `json:"station"`
-		WundergroundKey   string `json:"wunderground_key"`
-		StateAbbreviation string `json:"state_abbreviation"`
-		City              string `json:"city"`
+		Units             string  `json:"units"` //imperial or metric
+		Station           string  `json:"station"`
+		WundergroundKey   string  `json:"wunderground_key"`
+		StateAbbreviation string  `json:"state_abbreviation"`
+		City              string  `json:"city"`
+		Latitude          float64 `json:"latitude"`
+		Longitude         float64 `json:"longitude"`
 	} `json:"weather"`
 	Debug struct {
 		Pirri        bool   `json:"pirri"`

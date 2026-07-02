@@ -6,15 +6,28 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/vacovsky/pirrigo/data"
 	"github.com/vacovsky/pirrigo/logging"
 	"go.uber.org/zap"
-	//	"time"
 )
 
-// TODO parameterize the inputs for date ranges and add selectors on stats page
+// parseDaysParam reads ?days=N from query string, defaults to defDays.
+func parseDaysParam(req *http.Request, defDays int) int {
+	s := req.URL.Query().Get("days")
+	if s == "" {
+		return defDays
+	}
+	n, err := strconv.Atoi(s)
+	if err != nil || n < 1 {
+		return defDays
+	}
+	return n
+}
+
 func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
+	days := parseDaysParam(req, 7)
 	type StatsChart struct {
 		ReportType int
 		Labels     []int
@@ -32,46 +45,37 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 		Series:     []string{"Unscheduled", "Scheduled"},
 	}
 
-	var rawResult0 []RawResult
-	var rawResult1 []RawResult
-	var sqlQuery0 string
-	var sqlQuery1 string
+	var rawResult0, rawResult1 []RawResult
+	var sqlQuery0, sqlQuery1 string
 
 	seriesTracker := map[int]int{}
 
 	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
-
-		// unscheduled
 		sqlQuery0 = `SELECT DISTINCT station_id, SUM(duration) as secs
-	            FROM station_histories
-	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id=0 AND station_id > 0
-	            GROUP BY station_id
-	            ORDER BY station_id ASC`
-		// scheduled
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id=0 AND station_id > 0
+			GROUP BY station_id
+			ORDER BY station_id ASC`
 		sqlQuery1 = `SELECT DISTINCT station_id, SUM(duration) as secs
-	            FROM station_histories
-	            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)  AND schedule_id>=1 AND station_id > 0
-	            GROUP BY station_id
-	            ORDER BY station_id ASC`
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id>=1 AND station_id > 0
+			GROUP BY station_id
+			ORDER BY station_id ASC`
 	} else {
-
-		// unscheduled
 		sqlQuery0 = `SELECT DISTINCT station_id, SUM(duration) as secs
-				FROM station_histories
-				WHERE start_time >= date('now', '-? DAYS') AND schedule_id=0 AND station_id > 0
-				GROUP BY station_id
-				ORDER BY station_id ASC`
-
-		// scheduled
+			FROM station_histories
+			WHERE start_time >= date('now', '-? DAYS') AND schedule_id=0 AND station_id > 0
+			GROUP BY station_id
+			ORDER BY station_id ASC`
 		sqlQuery1 = `SELECT DISTINCT station_id, SUM(duration) as secs
-				FROM station_histories
-				WHERE start_time >= date('now', '-? DAYS') AND schedule_id>=1 AND station_id > 0
-				GROUP BY station_id
-				ORDER BY station_id ASC`
+			FROM station_histories
+			WHERE start_time >= date('now', '-? DAYS') AND schedule_id>=1 AND station_id > 0
+			GROUP BY station_id
+			ORDER BY station_id ASC`
 	}
 
-	data.Service().DB.Raw(sqlQuery0, 7).Scan(&rawResult0)
-	data.Service().DB.Raw(sqlQuery1, 7).Scan(&rawResult1)
+	data.Service().DB.Raw(sqlQuery0, days).Scan(&rawResult0)
+	data.Service().DB.Raw(sqlQuery1, days).Scan(&rawResult1)
 	result.Data = [][]int{[]int{}, []int{}}
 
 	for _, i := range rawResult0 {
@@ -106,6 +110,7 @@ func statsActivityByStation(rw http.ResponseWriter, req *http.Request) {
 }
 
 func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
+	days := parseDaysParam(req, 7)
 	type StatsChart struct {
 		ReportType int
 		Labels     []string
@@ -124,56 +129,46 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 		Secs int
 	}
 
-	var rawResults0 []RawResult
-	var rawResults1 []RawResult
-	var rawResults2 []RawResult
+	var rawResults0, rawResults1, rawResults2 []RawResult
 
-	var sqlQuery0 string
-	var sqlQuery1 string
-	var sqlQuery2 string
+	var sqlQuery0, sqlQuery1, sqlQuery2 string
 
 	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
-		sqlQuery0 = fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
-            FROM station_histories
-            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
-            GROUP BY day
-            ORDER BY day ASC`)
-		sqlQuery1 = fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
-            FROM station_histories
-            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id > 0
-            GROUP BY day
-            ORDER BY day ASC`)
-		sqlQuery2 = fmt.Sprintf(`SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
-            FROM station_histories
-            WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id = 0
-            GROUP BY day
-            ORDER BY day ASC`)
+		sqlQuery0 = `SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
+			GROUP BY day
+			ORDER BY day ASC`
+		sqlQuery1 = `SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id > 0
+			GROUP BY day
+			ORDER BY day ASC`
+		sqlQuery2 = `SELECT DISTINCT DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration) as secs
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND schedule_id = 0
+			GROUP BY day
+			ORDER BY day ASC`
 	} else {
-		sqlQuery0 = fmt.Sprintf(`SELECT DISTINCT strftime( '%%w', (datetime(start_time, '? HOURS'))) as day, SUM(duration) as secs
-            FROM station_histories
-            WHERE start_time >= date('now', '-? DAYS')
-            GROUP BY day
-            ORDER BY day ASC`)
-		sqlQuery1 = fmt.Sprintf(`SELECT DISTINCT strftime( '%%w', (datetime(start_time, '? HOURS'))) as day, SUM(duration) as secs
-            FROM station_histories
-            WHERE start_time >= date('now', '-? DAYS') AND schedule_id > 0
-            GROUP BY day
-            ORDER BY day ASC`)
-		sqlQuery2 = fmt.Sprintf(`SELECT DISTINCT strftime( '%%w', (datetime(start_time, '? HOURS'))) as day, SUM(duration) as secs
-            FROM station_histories
-            WHERE start_time >= date('now', '-? DAYS') AND schedule_id = 0
-            GROUP BY day
-			ORDER BY day ASC`)
-
-		// SELECT DISTINCT strftime( '%w', (datetime(start_time, '-? HOURS'))) as day, SUM(duration) as secs
-		// FROM station_histories
-		// WHERE start_time >= date('now', '-7 DAYS') AND schedule_id = 0
-		// GROUP BY day
-		// ORDER BY day ASC;
+		sqlQuery0 = `SELECT DISTINCT strftime('%%w', datetime(start_time, '? HOURS')) as day, SUM(duration) as secs
+			FROM station_histories
+			WHERE start_time >= date('now', '-? DAYS')
+			GROUP BY day
+			ORDER BY day ASC`
+		sqlQuery1 = `SELECT DISTINCT strftime('%%w', datetime(start_time, '? HOURS')) as day, SUM(duration) as secs
+			FROM station_histories
+			WHERE start_time >= date('now', '-? DAYS') AND schedule_id > 0
+			GROUP BY day
+			ORDER BY day ASC`
+		sqlQuery2 = `SELECT DISTINCT strftime('%%w', datetime(start_time, '? HOURS')) as day, SUM(duration) as secs
+			FROM station_histories
+			WHERE start_time >= date('now', '-? DAYS') AND schedule_id = 0
+			GROUP BY day
+			ORDER BY day ASC`
 	}
-	data.Service().DB.Raw(sqlQuery0, os.Getenv("PIRRIGO_UTC_OFFSET"), 7).Scan(&rawResults0)
-	data.Service().DB.Raw(sqlQuery1, os.Getenv("PIRRIGO_UTC_OFFSET"), 7).Scan(&rawResults1)
-	data.Service().DB.Raw(sqlQuery2, os.Getenv("PIRRIGO_UTC_OFFSET"), 7).Scan(&rawResults2)
+	data.Service().DB.Raw(sqlQuery0, os.Getenv("PIRRIGO_UTC_OFFSET"), days).Scan(&rawResults0)
+	data.Service().DB.Raw(sqlQuery1, os.Getenv("PIRRIGO_UTC_OFFSET"), days).Scan(&rawResults1)
+	data.Service().DB.Raw(sqlQuery2, os.Getenv("PIRRIGO_UTC_OFFSET"), days).Scan(&rawResults2)
 
 	result.Data = [][]int{
 		[]int{0, 0, 0, 0, 0, 0, 0},
@@ -216,23 +211,59 @@ func statsActivityByDayOfWeek(rw http.ResponseWriter, req *http.Request) {
 	io.WriteString(rw, string(blob))
 }
 
+// statsActivityPerStationByDOW: per-station watering minutes by day of week.
 func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
+	days := parseDaysParam(req, 7)
 	type StatsChart struct {
 		ReportType int
 		Labels     []string
-		Series     []string
-		Data       [][]float32
+		Series     []int
+		Data       [][]int
 	}
 
 	type RawResult struct {
-		Day  int
-		Mins float32
+		StationID int
+		Day       int
+		Mins      int
 	}
 
 	result := StatsChart{
-		ReportType: 2,
-		Labels:     []string{},
-		Series:     []string{},
+		ReportType: 3,
+		Labels:     []string{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"},
+		Series:     []int{},
+	}
+
+	var rawResults []RawResult
+	sqlQuery := `SELECT station_id, strftime('%%w', datetime(start_time, '? HOURS')) as day, SUM(duration)/60 as mins
+		FROM station_histories
+		WHERE start_time >= date('now', '-? DAYS') AND station_id > 0
+		GROUP BY station_id, day
+		ORDER BY station_id, day ASC`
+
+	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
+		sqlQuery = `SELECT station_id, DAYOFWEEK((start_time + INTERVAL ? HOUR)) as day, SUM(duration)/60 as mins
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY) AND station_id > 0
+			GROUP BY station_id, day
+			ORDER BY station_id, day ASC`
+	}
+
+	data.Service().DB.Raw(sqlQuery, os.Getenv("PIRRIGO_UTC_OFFSET"), days).Scan(&rawResults)
+
+	seriesTracker := map[int]int{}
+	for _, v := range rawResults {
+		if _, ok := seriesTracker[v.StationID]; !ok {
+			seriesTracker[v.StationID] = len(result.Series)
+			result.Series = append(result.Series, v.StationID)
+			result.Data = append(result.Data, []int{0, 0, 0, 0, 0, 0, 0})
+		}
+		dayIdx := v.Day - 1
+		if os.Getenv("PIRRIGO_DB_TYPE") != "mysql" {
+			dayIdx = v.Day
+		}
+		if dayIdx >= 0 && dayIdx < 7 {
+			result.Data[seriesTracker[v.StationID]][dayIdx] = v.Mins
+		}
 	}
 
 	blob, err := json.Marshal(&result)
@@ -243,6 +274,7 @@ func statsActivityPerStationByDOW(rw http.ResponseWriter, req *http.Request) {
 }
 
 func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
+	days := parseDaysParam(req, 7)
 	type StatsChart struct {
 		ReportType int
 		Labels     []string
@@ -270,27 +302,27 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	var sqlStr string
 	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
-		sqlStr = fmt.Sprintf(`SELECT stations.id, 
-					  HOUR(start_time + INTERVAL %s HOUR) as hour, 
-					  (duration) as run_secs
-				FROM station_histories
-				JOIN stations ON stations.id = station_histories.station_id
-				WHERE start_time >= (CURRENT_DATE - INTERVAL 7 DAY) 
-					AND stations.id > 0
-				ORDER BY station_id ASC`, os.Getenv("PIRRIGO_UTC_OFFSET"))
+		sqlStr = fmt.Sprintf(`SELECT stations.id,
+						HOUR(start_time + INTERVAL %s HOUR) as hour,
+						(duration) as run_secs
+					FROM station_histories
+					JOIN stations ON stations.id = station_histories.station_id
+					WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
+						AND stations.id > 0
+					ORDER BY station_id ASC`, os.Getenv("PIRRIGO_UTC_OFFSET"))
+		data.Service().DB.Raw(sqlStr, days).Scan(&chartData)
 	} else {
-		sqlStr = fmt.Sprintf(`SELECT stations.id, 
-			strftime('%%H', time(start_time, '%s HOURS')) as hour, 
+		sqlStr = fmt.Sprintf(`SELECT stations.id,
+			strftime('%%H', time(start_time, '%s HOURS')) as hour,
 			(duration) as run_secs
-			FROM station_histories
-			JOIN stations ON stations.id = station_histories.station_id
-			WHERE start_time >= date('now', '-7 DAYS') 
-				AND stations.id > 0
-			ORDER BY station_id ASC`, os.Getenv("PIRRIGO_UTC_OFFSET"))
+		FROM station_histories
+		JOIN stations ON stations.id = station_histories.station_id
+		WHERE start_time >= date('now', '-? DAYS')
+			AND stations.id > 0
+		ORDER BY station_id ASC`, os.Getenv("PIRRIGO_UTC_OFFSET"))
+		data.Service().DB.Raw(sqlStr, days).Scan(&chartData)
 	}
 	seriesTracker := map[int]int{}
-
-	data.Service().DB.Raw(sqlStr).Scan(&chartData)
 
 	for n, i := range chartData {
 		if n == 0 || i.ID != result.Series[len(result.Series)-1] {

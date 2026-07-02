@@ -60,8 +60,6 @@ export class CalendarComponent implements OnInit {
 
   eventClicked({ event }: { event: CalendarEvent }): void {
     this.editingSchedule = JSON.parse(event.title.split(" | ")[1])
-    this.editingSchedule.StartDate = moment(new Date().setHours(0, 0, 0, 0)).toDate();
-    this.editingSchedule.EndDate = moment().add(15, "y").toDate();
     this.openDialog(this.editingSchedule)
   }
 
