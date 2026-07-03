@@ -49,7 +49,12 @@ func StartPirriWebApp() {
 	http.HandleFunc("/login", loginAuth)
 
 	// Host server
-	err := http.ListenAndServe(":"+os.Getenv("PIRRIGO_WEB_PORT"), nil)
+	webPort := os.Getenv("PIRRIGO_WEB_PORT")
+	if webPort == "" {
+		webPort = "80"
+	}
+
+	err := http.ListenAndServe(":"+webPort, nil)
 	if err != nil {
 		logging.Service().LogError("HTTP server failed", zap.String("error", err.Error()))
 	}
