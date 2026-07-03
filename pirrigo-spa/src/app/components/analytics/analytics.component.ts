@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiClientService } from 'src/app/services/apiclient.service';
-import * as moment from 'moment';
 import { ChartTransformService } from 'src/app/services/chart-transform.service';
 
 @Component({
@@ -10,31 +9,11 @@ import { ChartTransformService } from 'src/app/services/chart-transform.service'
 })
 export class AnalyticsComponent implements OnInit {
 
-  startDate: Date
-  endDate: Date
+  days = 14
 
-  overallUsageChartData: any;
-  zoneActivityChartData: any;
-  chartLoading: boolean
+  chartData: Record<string, any> = {}
 
-
-  chart4Options: any = {
-    // options
-    legend: true,
-    showLabels: true,
-    animations: true,
-    xAxis: true,
-    yAxis: true,
-    showYAxisLabel: true,
-    showXAxisLabel: true,
-    xAxisLabel: 'hour of the day',
-    yAxisLabel: 'minutes',
-    timeline: true,
-  }
-
-  colorScheme = {
-    domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
-  };
+  colorScheme = 'viridis'
 
   constructor(
     private _api: ApiClientService,
@@ -42,16 +21,15 @@ export class AnalyticsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.endDate = moment().toDate()
-    this.startDate = moment().add(-14, "d").toDate()
     this.loadAllCharts()
   }
 
-
   loadAllCharts(): void {
-    this._api.loadChartByID(4, moment(this.startDate).unix(), moment(this.endDate).unix()).subscribe(data => {
-      this.overallUsageChartData = this._cts.transformChartDataForNgxChartsWithStringLabels(data)
-      console.log(data)
-    })
+    // ponytail: load all 5 charts in parallel — each is independent
+    for (let id = 1; id <= 5; id++) {
+      this._api.loadChartByID(id, this.days).subscribe(data => {
+        this.chartData[id] = this._cts.transformChartDataForNgxChartsWithStringLabels(data)
+      })
+    }
   }
 }

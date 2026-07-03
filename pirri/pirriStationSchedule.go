@@ -34,8 +34,12 @@ func checkForTasks() {
 	scheds := []StationSchedule{}
 	nowTime := time.Now()
 
+	dbType := os.Getenv("PIRRIGO_DB_TYPE")
+	if dbType == "" {
+		dbType = "sqlite"
+	}
 	var nowString string
-	if os.Getenv("PIRRIGO_DB_TYPE") != "sqlite" {
+	if dbType != "sqlite" {
 		nowString = "NOW()"
 	} else {
 		nowString = "date('now')"

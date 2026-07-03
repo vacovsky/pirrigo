@@ -200,7 +200,7 @@ export class StationsComponent implements OnInit {
   selector: 'dialog-scheduleform',
   templateUrl: `./dialog-stationedit.html`,
 })
-export class EditStationDialog implements OnInit, AfterViewInit {
+export class EditStationDialog implements OnInit {
   // @ViewChild('autosize') autosize: CdkTextareaAutosize;
   tempGPIOs: Gpio[];
   // tempStationsList: Station[];

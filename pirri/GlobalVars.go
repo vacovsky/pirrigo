@@ -32,6 +32,7 @@ var (
 		"/stats/2": statsActivityByDayOfWeek,
 		"/stats/3": statsActivityPerStationByDOW,
 		"/stats/4": statsStationActivity,
+		"/stats/5": statsDailySummary,
 
 		// run status
 		"/status/run":          statusRunWeb,

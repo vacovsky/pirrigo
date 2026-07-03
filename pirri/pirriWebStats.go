@@ -344,3 +344,54 @@ func statsStationActivity(rw http.ResponseWriter, req *http.Request) {
 
 	io.WriteString(rw, string(blob))
 }
+
+// statsDailySummary: total watering minutes per day over the range.
+func statsDailySummary(rw http.ResponseWriter, req *http.Request) {
+	days := parseDaysParam(req, 14)
+	type StatsChart struct {
+		ReportType int
+		Labels     []string
+		Series     []string
+		Data       [][]int
+	}
+
+	type RawResult struct {
+		Date string
+		Mins int
+	}
+
+	var rawResults []RawResult
+	sqlQuery := `SELECT date(start_time) as dt, SUM(duration)/60 as mins
+		FROM station_histories
+		WHERE start_time >= date('now', '-? DAYS')
+		GROUP BY dt
+		ORDER BY dt ASC`
+
+	if os.Getenv("PIRRIGO_DB_TYPE") == "mysql" {
+		sqlQuery = `SELECT DATE(start_time) as dt, SUM(duration)/60 as mins
+			FROM station_histories
+			WHERE start_time >= (CURRENT_DATE - INTERVAL ? DAY)
+			GROUP BY dt
+			ORDER BY dt ASC`
+	}
+
+	data.Service().DB.Raw(sqlQuery, days).Scan(&rawResults)
+
+	result := StatsChart{
+		ReportType: 5,
+		Labels:     []string{},
+		Series:     []string{"Minutes"},
+		Data:       [][]int{[]int{}},
+	}
+
+	for _, v := range rawResults {
+		result.Labels = append(result.Labels, v.Date)
+		result.Data[0] = append(result.Data[0], v.Mins)
+	}
+
+	blob, err := json.Marshal(&result)
+	if err != nil {
+		logging.Service().LogError("Error while marshalling daily summary.", zap.String("error", err.Error()))
+	}
+	io.WriteString(rw, string(blob))
+}

@@ -113,8 +113,8 @@ export class ApiClientService {
     )
   }
 
-  loadChartByID(chart: number, startDate: number, endDate: number): Observable<ChartData> {
-    const uri = `${this._globals.uriStem}/stats/${chart}`;
+  loadChartByID(chart: number, days?: number): Observable<ChartData> {
+    const uri = `${this._globals.uriStem}/stats/${chart}${days ? `?days=${days}` : ''}`;
     return this._http.get<ChartData>(uri)
   }
 
