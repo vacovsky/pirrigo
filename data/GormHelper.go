@@ -78,7 +78,7 @@ func (d *ORM) sqliteConnect() {
 	var err error
 
 	if os.Getenv("PIRRIGO_DB_PATH") == "" {
-		os.Setenv("PIRRIGO_DB_PATH", "pirri.db")
+		os.Setenv("PIRRIGO_DB_PATH", "/opt/pirri/pirrigo.db")
 	}
 	d.DB, err = gorm.Open("sqlite3", os.Getenv("PIRRIGO_DB_PATH"))
 

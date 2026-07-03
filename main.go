@@ -28,6 +28,23 @@ func main() {
 	log.Println("PIRRIGO_PASSWORD:", "***REDACTED***")
 	// log.Println("PIRRIGO_ENABLE_AUTH:", os.Getenv("PIRRIGO_ENABLE_AUTH"))
 
+	// ponytail: default env vars so the app works out of the box without systemd unit
+	dbType := os.Getenv("PIRRIGO_DB_TYPE")
+	if dbType == "" {
+		dbType = "sqlite"
+		os.Setenv("PIRRIGO_DB_TYPE", dbType)
+	}
+	utcOffset := os.Getenv("PIRRIGO_UTC_OFFSET")
+	if utcOffset == "" {
+		utcOffset = "0"
+		os.Setenv("PIRRIGO_UTC_OFFSET", utcOffset)
+	}
+	webPort := os.Getenv("PIRRIGO_WEB_PORT")
+	if webPort == "" {
+		webPort = "80"
+		os.Setenv("PIRRIGO_WEB_PORT", webPort)
+	}
+
 	// initialize dependencies
 	data.Service()
 

@@ -38,10 +38,8 @@ func StartPirriWebApp() {
 		(w).Header().Set("Access-Control-Allow-Origin", "*")
 		(w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE")
 		(w).Header().Set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
-		SPAPath := "pirrigo-spa/dist/pirrigo-spa/" + r.URL.Path[1:]
-		if r.URL.Path == "/" {
-			SPAPath = "pirrigo-spa/dist/pirrigo-spa/index.html"
-		}
+		// ponytail: serve index.html for ANY path — Angular handles client-side routing
+		SPAPath := "pirrigo-spa/dist/pirrigo-spa/index.html"
 		http.ServeFile(w, r, SPAPath)
 	})
 
